@@ -1,6 +1,6 @@
 cloud:
   aws:
-    s3.bucket: sponge-bucket
+    s3.bucket: mungdori-bucket-domain
     stack.auto: false
     region.static: ap-northeast-2
     credentials:

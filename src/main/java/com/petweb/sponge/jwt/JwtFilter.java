@@ -1,5 +1,6 @@
 package com.petweb.sponge.jwt;
 
+import com.amazonaws.HttpMethod;
 import com.petweb.sponge.exception.error.NotFoundToken;
 import com.petweb.sponge.oauth2.dto.CustomOAuth2User;
 import com.petweb.sponge.oauth2.dto.LoginAuth;
@@ -35,11 +36,8 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String requestUri = request.getRequestURI();
 
-        if (requestUri.matches("^\\/login(?:\\/.*)?$")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-        if (requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
+        // /login 또는 /oauth2 경로를 필터링하지 않음
+        if (requestUri.matches("^\\/login(?:\\/.*)?$") || requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
             filterChain.doFilter(request, response);
             return;
         }
