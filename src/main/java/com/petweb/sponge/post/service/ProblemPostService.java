@@ -4,7 +4,7 @@ import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.exception.error.NotFoundPet;
 import com.petweb.sponge.exception.error.NotFoundPost;
 import com.petweb.sponge.exception.error.NotFoundUser;
-import com.petweb.sponge.pet.domain.Pet;
+import com.petweb.sponge.pet.repository.PetEntity;
 import com.petweb.sponge.pet.repository.PetRepository;
 import com.petweb.sponge.post.domain.post.*;
 import com.petweb.sponge.post.dto.post.PostDetailDTO;
@@ -14,8 +14,8 @@ import com.petweb.sponge.post.repository.post.PostFileRepository;
 import com.petweb.sponge.post.repository.post.PostRecommendRepository;
 import com.petweb.sponge.post.repository.post.ProblemPostRepository;
 import com.petweb.sponge.post.repository.ProblemTypeRepository;
-import com.petweb.sponge.user.domain.User;
-import com.petweb.sponge.user.repository.UserRepository;
+import com.petweb.sponge.user.repository.UserEntity;
+import com.petweb.sponge.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -85,42 +86,42 @@ public class ProblemPostService {
      */
     @Transactional
     public void savePost(Long loginId, ProblemPostDTO problemPostDTO) {
-        //현재 로그인 유저 정보 가져오기
-        User user = userRepository.findById(loginId).orElseThrow(
-                NotFoundUser::new);
-        //선택한 반려동물 정보 가져오기
-        Pet pet = petRepository.findById(problemPostDTO.getPetId()).orElseThrow(
-                NotFoundPet::new);
-
-        ProblemPost problemPost = toEntity(problemPostDTO, user, pet);
-
-        //ProblemType 조회해서 -> PostCategory로 변환 저장
-        problemTypeRepository.findAllByCodeIn(problemPostDTO.getProblemTypeList())
-                .stream().map(problemType -> PostCategory.builder()
-                        .problemPost(problemPost)
-                        .problemType(problemType)
-                        .build()).collect(Collectors.toList())
-                .forEach(postCategory -> problemPost.getPostCategories().add(postCategory));
-
-        // tag 클래스 생성해서 저장
-        problemPostDTO.getHasTagList().stream().map(hashTag -> Tag.builder()
-                .hashtag(hashTag)
-                .problemPost(problemPost)
-                .build()).collect(Collectors.toList()).forEach(tag -> {
-            problemPost.getTags().add(tag);
-        });
-
-        //PostImage클래스 생성해서 저장
-        problemPostDTO.getFileUrlList().stream().map(imageUrl ->
-                        PostFile.builder()
-                                .fileUrl(imageUrl)
-                                .problemPost(problemPost)
-                                .build()
-                ).collect(Collectors.toList())
-                .forEach(postFile -> problemPost.getPostFiles().add(postFile));
-
-
-        problemPostRepository.save(problemPost);
+//        //현재 로그인 유저 정보 가져오기
+//        UserEntity userEntity = userRepository.findById(loginId).orElseThrow(
+//                NotFoundUser::new);
+//        //선택한 반려동물 정보 가져오기
+//        PetEntity petEntity = petRepository.findById(problemPostDTO.getPetId()).orElseThrow(
+//                NotFoundPet::new);
+//
+//        ProblemPost problemPost = toEntity(problemPostDTO, userEntity, petEntity);
+//
+//        //ProblemType 조회해서 -> PostCategory로 변환 저장
+//        problemTypeRepository.findAllByCodeIn(problemPostDTO.getProblemTypeList())
+//                .stream().map(problemType -> PostCategory.builder()
+//                        .problemPost(problemPost)
+//                        .problemType(problemType)
+//                        .build()).collect(Collectors.toList())
+//                .forEach(postCategory -> problemPost.getPostCategories().add(postCategory));
+//
+//        // tag 클래스 생성해서 저장
+//        problemPostDTO.getHasTagList().stream().map(hashTag -> Tag.builder()
+//                .hashtag(hashTag)
+//                .problemPost(problemPost)
+//                .build()).collect(Collectors.toList()).forEach(tag -> {
+//            problemPost.getTags().add(tag);
+//        });
+//
+//        //PostImage클래스 생성해서 저장
+//        problemPostDTO.getFileUrlList().stream().map(imageUrl ->
+//                        PostFile.builder()
+//                                .fileUrl(imageUrl)
+//                                .problemPost(problemPost)
+//                                .build()
+//                ).collect(Collectors.toList())
+//                .forEach(postFile -> problemPost.getPostFiles().add(postFile));
+//
+//
+//        problemPostRepository.save(problemPost);
 
     }
 
@@ -136,7 +137,7 @@ public class ProblemPostService {
         ProblemPost problemPost = problemPostRepository.findPostWithType(problemPostId).orElseThrow(
                 NotFoundPost::new);
         // 글을 쓴 유저가 아닌경우
-        if (!problemPost.getUser().getId().equals(loginId)) {
+        if (!problemPost.getUserEntity().getId().equals(loginId)) {
             throw new LoginIdError();
         }
         //글 초기화
@@ -169,7 +170,7 @@ public class ProblemPostService {
                 NotFoundPost::new);
         ;
         // 글을 쓴 유저가 아닌경우
-        if (!problemPost.getUser().getId().equals(loginId)) {
+        if (!problemPost.getUserEntity().getId().equals(loginId)) {
             throw new LoginIdError();
         }
         problemPostRepository.deletePost(problemPostId);
@@ -185,7 +186,7 @@ public class ProblemPostService {
     @Transactional
     public void deletePostFiles(Long loginId, Long problemPostId, List<String> fileUrlList) {
         ProblemPost problemPost = problemPostRepository.findById(problemPostId).orElseThrow(NotFoundPost::new);
-        if (!problemPost.getUser().getId().equals(loginId)) {
+        if (!problemPost.getUserEntity().getId().equals(loginId)) {
             throw new LoginIdError();
         }
         postFileRepository.deleteByFiles(fileUrlList);
@@ -212,7 +213,7 @@ public class ProblemPostService {
         } else {
             PostRecommend postRecommend = PostRecommend.builder()
                     .problemPost(problemPost)
-                    .user(problemPost.getUser())
+                    .userEntity(problemPost.getUserEntity())
                     .build();
             problemPost.increaseLikeCount();
             postRecommendRepository.save(postRecommend);
@@ -224,17 +225,17 @@ public class ProblemPostService {
      * entity로 변환
      *
      * @param problemPostDTO
-     * @param user
-     * @param pet
+     * @param userEntity
+     * @param petEntity
      * @return
      */
-    private ProblemPost toEntity(ProblemPostDTO problemPostDTO, User user, Pet pet) {
+    private ProblemPost toEntity(ProblemPostDTO problemPostDTO, UserEntity userEntity, PetEntity petEntity) {
         return ProblemPost.builder()
                 .title(problemPostDTO.getTitle())
                 .content(problemPostDTO.getContent())
                 .duration(problemPostDTO.getDuration())
-                .user(user)
-                .pet(pet).build();
+                .userEntity(userEntity)
+                .petEntity(petEntity).build();
 
     }
 
@@ -248,20 +249,20 @@ public class ProblemPostService {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
         //펫 정보를 삭제하지 않았다면
-        Optional<Pet> pet = petRepository.findById(problemPost.getPet().getId());
+        Optional<PetEntity> pet = petRepository.findById(problemPost.getPetEntity().getId());
         if (pet.isPresent()) {
             return PostDetailDTO.builder()
-                    .userId(problemPost.getUser().getId())
+                    .userId(problemPost.getUserEntity().getId())
                     .problemPostId(problemPost.getId())
                     .title(problemPost.getTitle())
                     .content(problemPost.getContent())
                     .duration(problemPost.getDuration())
                     .likeCount(problemPost.getLikeCount())
-                    .petName(problemPost.getPet().getName())
-                    .breed(problemPost.getPet().getBreed())
-                    .gender(problemPost.getPet().getGender())
-                    .age(problemPost.getPet().getAge())
-                    .weight(problemPost.getPet().getWeight())
+                    .petName(problemPost.getPetEntity().getName())
+                    .breed(problemPost.getPetEntity().getBreed())
+                    .gender(problemPost.getPetEntity().getGender())
+                    .age(problemPost.getPetEntity().getAge())
+                    .weight(problemPost.getPetEntity().getWeight())
                     .createdAt(formatter.format(problemPost.getCreatedAt()))
                     .problemTypeList(problemPost.getPostCategories().stream()
                             .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
@@ -272,7 +273,7 @@ public class ProblemPostService {
                     .build();
         } else {
             return PostDetailDTO.builder()
-                    .userId(problemPost.getUser().getId())
+                    .userId(problemPost.getUserEntity().getId())
                     .problemPostId(problemPost.getId())
                     .title(problemPost.getTitle())
                     .content(problemPost.getContent())

@@ -1,6 +1,6 @@
 package com.petweb.sponge.trainer.domain;
 
-import com.petweb.sponge.user.domain.User;
+import com.petweb.sponge.user.repository.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -34,12 +34,12 @@ public class Review {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private User user;
+    private UserEntity userEntity;
     @Builder
-    public Review(int score, String content, Trainer trainer, User user) {
+    public Review(int score, String content, Trainer trainer, UserEntity userEntity) {
         this.score = score;
         this.content = content;
         this.trainer = trainer;
-        this.user = user;
+        this.userEntity = userEntity;
     }
 }

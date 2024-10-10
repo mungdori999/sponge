@@ -4,6 +4,7 @@ import com.petweb.sponge.post.domain.ProblemType;
 import com.petweb.sponge.post.domain.post.PostCategory;
 import com.petweb.sponge.post.domain.post.ProblemPost;
 import com.petweb.sponge.post.domain.post.QPostFile;
+import com.petweb.sponge.user.repository.QUserEntity;
 import com.petweb.sponge.utils.ProblemTypeCode;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -20,7 +21,7 @@ import static com.petweb.sponge.post.domain.post.QPostFile.*;
 import static com.petweb.sponge.post.domain.post.QPostRecommend.*;
 import static com.petweb.sponge.post.domain.post.QProblemPost.*;
 import static com.petweb.sponge.post.domain.post.QTag.*;
-import static com.petweb.sponge.user.domain.QUser.*;
+import static com.petweb.sponge.user.repository.QUserEntity.*;
 
 public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
 
@@ -41,9 +42,10 @@ public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
 
     @Override
     public Optional<ProblemPost> findPostWithUser(Long problemPostId) {
+
          return Optional.ofNullable(queryFactory
                  .selectFrom(problemPost)
-                 .leftJoin(problemPost.user, user).fetchJoin()
+                 .leftJoin(problemPost.userEntity, userEntity).fetchJoin()
                  .where(problemPost.id.eq(problemPostId))
                  .fetchOne());
     }
@@ -128,7 +130,7 @@ public class ProblemPostRepositoryImpl implements ProblemPostRepositoryCustom {
                 .select(bookmark.problemPost)
                 .from(bookmark)
                 .leftJoin(bookmark.problemPost.postCategories, postCategory).fetchJoin()
-                .where(bookmark.user.id.eq(loginId))
+                .where(bookmark.userEntity.id.eq(loginId))
                 .fetch();
 
     }

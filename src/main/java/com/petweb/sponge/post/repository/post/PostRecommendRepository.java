@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface PostRecommendRepository extends JpaRepository<PostRecommend,Long> {
 
-    @Query("SELECT pr FROM PostRecommend pr WHERE pr.problemPost.id = :problemPostId AND pr.user.id = :userId")
+    @Query("SELECT pr FROM PostRecommend pr WHERE pr.problemPost.id = :problemPostId AND pr.userEntity.id = :userId")
     Optional<PostRecommend> findRecommend(@Param("problemPostId") Long problemPostId, @Param("userId") Long userId);
 }

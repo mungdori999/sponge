@@ -15,8 +15,8 @@ import com.petweb.sponge.post.repository.answer.AnswerRepository;
 import com.petweb.sponge.post.repository.post.ProblemPostRepository;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
-import com.petweb.sponge.user.domain.User;
-import com.petweb.sponge.user.repository.UserRepository;
+import com.petweb.sponge.user.repository.UserEntity;
+import com.petweb.sponge.user.service.port.UserRepository;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import com.petweb.sponge.utils.LoginType;
 import lombok.RequiredArgsConstructor;
@@ -130,23 +130,23 @@ public class AnswerService {
      */
     @Transactional
     public void saveAdoptAnswer(AdoptAnswerDTO adoptAnswerDTO, Long loginId) {
-        Answer answer = answerRepository.findAnswer(adoptAnswerDTO.getAnswerId()).orElseThrow(
-                NotFoundAnswer::new);
-        User user = userRepository.findById(loginId).orElseThrow(
-                NotFoundUser::new);
-        // 문제행동 글을쓴 유저인지 아닌지 체크
-        if (!answer.isPostWriteUser(user.getId())) {
-            throw new LoginIdError();
-        }
-
-        AdoptAnswer adoptAnswer = AdoptAnswer.builder()
-                .answer(answer)
-                .trainer(answer.getTrainer())
-                .user(user)
-                .build();
-        adoptAnswerRepository.save(adoptAnswer);
-        // 답변채택수 증가
-        answer.getTrainer().increaseAdoptCount();
+//        Answer answer = answerRepository.findAnswer(adoptAnswerDTO.getAnswerId()).orElseThrow(
+//                NotFoundAnswer::new);
+//        UserEntity userEntity = userRepository.findById(loginId).orElseThrow(
+//                NotFoundUser::new);
+//        // 문제행동 글을쓴 유저인지 아닌지 체크
+//        if (!answer.isPostWriteUser(userEntity.getId())) {
+//            throw new LoginIdError();
+//        }
+//
+//        AdoptAnswer adoptAnswer = AdoptAnswer.builder()
+//                .answer(answer)
+//                .trainer(answer.getTrainer())
+//                .userEntity(userEntity)
+//                .build();
+//        adoptAnswerRepository.save(adoptAnswer);
+//        // 답변채택수 증가
+//        answer.getTrainer().increaseAdoptCount();
     }
 
     /**
@@ -157,27 +157,27 @@ public class AnswerService {
      */
     @Transactional
     public void updateLikeCount(Long answerId, Long loginId) {
-        Optional<AnswerRecommend> recommend = answerRecommendRepository.findRecommend(answerId, loginId);
-        Answer answer = answerRepository.findAnswer(answerId).orElseThrow(
-                NotFoundAnswer::new);
-        User user = userRepository.findById(loginId).orElseThrow(
-                NotFoundUser::new);
-
-        /**
-         * 추천이 이미 있다면 추천을 삭제 추천수 -1
-         * 추천이 없다면 추천을 저장 추천수 +1
-         */
-        if (recommend.isPresent()) {
-            answer.decreaseLikeCount();
-            answerRecommendRepository.delete(recommend.get());
-        } else {
-            AnswerRecommend answerRecommend = AnswerRecommend.builder()
-                    .answer(answer)
-                    .user(user)
-                    .build();
-            answer.increaseLikeCount();
-            answerRecommendRepository.save(answerRecommend);
-        }
+//        Optional<AnswerRecommend> recommend = answerRecommendRepository.findRecommend(answerId, loginId);
+//        Answer answer = answerRepository.findAnswer(answerId).orElseThrow(
+//                NotFoundAnswer::new);
+//        UserEntity userEntity = userRepository.findById(loginId).orElseThrow(
+//                NotFoundUser::new);
+//
+//        /**
+//         * 추천이 이미 있다면 추천을 삭제 추천수 -1
+//         * 추천이 없다면 추천을 저장 추천수 +1
+//         */
+//        if (recommend.isPresent()) {
+//            answer.decreaseLikeCount();
+//            answerRecommendRepository.delete(recommend.get());
+//        } else {
+//            AnswerRecommend answerRecommend = AnswerRecommend.builder()
+//                    .answer(answer)
+//                    .userEntity(userEntity)
+//                    .build();
+//            answer.increaseLikeCount();
+//            answerRecommendRepository.save(answerRecommend);
+//        }
     }
 
     /**
@@ -199,7 +199,7 @@ public class AnswerService {
             // 문제행동글 작성자면 true 작성자가 아니라면 false
             boolean postWriter = false;
             if (authorizationUtil.getLoginType().equals(LoginType.USER.getLoginType())) {
-                Long userId = answer.getProblemPost().getUser().getId();
+                Long userId = answer.getProblemPost().getUserEntity().getId();
                 postWriter = authorizationUtil.getLoginId().equals(userId);
             }
             Optional<Trainer> trainer = trainerRepository.findById(answer.getTrainer().getId());

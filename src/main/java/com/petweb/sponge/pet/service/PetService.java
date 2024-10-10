@@ -3,12 +3,11 @@ package com.petweb.sponge.pet.service;
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.exception.error.NotFoundPet;
-import com.petweb.sponge.exception.error.NotFoundUser;
-import com.petweb.sponge.pet.domain.Pet;
+import com.petweb.sponge.pet.repository.PetEntity;
 import com.petweb.sponge.pet.dto.PetDTO;
 import com.petweb.sponge.pet.repository.PetRepository;
-import com.petweb.sponge.user.domain.User;
-import com.petweb.sponge.user.repository.UserRepository;
+import com.petweb.sponge.user.repository.UserEntity;
+import com.petweb.sponge.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,9 +29,9 @@ public class PetService {
      */
     @Transactional(readOnly = true)
     public PetDTO findPet(Long petId) {
-        Pet pet = petRepository.findById(petId).orElseThrow(
+        PetEntity petEntity = petRepository.findById(petId).orElseThrow(
                 NotFoundPet::new);
-        return toDto(pet);
+        return toDto(petEntity);
     }
 
     /**
@@ -43,8 +42,8 @@ public class PetService {
      */
     @Transactional(readOnly = true)
     public List<PetDTO> findAllPet(Long userId) {
-        List<Pet> petList = petRepository.findAllByUserId(userId);
-        return petList.stream().map(pet -> toDto(pet)).collect(Collectors.toList());
+        List<PetEntity> petEntityList = petRepository.findAllByUserEntityId(userId);
+        return petEntityList.stream().map(pet -> toDto(pet)).collect(Collectors.toList());
 
     }
 
@@ -57,18 +56,18 @@ public class PetService {
     @Transactional
     public void savePet(Long loginId, PetDTO petDTO) {
         //현재 로그인 유저 정보 가져오기
-        User user = userRepository.findById(loginId).orElseThrow(
-                () -> new NotFoundException("NO Found USER"));
-        Pet pet = Pet.builder()
-                .name(petDTO.getPetName())
-                .breed(petDTO.getBreed())
-                .gender(petDTO.getGender())
-                .age(petDTO.getAge())
-                .weight(petDTO.getWeight())
-                .user(user)
-                .build();
-        //반려견 저장
-        petRepository.save(pet);
+//        UserEntity userEntity = userRepository.findById(loginId).orElseThrow(
+//                () -> new NotFoundException("NO Found USER"));
+//        PetEntity petEntity = PetEntity.builder()
+//                .name(petDTO.getPetName())
+//                .breed(petDTO.getBreed())
+//                .gender(petDTO.getGender())
+//                .age(petDTO.getAge())
+//                .weight(petDTO.getWeight())
+//                .userEntity(userEntity)
+//                .build();
+//        //반려견 저장
+//        petRepository.save(petEntity);
     }
 
     /**
@@ -79,11 +78,11 @@ public class PetService {
      */
     @Transactional
     public void updatePet(Long loginId, Long petId, PetDTO petDTO) {
-        Pet pet = petRepository.findById(petId).orElseThrow(NotFoundPet::new);
-        if (!pet.getUser().getId().equals(loginId)) {
+        PetEntity petEntity = petRepository.findById(petId).orElseThrow(NotFoundPet::new);
+        if (!petEntity.getUserEntity().getId().equals(loginId)) {
             throw new LoginIdError();
         }
-        pet.updatePet(petDTO);
+        petEntity.updatePet(petDTO);
     }
 
     /**
@@ -94,8 +93,8 @@ public class PetService {
      */
     @Transactional
     public void deletePet(Long loginId, Long petId) {
-        Pet pet = petRepository.findById(petId).orElseThrow(NotFoundPet::new);
-        if (!pet.getUser().getId().equals(loginId)) {
+        PetEntity petEntity = petRepository.findById(petId).orElseThrow(NotFoundPet::new);
+        if (!petEntity.getUserEntity().getId().equals(loginId)) {
             throw new LoginIdError();
         }
         petRepository.deleteById(petId);
@@ -108,21 +107,21 @@ public class PetService {
      */
     @Transactional
     public void deletePetImg(Long loginId, Long petId) {
-        Pet pet = petRepository.findById(petId).orElseThrow(NotFoundPet::new);
-        if (!pet.getUser().getId().equals(loginId)) {
+        PetEntity petEntity = petRepository.findById(petId).orElseThrow(NotFoundPet::new);
+        if (!petEntity.getUserEntity().getId().equals(loginId)) {
             throw new LoginIdError();
         }
-        pet.setPetImgUrl(null);
+        petEntity.setPetImgUrl(null);
     }
 
-    private PetDTO toDto(Pet pet) {
+    private PetDTO toDto(PetEntity petEntity) {
         return PetDTO.builder()
-                .petId(pet.getId())
-                .petName(pet.getName())
-                .breed(pet.getBreed())
-                .gender(pet.getGender())
-                .age(pet.getAge())
-                .weight(pet.getWeight())
+                .petId(petEntity.getId())
+                .petName(petEntity.getName())
+                .breed(petEntity.getBreed())
+                .gender(petEntity.getGender())
+                .age(petEntity.getAge())
+                .weight(petEntity.getWeight())
                 .build();
     }
 

@@ -4,9 +4,9 @@ import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.post.dto.post.PostIdDTO;
 import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
-import com.petweb.sponge.user.dto.UserDTO;
-import com.petweb.sponge.user.dto.UserDetailDTO;
-import com.petweb.sponge.user.dto.UserUpdateDTO;
+import com.petweb.sponge.user.controller.response.UserResponse;
+import com.petweb.sponge.user.domain.User;
+import com.petweb.sponge.user.domain.UserUpdate;
 import com.petweb.sponge.user.service.UserService;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import jakarta.servlet.http.Cookie;
@@ -28,13 +28,13 @@ public class UserController {
     /**
      * 유저 단건조회
      *
-     * @param userId
+     * @param id
      * @return
      */
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserDetailDTO> getUser(@PathVariable("userId") Long userId) {
-        UserDetailDTO user = userService.findUser(userId);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> getById(@PathVariable("id") Long id) {
+        User user = userService.getById(id);
+        return new ResponseEntity<>(UserResponse.from(user), HttpStatus.OK);
     }
 
     /**
@@ -44,34 +44,24 @@ public class UserController {
      */
     @GetMapping("/my_info")
     @UserAuth
-    public ResponseEntity<UserDetailDTO> getMyInfo() {
-        UserDetailDTO user = userService.findMyInfo(authorizationUtil.getLoginId());
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    public ResponseEntity<UserResponse> getMyInfo() {
+        User user = userService.findMyInfo(authorizationUtil.getLoginId());
+        return new ResponseEntity<>(UserResponse.from(user), HttpStatus.OK);
     }
 
-    /**
-     * 유저 정보 저장
-     *
-     * @param userDTO
-     * @return
-     */
-    @PostMapping()
-    @UserAuth
-    public void signup(@RequestBody UserDTO userDTO) {
-        userService.saveUser(authorizationUtil.getLoginId(), userDTO);
-
-    }
 
     /**
      * 유저 정보 수정
      *
-     * @param userId
+     * @param id
+     * @return
      */
-    @PatchMapping("/{userId}")
+    @PatchMapping("/{id}")
     @UserAuth
-    public void updateUser(@PathVariable("userId") Long userId, @RequestBody UserUpdateDTO userUpdateDTO) {
-        if (authorizationUtil.getLoginId().equals(userId)) {
-            userService.updateUser(userId, userUpdateDTO);
+    public ResponseEntity<UserResponse> updateUser(@PathVariable("id") Long id, @RequestBody UserUpdate userUpdate) {
+        if (authorizationUtil.getLoginId().equals(id)) {
+            User user = userService.update(id, userUpdate);
+            return new ResponseEntity<>(UserResponse.from(user),HttpStatus.OK);
         } else {
             throw new LoginIdError();
         }
@@ -80,18 +70,17 @@ public class UserController {
     /**
      * 회원탈퇴
      *
-     * @param userId
+     * @param id
      * @param response
      */
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/{id}")
     @UserAuth
-    public void removeUser(@PathVariable("userId") Long userId, HttpServletResponse response) {
-        if (authorizationUtil.getLoginId().equals(userId)) {
-            userService.deleteUser(userId);
+    public void removeUser(@PathVariable("id") Long id, HttpServletResponse response) {
+        if (authorizationUtil.getLoginId().equals(id)) {
+            userService.delete(id);
         } else {
             throw new LoginIdError();
         }
-
         Cookie cookie = new Cookie("Authorization", null);
         cookie.setMaxAge(0);
         cookie.setPath("/");

@@ -1,7 +1,7 @@
-package com.petweb.sponge.pet.domain;
+package com.petweb.sponge.pet.repository;
 
 import com.petweb.sponge.pet.dto.PetDTO;
-import com.petweb.sponge.user.domain.User;
+import com.petweb.sponge.user.repository.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,8 +18,7 @@ import java.sql.Timestamp;
 @Getter
 @Table(name = "pets")
 @EntityListeners(AuditingEntityListener.class)
-// TODO 주소가 PET에 들어갈 수 있음
-public class Pet {
+public class PetEntity {
 
     @Id
     @GeneratedValue
@@ -39,7 +38,7 @@ public class Pet {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private User user;
+    private UserEntity userEntity;
 
     public void setPetImgUrl(String petImgUrl) {
         this.petImgUrl = petImgUrl;
@@ -55,13 +54,13 @@ public class Pet {
     }
 
     @Builder
-    public Pet(String name, String breed, int gender, int age, float weight, String petImgUrl, User user) {
+    public PetEntity(String name, String breed, int gender, int age, float weight, String petImgUrl, UserEntity userEntity) {
         this.name = name;
         this.breed = breed;
         this.gender = gender;
         this.age = age;
         this.weight = weight;
         this.petImgUrl = petImgUrl;
-        this.user = user;
+        this.userEntity = userEntity;
     }
 }

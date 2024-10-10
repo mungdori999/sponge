@@ -2,19 +2,15 @@ package com.petweb.sponge.user.service;
 
 import com.petweb.sponge.exception.error.NotFoundPost;
 import com.petweb.sponge.exception.error.NotFoundUser;
-import com.petweb.sponge.pet.dto.PetDTO;
 import com.petweb.sponge.post.domain.post.Bookmark;
 import com.petweb.sponge.post.domain.post.ProblemPost;
 import com.petweb.sponge.post.dto.post.PostIdDTO;
 import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
 import com.petweb.sponge.post.repository.post.BookmarkRepository;
 import com.petweb.sponge.post.repository.post.ProblemPostRepository;
-import com.petweb.sponge.trainer.dto.AddressDTO;
 import com.petweb.sponge.user.domain.User;
-import com.petweb.sponge.user.dto.UserDTO;
-import com.petweb.sponge.user.dto.UserDetailDTO;
-import com.petweb.sponge.user.dto.UserUpdateDTO;
-import com.petweb.sponge.user.repository.UserRepository;
+import com.petweb.sponge.user.domain.UserUpdate;
+import com.petweb.sponge.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,15 +31,14 @@ public class UserService {
     /**
      * 유저 단건 조회
      *
-     * @param userId
+     * @param id
      * @return
      */
     @Transactional(readOnly = true)
-    public UserDetailDTO findUser(Long userId) {
+    public User getById(Long id) {
         // user,address 한번에 조회
-        User user = userRepository.findUserWithAddress(userId).orElseThrow(
+        return userRepository.findById(id).orElseThrow(
                 NotFoundUser::new);
-        return toDetailDto(user);
     }
 
     /**
@@ -53,55 +48,40 @@ public class UserService {
      * @return
      */
     @Transactional(readOnly = true)
-    public UserDetailDTO findMyInfo(Long loginId) {
+    public User findMyInfo(Long loginId) {
         // user,address 한번에 조회
-        User user = userRepository.findUserWithAddress(loginId).orElseThrow(
+        return userRepository.findById(loginId).orElseThrow(
                 NotFoundUser::new);
-
-
-        return toDetailDto(user);
-    }
-
-    /**
-     * 유저 정보 저장
-     *
-     * @param loginId
-     * @param userDTO
-     * @return
-     */
-    @Transactional
-    public void saveUser(Long loginId, UserDTO userDTO) {
-        //현재 로그인 유저 정보 가져오기
-        User user = userRepository.findById(loginId).orElseThrow(
-                NotFoundUser::new);
-        user.settingUser(userDTO);
-        userRepository.save(user);
     }
 
     /**
      * 유저 정보 수정
-     * @param userId
-     * @param userUpdateDTO
+     *
+     * @param id
+     * @param userUpdate
+     * @return
      */
     @Transactional
-    public void updateUser(Long userId, UserUpdateDTO userUpdateDTO) {
-        User user = userRepository.findById(userId).orElseThrow(
+    public User update(Long id, UserUpdate userUpdate) {
+        User user =  userRepository.findById(id).orElseThrow(
                 NotFoundUser::new);
-        //초기화
-        userRepository.initUser(userId);
-        user.updateUser(userUpdateDTO);
+        //address 초기화
+        userRepository.deleteAddress(id);
+        user = user.update(userUpdate);
+        user = userRepository.save(user);
+        return user;
     }
 
     /**
      * 유저 정보 삭제
      *
-     * @param userId
+     * @param id
      */
     @Transactional
-    public void deleteUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(
+    public void delete(Long id) {
+        User user = userRepository.findById(id).orElseThrow(
                 NotFoundUser::new);
-        userRepository.deleteUser(user.getId());
+        userRepository.delete(user);
     }
 
     /**
@@ -133,7 +113,7 @@ public class UserService {
         } else {
             Bookmark buildBookmark = Bookmark.builder()
                     .problemPost(problemPost)
-                    .user(problemPost.getUser())
+                    .userEntity(problemPost.getUserEntity())
                     .build();
             bookmarkRepository.save(buildBookmark);
         }
@@ -154,34 +134,6 @@ public class UserService {
                                 .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
                         .build()).collect(Collectors.toList());
     }
-    /**
-     * DetailDto 변환
-     * @param user
-     * @return
-     */
-    private UserDetailDTO toDetailDto(User user) {
-        List<AddressDTO> addressDTOList = user.getUserAddresses().stream().map(userAddress -> AddressDTO.builder()
-                .city(userAddress.getCity())
-                .town(userAddress.getTown())
-                .build()).collect(Collectors.toList());
-        List<PetDTO> petDTOList = user.getPets().stream().map(pet ->
-                        PetDTO.builder()
-                                .petId(pet.getId())
-                                .petName(pet.getName())
-                                .breed(pet.getBreed())
-                                .gender(pet.getGender())
-                                .age(pet.getAge())
-                                .weight(pet.getWeight())
-                                .petImgUrl(pet.getPetImgUrl()).build())
-                .collect(Collectors.toList());
-        return UserDetailDTO.builder()
-                .userId(user.getId())
-                .userName(user.getName())
-                .petList(petDTOList)
-                .addressList(addressDTOList)
-                .build();
-    }
-
 
 
 }

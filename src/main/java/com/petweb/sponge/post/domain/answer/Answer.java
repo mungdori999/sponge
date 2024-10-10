@@ -67,6 +67,6 @@ public class Answer {
     }
     // 문젬행동글을 작성한 유저인지 아닌지
     public boolean isPostWriteUser(Long userId) {
-        return getProblemPost().getUser().getId().equals(userId);
+        return getProblemPost().getUserEntity().getId().equals(userId);
     }
 }

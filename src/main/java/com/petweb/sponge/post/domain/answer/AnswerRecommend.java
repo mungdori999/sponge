@@ -1,6 +1,6 @@
 package com.petweb.sponge.post.domain.answer;
 
-import com.petweb.sponge.user.domain.User;
+import com.petweb.sponge.user.repository.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,15 +18,15 @@ public class AnswerRecommend {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private User user;
+    private UserEntity userEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "answer_id")
     private Answer answer;
 
     @Builder
-    public AnswerRecommend(User user, Answer answer) {
-        this.user = user;
+    public AnswerRecommend(UserEntity userEntity, Answer answer) {
+        this.userEntity = userEntity;
         this.answer = answer;
     }
 }
