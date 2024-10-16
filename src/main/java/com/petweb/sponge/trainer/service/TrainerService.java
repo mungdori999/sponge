@@ -1,6 +1,5 @@
 package com.petweb.sponge.trainer.service;
 
-import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.exception.error.NotFoundTrainer;
 import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.trainer.domain.Review;
@@ -8,8 +7,8 @@ import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.dto.*;
 import com.petweb.sponge.trainer.repository.ReviewRepository;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
-import com.petweb.sponge.user.domain.User;
-import com.petweb.sponge.user.repository.UserRepository;
+import com.petweb.sponge.user.repository.UserEntity;
+import com.petweb.sponge.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -122,8 +121,8 @@ public class TrainerService {
     public List<ReviewDetailDTO> findAllReview(Long trainerId) {
         List<Review> reviewList = reviewRepository.findAllByTrainerId(trainerId);
         return reviewList.stream().map(review -> ReviewDetailDTO.builder()
-                .userId(review.getUser().getId())
-                .userName(review.getUser().getName())
+                .userId(review.getUserEntity().getId())
+                .userName(review.getUserEntity().getName())
                 .score(review.getScore())
                 .content(review.getContent()).build()).collect(Collectors.toList());
     }
@@ -136,18 +135,18 @@ public class TrainerService {
      */
     @Transactional
     public void saveReview(ReviewDTO reviewDTO, Long loginId) {
-        User user = userRepository.findById(loginId).orElseThrow(
-                NotFoundUser::new);
-        Trainer trainer = trainerRepository.findById(loginId).orElseThrow(
-                NotFoundTrainer::new);
-
-        Review review = Review.builder()
-                .score(reviewDTO.getScore())
-                .content(reviewDTO.getContent())
-                .user(user)
-                .trainer(trainer)
-                .build();
-        reviewRepository.save(review);
+//        UserEntity userEntity = userRepository.findById(loginId).orElseThrow(
+//                NotFoundUser::new);
+//        Trainer trainer = trainerRepository.findById(loginId).orElseThrow(
+//                NotFoundTrainer::new);
+//
+//        Review review = Review.builder()
+//                .score(reviewDTO.getScore())
+//                .content(reviewDTO.getContent())
+//                .userEntity(userEntity)
+//                .trainer(trainer)
+//                .build();
+//        reviewRepository.save(review);
     }
 
     /**

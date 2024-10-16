@@ -1,7 +1,7 @@
 package com.petweb.sponge.post.domain.post;
 
-import com.petweb.sponge.pet.domain.Pet;
-import com.petweb.sponge.user.domain.User;
+import com.petweb.sponge.pet.repository.PetEntity;
+import com.petweb.sponge.user.repository.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -41,11 +41,11 @@ public class ProblemPost {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private User user;
+    private UserEntity userEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Pet pet;
+    private PetEntity petEntity;
 
     /**
      * 1:N 관계를 조회하려면 애플리케이션 메모리에 적재하고 쿼리 결과를 반환하기 때문에 Batch Size를 꼭 설정하는게 좋습니다
@@ -84,13 +84,13 @@ public class ProblemPost {
     }
 
     @Builder
-    public ProblemPost(String title, String content, String duration, int likeCount, User user, Pet pet) {
+    public ProblemPost(String title, String content, String duration, int likeCount, UserEntity userEntity, PetEntity petEntity) {
         this.title = title;
         this.content = content;
         this.duration = duration;
         this.likeCount = likeCount;
-        this.user = user;
-        this.pet = pet;
+        this.userEntity = userEntity;
+        this.petEntity = petEntity;
     }
 
     //== 게시글 수정 메서드 ==//

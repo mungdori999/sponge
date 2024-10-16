@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface AnswerRecommendRepository extends JpaRepository<AnswerRecommend,Long> {
 
-    @Query("SELECT ar FROM AnswerRecommend ar WHERE ar.answer.id = :answerId AND ar.user.id = :userId")
+    @Query("SELECT ar FROM AnswerRecommend ar WHERE ar.answer.id = :answerId AND ar.userEntity.id = :userId")
     Optional<AnswerRecommend> findRecommend(@Param("answerId") Long answerId, @Param("userId") Long userId);
 }

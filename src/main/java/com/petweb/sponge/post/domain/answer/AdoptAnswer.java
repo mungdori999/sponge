@@ -1,7 +1,7 @@
 package com.petweb.sponge.post.domain.answer;
 
 import com.petweb.sponge.trainer.domain.Trainer;
-import com.petweb.sponge.user.domain.User;
+import com.petweb.sponge.user.repository.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -24,16 +24,16 @@ public class AdoptAnswer {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private User user;
+    private UserEntity userEntity;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "answer_id")
     private Answer answer;
 
     @Builder
-    public AdoptAnswer(Trainer trainer, User user, Answer answer) {
+    public AdoptAnswer(Trainer trainer, UserEntity userEntity, Answer answer) {
         this.trainer = trainer;
-        this.user = user;
+        this.userEntity = userEntity;
         this.answer = answer;
     }
 }

@@ -1,55 +1,47 @@
 package com.petweb.sponge.user.repository;
 
-import com.petweb.sponge.pet.domain.QPet;
-import com.petweb.sponge.user.domain.QUser;
-import com.petweb.sponge.user.domain.QUserAddress;
 import com.petweb.sponge.user.domain.User;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
+import com.petweb.sponge.user.service.port.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+@Repository
+@RequiredArgsConstructor
+public class UserRepositoryImpl implements UserRepository {
 
-import static com.petweb.sponge.pet.domain.QPet.*;
-import static com.petweb.sponge.user.domain.QUser.*;
-import static com.petweb.sponge.user.domain.QUserAddress.*;
+    private final UserJpaRepository userJpaRepository;
 
-public class UserRepositoryImpl implements UserRepositoryCustom{
-
-
-    private final JPAQueryFactory queryFactory;
-
-    public UserRepositoryImpl(EntityManager em) {
-        this.queryFactory = new JPAQueryFactory(em);
+    @Override
+    public Optional<User> findById(Long id) {
+        return userJpaRepository.findById(id).map(UserEntity::toModel);
     }
 
     @Override
-    public Optional<User> findUserWithAddress(Long userId) {
-        User foundUser = queryFactory
-                .selectDistinct(user)
-                .from(user)
-                .leftJoin(user.userAddresses, userAddress).fetchJoin()
-                .where(user.id.eq(userId))
-                .fetchOne();
-        return Optional.ofNullable(foundUser);
+    public Optional<User> findByEmail(String email) {
+        return userJpaRepository.findByEmail(email).map(UserEntity::toModel);
     }
 
     @Override
-    public void deleteUser(Long userId) {
-        queryFactory
-                .delete(userAddress)
-                .where(userAddress.user.id.eq(userId))
-                .execute();
-        queryFactory
-                .delete(user)
-                .where(user.id.eq(userId))
-                .execute();
+    public User save(User user) {
+        return userJpaRepository.save(UserEntity.from(user)).toModel();
     }
 
     @Override
-    public void initUser(Long userId) {
-        queryFactory
-                .delete(userAddress)
-                .where(userAddress.user.id.eq(userId))
-                .execute();
+    public User register(User user) {
+        UserEntity userEntity = UserEntity.builder()
+                .email(user.getEmail())
+                .name(user.getName()).build();
+        return userJpaRepository.save(userEntity).toModel();
+    }
+
+    @Override
+    public void deleteAddress(Long id) {
+        userJpaRepository.deleteAddress(id);
+    }
+
+    @Override
+    public void delete(User user) {
+        userJpaRepository.delete(UserEntity.from(user));
     }
 }

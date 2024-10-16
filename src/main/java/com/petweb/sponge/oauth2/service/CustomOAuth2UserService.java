@@ -7,7 +7,8 @@ import com.petweb.sponge.oauth2.dto.OAuth2Response;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
 import com.petweb.sponge.user.domain.User;
-import com.petweb.sponge.user.repository.UserRepository;
+import com.petweb.sponge.user.repository.UserEntity;
+import com.petweb.sponge.user.service.port.UserRepository;
 import com.petweb.sponge.utils.LoginType;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -80,7 +81,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                         .email(email)
                         .name(oAuth2Response.getName())
                         .build();
-                User savedUser = userRepository.save(user);
+                User savedUser = userRepository.register(user);
                 LoginAuth loginAuth = createLoginAuth(savedUser.getId(), oAuth2Response.getName());
                 return new CustomOAuth2User(loginAuth);
             }
