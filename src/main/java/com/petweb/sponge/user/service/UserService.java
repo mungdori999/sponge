@@ -11,6 +11,7 @@ import com.petweb.sponge.post.repository.post.ProblemPostRepository;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.domain.UserUpdate;
 import com.petweb.sponge.user.service.port.UserRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Builder
 public class UserService {
 
     private final UserRepository userRepository;
