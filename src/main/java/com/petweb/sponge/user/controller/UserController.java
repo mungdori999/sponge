@@ -58,7 +58,7 @@ public class UserController {
      */
     @PatchMapping("/{id}")
     @UserAuth
-    public ResponseEntity<UserResponse> updateUser(@PathVariable("id") Long id, @RequestBody UserUpdate userUpdate) {
+    public ResponseEntity<UserResponse> update(@PathVariable("id") Long id, @RequestBody UserUpdate userUpdate) {
         if (authorizationUtil.getLoginId().equals(id)) {
             User user = userService.update(id, userUpdate);
             return new ResponseEntity<>(UserResponse.from(user),HttpStatus.OK);
@@ -75,7 +75,7 @@ public class UserController {
      */
     @DeleteMapping("/{id}")
     @UserAuth
-    public void removeUser(@PathVariable("id") Long id, HttpServletResponse response) {
+    public void delete(@PathVariable("id") Long id, HttpServletResponse response) {
         if (authorizationUtil.getLoginId().equals(id)) {
             userService.delete(id);
         } else {

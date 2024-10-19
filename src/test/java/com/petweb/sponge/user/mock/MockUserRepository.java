@@ -44,10 +44,6 @@ public class MockUserRepository implements UserRepository {
         return null;
     }
 
-    @Override
-    public void deleteAddress(Long id) {
-
-    }
 
     @Override
     public void delete(User user) {

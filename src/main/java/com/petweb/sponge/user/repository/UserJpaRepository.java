@@ -9,11 +9,10 @@ import java.util.Optional;
 
 public interface UserJpaRepository extends JpaRepository<UserEntity,Long> {
 
+
     @Query("SELECT user FROM UserEntity user where user.email = :email")
     Optional<UserEntity> findByEmail(@Param("email") String email);
 
-    @Modifying
-    @Query("DELETE FROM UserAddressEntity addr where addr.userEntity.id = :id")
-    void deleteAddress(@Param("id") Long id);
+
 
 }

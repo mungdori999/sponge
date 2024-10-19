@@ -4,17 +4,16 @@ package com.petweb.sponge.user.domain;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.List;
 @Getter
 public class UserUpdate {
 
     private String name;
-
-    private List<UserAddress> addressList;
+    private String address;
 
     @Builder
-    public UserUpdate(String name, List<UserAddress> addressList) {
+
+    public UserUpdate(String name, String address) {
         this.name = name;
-        this.addressList = addressList;
+        this.address = address;
     }
 }

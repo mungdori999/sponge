@@ -67,8 +67,6 @@ public class UserService {
     public User update(Long id, UserUpdate userUpdate) {
         User user =  userRepository.findById(id).orElseThrow(
                 NotFoundUser::new);
-        //address 초기화
-        userRepository.deleteAddress(id);
         user = user.update(userUpdate);
         user = userRepository.save(user);
         return user;

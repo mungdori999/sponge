@@ -2,15 +2,12 @@ package com.petweb.sponge.user.service;
 
 import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.user.domain.User;
-import com.petweb.sponge.user.domain.UserAddress;
 import com.petweb.sponge.user.domain.UserUpdate;
 import com.petweb.sponge.user.mock.MockUserRepository;
 import com.petweb.sponge.user.service.port.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -47,14 +44,9 @@ class UserServiceTest {
     public void update는_USER의_정보를_수정한다() {
         // given
         Long id = 1L;
-        List<UserAddress> userAddressList = new ArrayList<>();
-        userAddressList.add(UserAddress.builder()
-                .id(1L)
-                .city("테스트구")
-                .town("테스트동").build());
         UserUpdate userUpdate = UserUpdate.builder()
                 .name("test")
-                .addressList(userAddressList)
+                .address("서울 성북구")
                 .build();
 
         // when
@@ -62,7 +54,7 @@ class UserServiceTest {
 
         // then
         assertThat(result.getName()).isEqualTo("test");
-        assertThat(result.getUserAddressList().get(0).getCity()).isEqualTo("테스트구");
+        assertThat(result.getAddress()).isEqualTo("서울 성북구");
 
     }
 

@@ -1,11 +1,9 @@
 package com.petweb.sponge.post.service;
 
 import com.petweb.sponge.exception.error.LoginIdError;
-import com.petweb.sponge.exception.error.NotFoundPet;
 import com.petweb.sponge.exception.error.NotFoundPost;
-import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.pet.repository.PetEntity;
-import com.petweb.sponge.pet.repository.PetRepository;
+import com.petweb.sponge.pet.service.port.PetRepository;
 import com.petweb.sponge.post.domain.post.*;
 import com.petweb.sponge.post.dto.post.PostDetailDTO;
 import com.petweb.sponge.post.dto.post.ProblemPostDTO;
@@ -48,7 +46,7 @@ public class ProblemPostService {
     public PostDetailDTO findPost(Long problemPostId) {
         ProblemPost problemPost = problemPostRepository.findPostWithType(problemPostId).orElseThrow(
                 NotFoundPost::new);
-        ;
+
         return toDetailDto(problemPost);
     }
 
@@ -246,49 +244,50 @@ public class ProblemPostService {
      * @return
      */
     private PostDetailDTO toDetailDto(ProblemPost problemPost) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-        //펫 정보를 삭제하지 않았다면
-        Optional<PetEntity> pet = petRepository.findById(problemPost.getPetEntity().getId());
-        if (pet.isPresent()) {
-            return PostDetailDTO.builder()
-                    .userId(problemPost.getUserEntity().getId())
-                    .problemPostId(problemPost.getId())
-                    .title(problemPost.getTitle())
-                    .content(problemPost.getContent())
-                    .duration(problemPost.getDuration())
-                    .likeCount(problemPost.getLikeCount())
-                    .petName(problemPost.getPetEntity().getName())
-                    .breed(problemPost.getPetEntity().getBreed())
-                    .gender(problemPost.getPetEntity().getGender())
-                    .age(problemPost.getPetEntity().getAge())
-                    .weight(problemPost.getPetEntity().getWeight())
-                    .createdAt(formatter.format(problemPost.getCreatedAt()))
-                    .problemTypeList(problemPost.getPostCategories().stream()
-                            .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
-                    .hasTagList(problemPost.getTags().stream()
-                            .map(tag -> tag.getHashtag()).collect(Collectors.toList()))
-                    .fileUrlList(problemPost.getPostFiles().stream()
-                            .map(postFile -> postFile.getFileUrl()).collect(Collectors.toList()))
-                    .build();
-        } else {
-            return PostDetailDTO.builder()
-                    .userId(problemPost.getUserEntity().getId())
-                    .problemPostId(problemPost.getId())
-                    .title(problemPost.getTitle())
-                    .content(problemPost.getContent())
-                    .duration(problemPost.getDuration())
-                    .likeCount(problemPost.getLikeCount())
-                    .createdAt(formatter.format(problemPost.getCreatedAt()))
-                    .problemTypeList(problemPost.getPostCategories().stream()
-                            .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
-                    .hasTagList(problemPost.getTags().stream()
-                            .map(tag -> tag.getHashtag()).collect(Collectors.toList()))
-                    .fileUrlList(problemPost.getPostFiles().stream()
-                            .map(postFile -> postFile.getFileUrl()).collect(Collectors.toList()))
-                    .build();
-
-        }
+        return null;
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//
+//        //펫 정보를 삭제하지 않았다면
+//
+//        if (pet.isPresent()) {
+//            return PostDetailDTO.builder()
+//                    .userId(problemPost.getUserEntity().getId())
+//                    .problemPostId(problemPost.getId())
+//                    .title(problemPost.getTitle())
+//                    .content(problemPost.getContent())
+//                    .duration(problemPost.getDuration())
+//                    .likeCount(problemPost.getLikeCount())
+//                    .petName(problemPost.getPetEntity().getName())
+//                    .breed(problemPost.getPetEntity().getBreed())
+//                    .gender(problemPost.getPetEntity().getGender())
+//                    .age(problemPost.getPetEntity().getAge())
+//                    .weight(problemPost.getPetEntity().getWeight())
+//                    .createdAt(formatter.format(problemPost.getCreatedAt()))
+//                    .problemTypeList(problemPost.getPostCategories().stream()
+//                            .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
+//                    .hasTagList(problemPost.getTags().stream()
+//                            .map(tag -> tag.getHashtag()).collect(Collectors.toList()))
+//                    .fileUrlList(problemPost.getPostFiles().stream()
+//                            .map(postFile -> postFile.getFileUrl()).collect(Collectors.toList()))
+//                    .build();
+//        } else {
+//            return PostDetailDTO.builder()
+//                    .userId(problemPost.getUserEntity().getId())
+//                    .problemPostId(problemPost.getId())
+//                    .title(problemPost.getTitle())
+//                    .content(problemPost.getContent())
+//                    .duration(problemPost.getDuration())
+//                    .likeCount(problemPost.getLikeCount())
+//                    .createdAt(formatter.format(problemPost.getCreatedAt()))
+//                    .problemTypeList(problemPost.getPostCategories().stream()
+//                            .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
+//                    .hasTagList(problemPost.getTags().stream()
+//                            .map(tag -> tag.getHashtag()).collect(Collectors.toList()))
+//                    .fileUrlList(problemPost.getPostFiles().stream()
+//                            .map(postFile -> postFile.getFileUrl()).collect(Collectors.toList()))
+//                    .build();
+//
+//        }
     }
 
 

@@ -35,10 +35,6 @@ public class UserRepositoryImpl implements UserRepository {
         return userJpaRepository.save(userEntity).toModel();
     }
 
-    @Override
-    public void deleteAddress(Long id) {
-        userJpaRepository.deleteAddress(id);
-    }
 
     @Override
     public void delete(User user) {
