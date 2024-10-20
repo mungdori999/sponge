@@ -1,7 +1,10 @@
 package com.petweb.sponge.pet.controller;
 
 import com.petweb.sponge.auth.UserAuth;
-import com.petweb.sponge.pet.dto.PetDTO;
+import com.petweb.sponge.pet.controller.response.PetResponse;
+import com.petweb.sponge.pet.domain.Pet;
+import com.petweb.sponge.pet.domain.PetCreate;
+import com.petweb.sponge.pet.domain.PetUpdate;
 import com.petweb.sponge.pet.service.PetService;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,13 +27,13 @@ public class PetController {
     /**
      * 반려동물 정보 단건 조회
      *
-     * @param petId
+     * @param id
      * @return
      */
-    @GetMapping("/{petId}")
-    public ResponseEntity<PetDTO> getPet(@PathVariable("petId") Long petId) {
-        PetDTO pet = petService.findPet(petId);
-        return new ResponseEntity<>(pet, HttpStatus.OK);
+    @GetMapping("/{id}")
+    public ResponseEntity<PetResponse> getById(@PathVariable("id") Long id) {
+        Pet pet = petService.getById(id);
+        return new ResponseEntity<>(PetResponse.from(pet), HttpStatus.OK);
     }
 
 
@@ -40,37 +44,47 @@ public class PetController {
      * @return
      */
     @GetMapping()
-    public ResponseEntity<List<PetDTO>> getAllPet(@RequestParam Long userId) {
-        List<PetDTO> petList = petService.findAllPet(userId);
-        return new ResponseEntity<>(petList, HttpStatus.OK);
+    public ResponseEntity<List<PetResponse>> getAllByUserId(@RequestParam Long userId) {
+        List<Pet> petList = petService.getAllByUserId(userId);
+        return new ResponseEntity<>(petList.stream().map(PetResponse::from).collect(Collectors.toList()), HttpStatus.OK);
     }
 
     /**
      * 반려동물 등록
      *
-     * @param petDTO
+     * @param petCreate
+     * @return
      */
     @PostMapping
     @UserAuth
-    public void registerPet(@RequestBody PetDTO petDTO) {
-        petService.savePet(authorizationUtil.getLoginId(), petDTO);
+    public ResponseEntity<PetResponse> create(@RequestBody PetCreate petCreate) {
+        Pet pet = petService.create(authorizationUtil.getLoginId(), petCreate);
+        return new ResponseEntity<>(PetResponse.from(pet), HttpStatus.OK);
     }
 
-    @PatchMapping("/{petId}")
+    /**
+     * 반려동물 수정
+     *
+     * @param id
+     * @param petUpdate
+     * @return
+     */
+    @PatchMapping("/{id}")
     @UserAuth
-    public void updatePet(@PathVariable("petId") Long petId, @RequestBody PetDTO petDTO) {
-        petService.updatePet(authorizationUtil.getLoginId(), petId, petDTO);
+    public ResponseEntity<PetResponse> update(@PathVariable("id") Long id, @RequestBody PetUpdate petUpdate) {
+        Pet pet = petService.update(authorizationUtil.getLoginId(), id, petUpdate);
+        return new ResponseEntity<>(PetResponse.from(pet),HttpStatus.OK);
     }
 
     /**
      * 반려동물 삭제
      *
-     * @param petId
+     * @param id
      */
-    @DeleteMapping("/{petId}")
+    @DeleteMapping("/{id}")
     @UserAuth
-    public void removePet(@PathVariable("petId") Long petId) {
-        petService.deletePet(authorizationUtil.getLoginId(), petId);
+    public void delete(@PathVariable("id") Long id) {
+        petService.delete(authorizationUtil.getLoginId(), id);
     }
 
 
