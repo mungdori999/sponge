@@ -23,7 +23,7 @@ class UserServiceTest {
                 .userRepository(userRepository)
                 .build();
         userRepository.save(User.builder()
-                .email("abc@naver.com")
+                .email("abc@test.com")
                 .name("테스트").build());
 
     }
@@ -37,7 +37,7 @@ class UserServiceTest {
         User result = userService.getById(id);
 
         // then
-        assertThat(result.getEmail()).isEqualTo("abc@naver.com");
+        assertThat(result.getEmail()).isEqualTo("abc@test.com");
     }
 
     @Test

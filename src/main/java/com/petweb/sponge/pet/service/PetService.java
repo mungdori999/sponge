@@ -9,6 +9,7 @@ import com.petweb.sponge.pet.domain.PetUpdate;
 import com.petweb.sponge.pet.service.port.PetRepository;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.service.port.UserRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Builder
 public class PetService {
     private final PetRepository petRepository;
     private final UserRepository userRepository;
@@ -65,13 +67,13 @@ public class PetService {
      * 펫 정보 업데이트
      *
      * @param loginId
-     * @param petId
+     * @param id
      * @param petUpdate
      * @return
      */
     @Transactional
-    public Pet update(Long loginId, Long petId, PetUpdate petUpdate) {
-        Pet pet = petRepository.findById(petId).orElseThrow(NotFoundPet::new);
+    public Pet update(Long loginId, Long id, PetUpdate petUpdate) {
+        Pet pet = petRepository.findById(id).orElseThrow(NotFoundPet::new);
         if (!pet.getUser().getId().equals(loginId)) {
             throw new LoginIdError();
         }

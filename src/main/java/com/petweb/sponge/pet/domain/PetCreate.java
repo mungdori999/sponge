@@ -1,8 +1,10 @@
 package com.petweb.sponge.pet.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class PetCreate {
     private String name;
     private String breed;
@@ -10,4 +12,5 @@ public class PetCreate {
     private int age;
     private float weight;
     private String petImgUrl;
+
 }
