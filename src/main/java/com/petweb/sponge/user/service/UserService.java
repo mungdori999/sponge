@@ -9,7 +9,7 @@ import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
 import com.petweb.sponge.post.repository.post.BookmarkRepository;
 import com.petweb.sponge.post.repository.post.ProblemPostRepository;
 import com.petweb.sponge.user.domain.User;
-import com.petweb.sponge.user.domain.UserUpdate;
+import com.petweb.sponge.user.dto.UserUpdate;
 import com.petweb.sponge.user.service.port.UserRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,6 @@
 package com.petweb.sponge.pet.repository;
 
 import com.petweb.sponge.pet.domain.Pet;
-import com.petweb.sponge.pet.dto.PetDTO;
 import com.petweb.sponge.user.repository.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -36,14 +35,7 @@ public class PetEntity {
     @LastModifiedDate
     private Timestamp modifiedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private UserEntity userEntity;
-
-
-    public void setPetImgUrl(String petImgUrl) {
-        this.petImgUrl = petImgUrl;
-    }
+    private Long userId;
 
     public static PetEntity from(Pet pet) {
         PetEntity petEntity = new PetEntity();
@@ -54,7 +46,7 @@ public class PetEntity {
         petEntity.age = pet.getAge();
         petEntity.weight = pet.getWeight();
         petEntity.petImgUrl = pet.getPetImgUrl();
-        petEntity.userEntity = UserEntity.from(pet.getUser());
+        petEntity.userId = pet.getUserId();
         petEntity.createdAt = pet.getCreatedAt();
         return petEntity;
     }
@@ -67,7 +59,7 @@ public class PetEntity {
                 .age(age)
                 .weight(weight)
                 .petImgUrl(petImgUrl)
-                .user(userEntity.toModel())
+                .userId(userId)
                 .createdAt(createdAt)
                 .modifiedAt(modifiedAt)
                 .build();

@@ -4,8 +4,8 @@ import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.exception.error.NotFoundPet;
 import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.pet.domain.Pet;
-import com.petweb.sponge.pet.domain.PetCreate;
-import com.petweb.sponge.pet.domain.PetUpdate;
+import com.petweb.sponge.pet.dto.PetCreate;
+import com.petweb.sponge.pet.dto.PetUpdate;
 import com.petweb.sponge.pet.service.port.PetRepository;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.service.port.UserRepository;
@@ -58,7 +58,7 @@ public class PetService {
         //현재 로그인 유저 정보 가져오기
         User user = userRepository.findById(loginId).orElseThrow(
                 NotFoundUser::new);
-        Pet pet = Pet.from(user, petCreate);
+        Pet pet = Pet.from(user.getId(), petCreate);
         //반려견 저장
         return petRepository.save(pet);
     }
@@ -74,10 +74,7 @@ public class PetService {
     @Transactional
     public Pet update(Long loginId, Long id, PetUpdate petUpdate) {
         Pet pet = petRepository.findById(id).orElseThrow(NotFoundPet::new);
-        if (!pet.getUser().getId().equals(loginId)) {
-            throw new LoginIdError();
-        }
-        pet = pet.update(petUpdate);
+        pet = pet.update(petUpdate, loginId);
         petRepository.save(pet);
         return pet;
     }
@@ -91,7 +88,7 @@ public class PetService {
     @Transactional
     public void delete(Long loginId, Long id) {
         Pet pet = petRepository.findById(id).orElseThrow(NotFoundPet::new);
-        if (!pet.getUser().getId().equals(loginId)) {
+        if (!pet.getId().equals(loginId)) {
             throw new LoginIdError();
         }
         petRepository.delete(pet);

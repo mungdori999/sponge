@@ -1,5 +1,6 @@
 package com.petweb.sponge.user.domain;
 
+import com.petweb.sponge.user.dto.UserUpdate;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -24,8 +25,6 @@ public class User {
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
-
-
     public User update(UserUpdate userUpdate) {
         return User.builder()
                 .id(id)

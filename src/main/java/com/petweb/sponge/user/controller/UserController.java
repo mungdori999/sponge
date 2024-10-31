@@ -6,7 +6,7 @@ import com.petweb.sponge.post.dto.post.PostIdDTO;
 import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
 import com.petweb.sponge.user.controller.response.UserResponse;
 import com.petweb.sponge.user.domain.User;
-import com.petweb.sponge.user.domain.UserUpdate;
+import com.petweb.sponge.user.dto.UserUpdate;
 import com.petweb.sponge.user.service.UserService;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import jakarta.servlet.http.Cookie;

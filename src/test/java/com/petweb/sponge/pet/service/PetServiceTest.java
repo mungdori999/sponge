@@ -1,10 +1,9 @@
 package com.petweb.sponge.pet.service;
 
 import com.petweb.sponge.exception.error.NotFoundPet;
-import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.pet.domain.Pet;
-import com.petweb.sponge.pet.domain.PetCreate;
-import com.petweb.sponge.pet.domain.PetUpdate;
+import com.petweb.sponge.pet.dto.PetCreate;
+import com.petweb.sponge.pet.dto.PetUpdate;
 import com.petweb.sponge.pet.mock.MockPetRepository;
 import com.petweb.sponge.pet.service.port.PetRepository;
 import com.petweb.sponge.user.domain.User;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class PetServiceTest {
 
@@ -40,12 +38,12 @@ class PetServiceTest {
                 .gender(Gender.MALE.getCode())
                 .breed("테스트 견종")
                 .age(5)
-                .user(user)
+                .userId(user.getId())
                 .build());
     }
 
     @Test
-    public void getById는_PET과_USER를_조인해서_조회한다() {
+    public void getById는_PET을_조회한다() {
         // given
         Long id = 1L;
 
@@ -54,7 +52,6 @@ class PetServiceTest {
 
         // then
         assertThat(result.getName()).isEqualTo("테스트 이름");
-        assertThat(result.getUser().getName()).isEqualTo("테스트");
 
     }
 
@@ -77,7 +74,6 @@ class PetServiceTest {
         // then
         assertThat(result.getName()).isEqualTo("테스트 이름");
         assertThat(result.getBreed()).isEqualTo("테스트 견종");
-        assertThat(result.getUser().getName()).isEqualTo("테스트");
     }
 
     @Test

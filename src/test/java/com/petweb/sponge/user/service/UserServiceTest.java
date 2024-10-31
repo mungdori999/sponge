@@ -2,7 +2,7 @@ package com.petweb.sponge.user.service;
 
 import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.user.domain.User;
-import com.petweb.sponge.user.domain.UserUpdate;
+import com.petweb.sponge.user.dto.UserUpdate;
 import com.petweb.sponge.user.mock.MockUserRepository;
 import com.petweb.sponge.user.service.port.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
