@@ -1,4 +1,4 @@
-package com.petweb.sponge.post.domain.post;
+package com.petweb.sponge.post.repository.post;
 
 import com.petweb.sponge.post.repository.post.PostEntity;
 import com.petweb.sponge.user.repository.UserEntity;
@@ -11,23 +11,23 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Table(name = "bookmark")
-public class Bookmark {
+@Table(name = "like")
+public class LikeEntity {
+
     @Id
     @GeneratedValue
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "problem_post_id")
     private PostEntity postEntity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private UserEntity userEntity;
+    private Long userId;
 
     @Builder
-    public Bookmark(PostEntity postEntity, UserEntity userEntity) {
+    public LikeEntity(Long id, PostEntity postEntity, Long userId) {
+        this.id = id;
         this.postEntity = postEntity;
-        this.userEntity = userEntity;
+        this.userId = userId;
     }
 }

@@ -16,7 +16,7 @@ public class PetRepositoryImpl implements PetRepository {
 
     @Override
     public Optional<Pet> findById(Long id) {
-        return petJpaRepository.findByIdWithUser(id).map(PetEntity::toModel);
+        return petJpaRepository.findById(id).map(PetEntity::toModel);
     }
 
     @Override

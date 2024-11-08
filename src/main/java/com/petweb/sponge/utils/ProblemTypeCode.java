@@ -19,4 +19,5 @@ public enum ProblemTypeCode {
         this.code = code;
         this.description = description;
     }
+
 }

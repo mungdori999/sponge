@@ -1,7 +1,7 @@
 package com.petweb.sponge.post.controller;
 
 import com.petweb.sponge.auth.UserAuth;
-import com.petweb.sponge.post.service.ProblemPostService;
+import com.petweb.sponge.post.service.PostService;
 import com.petweb.sponge.s3.dto.FileListDTO;
 import com.petweb.sponge.s3.service.S3DeleteService;
 import com.petweb.sponge.s3.service.S3UploadService;
@@ -23,7 +23,7 @@ public class PostFileController {
 
     private final S3UploadService s3UploadService;
     private final S3DeleteService s3DeleteService;
-    private final ProblemPostService problemPostService;
+    private final PostService postService;
     private final AuthorizationUtil authorizationUtil;
 
     /**
@@ -51,6 +51,6 @@ public class PostFileController {
         // S3에서 삭제
         s3DeleteService.deleteFiles(fileListDTO.getFileUrlList());
         // DB에서 링크 삭제
-        problemPostService.deletePostFiles(authorizationUtil.getLoginId(), problemPostId, fileListDTO.getFileUrlList());
+        postService.deletePostFiles(authorizationUtil.getLoginId(), problemPostId, fileListDTO.getFileUrlList());
     }
 }

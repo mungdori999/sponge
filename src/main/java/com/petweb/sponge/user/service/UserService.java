@@ -3,11 +3,11 @@ package com.petweb.sponge.user.service;
 import com.petweb.sponge.exception.error.NotFoundPost;
 import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.post.domain.post.Bookmark;
-import com.petweb.sponge.post.domain.post.ProblemPost;
+import com.petweb.sponge.post.repository.post.PostEntity;
 import com.petweb.sponge.post.dto.post.PostIdDTO;
 import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
 import com.petweb.sponge.post.repository.post.BookmarkRepository;
-import com.petweb.sponge.post.repository.post.ProblemPostRepository;
+import com.petweb.sponge.post.repository.post.PostRepository;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.dto.UserUpdate;
 import com.petweb.sponge.user.service.port.UserRepository;
@@ -28,7 +28,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private final ProblemPostRepository problemPostRepository;
+    private final PostRepository postRepository;
     private final BookmarkRepository bookmarkRepository;
     /**
      * 유저 단건 조회
@@ -92,9 +92,9 @@ public class UserService {
      */
     @Transactional(readOnly = true)
     public List<ProblemPostListDTO> findBookmark(Long loginId) {
-        List<ProblemPost> problemPostList = problemPostRepository.findAllPostByBookmark(loginId);
-        return toPostListDto(problemPostList);
-
+//        List<PostEntity> postEntityList = postRepository.findAllPostByBookmark(loginId);
+//        return toPostListDto(postEntityList);
+        return null;
     }
     /**
      * 북마크 업데이트
@@ -103,37 +103,23 @@ public class UserService {
      * @param loginId
      */
     public void updateBookmark(PostIdDTO postIdDTO, Long loginId) {
-        Optional<Bookmark> bookmark = bookmarkRepository.findBookmark(postIdDTO.getProblemPostId(), loginId);
-        ProblemPost problemPost = problemPostRepository.findPostWithUser(postIdDTO.getProblemPostId()).orElseThrow(
-                NotFoundPost::new);;
-
-        // 이미 북마크 되어있다면 삭제 아니라면 저장
-        if (bookmark.isPresent()) {
-            bookmarkRepository.delete(bookmark.get());
-        } else {
-            Bookmark buildBookmark = Bookmark.builder()
-                    .problemPost(problemPost)
-                    .userEntity(problemPost.getUserEntity())
-                    .build();
-            bookmarkRepository.save(buildBookmark);
-        }
+//        Optional<Bookmark> bookmark = bookmarkRepository.findBookmark(postIdDTO.getProblemPostId(), loginId);
+//        PostEntity postEntity = postRepository.findPostWithUser(postIdDTO.getProblemPostId()).orElseThrow(
+//                NotFoundPost::new);;
+//
+//        // 이미 북마크 되어있다면 삭제 아니라면 저장
+//        if (bookmark.isPresent()) {
+//            bookmarkRepository.delete(bookmark.get());
+//        } else {
+//            Bookmark buildBookmark = Bookmark.builder()
+//                    .problemPost(postEntity)
+//                    .userEntity(postEntity.getUserEntity())
+//                    .build();
+//            bookmarkRepository.save(buildBookmark);
+//        }
 
     }
 
-
-    private List<ProblemPostListDTO> toPostListDto(List<ProblemPost> problemPosts) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        return problemPosts.stream().map(problemPost ->
-                ProblemPostListDTO.builder()
-                        .problemPostId(problemPost.getId())
-                        .title(problemPost.getTitle())
-                        .content(problemPost.getContent())
-                        .likeCount(problemPost.getLikeCount())
-                        .createdAt(formatter.format(problemPost.getCreatedAt()))
-                        .problemTypeList(problemPost.getPostCategories().stream()
-                                .map(postCategory -> postCategory.getProblemType().getCode()).collect(Collectors.toList()))
-                        .build()).collect(Collectors.toList());
-    }
 
 
 }

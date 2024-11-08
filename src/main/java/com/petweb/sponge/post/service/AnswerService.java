@@ -3,8 +3,7 @@ package com.petweb.sponge.post.service;
 import com.petweb.sponge.exception.error.*;
 import com.petweb.sponge.post.domain.answer.AdoptAnswer;
 import com.petweb.sponge.post.domain.answer.Answer;
-import com.petweb.sponge.post.domain.answer.AnswerRecommend;
-import com.petweb.sponge.post.domain.post.ProblemPost;
+import com.petweb.sponge.post.repository.post.PostEntity;
 import com.petweb.sponge.post.dto.answer.AdoptAnswerDTO;
 import com.petweb.sponge.post.dto.answer.AnswerDTO;
 import com.petweb.sponge.post.dto.answer.AnswerDetailDTO;
@@ -12,10 +11,9 @@ import com.petweb.sponge.post.dto.answer.AnswerUpdateDTO;
 import com.petweb.sponge.post.repository.answer.AdoptAnswerRepository;
 import com.petweb.sponge.post.repository.answer.AnswerRecommendRepository;
 import com.petweb.sponge.post.repository.answer.AnswerRepository;
-import com.petweb.sponge.post.repository.post.ProblemPostRepository;
+import com.petweb.sponge.post.repository.post.PostRepository;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
-import com.petweb.sponge.user.repository.UserEntity;
 import com.petweb.sponge.user.service.port.UserRepository;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import com.petweb.sponge.utils.LoginType;
@@ -34,7 +32,7 @@ public class AnswerService {
 
     private final TrainerRepository trainerRepository;
     private final UserRepository userRepository;
-    private final ProblemPostRepository problemPostRepository;
+    private final PostRepository postRepository;
     private final AnswerRepository answerRepository;
     private final AdoptAnswerRepository adoptAnswerRepository;
     private final AnswerRecommendRepository answerRecommendRepository;
@@ -61,17 +59,17 @@ public class AnswerService {
      */
     @Transactional
     public void saveAnswer(Long loginId, AnswerDTO answerDTO) {
-        ProblemPost problemPost = problemPostRepository.findById(answerDTO.getProblemPostId()).orElseThrow(
-                NotFoundPost::new);
-        Trainer trainer = trainerRepository.findById(loginId).orElseThrow(
-                NotFoundTrainer::new);
-        Answer answer = Answer.builder()
-                .content(answerDTO.getContent())
-                .problemPost(problemPost)
-                .trainer(trainer).build();
-        //답변수 증가
-        problemPost.increaseAnswerCount();
-        answerRepository.save(answer);
+//        PostEntity postEntity = postRepository.findById(answerDTO.getProblemPostId()).orElseThrow(
+//                NotFoundPost::new);
+//        Trainer trainer = trainerRepository.findById(loginId).orElseThrow(
+//                NotFoundTrainer::new);
+//        Answer answer = Answer.builder()
+//                .content(answerDTO.getContent())
+//                .problemPost(postEntity)
+//                .trainer(trainer).build();
+//        //답변수 증가
+//        postEntity.increaseAnswerCount();
+//        answerRepository.save(answer);
     }
 
     /**
@@ -117,7 +115,7 @@ public class AnswerService {
         if (adoptAnswer.isPresent()) {
             Trainer trainer = adoptAnswer.get().getTrainer();
             trainer.decreaseAdoptCount();
-            answer.getProblemPost().decreaseAnswerCount();
+//            answer.getPostEntity().decreaseAnswerCount();
         }
         answerRepository.deleteAnswer(answerId, loginId);
     }
@@ -199,8 +197,8 @@ public class AnswerService {
             // 문제행동글 작성자면 true 작성자가 아니라면 false
             boolean postWriter = false;
             if (authorizationUtil.getLoginType().equals(LoginType.USER.getLoginType())) {
-                Long userId = answer.getProblemPost().getUserEntity().getId();
-                postWriter = authorizationUtil.getLoginId().equals(userId);
+//                Long userId = answer.getPostEntity().getUserEntity().getId();
+//                postWriter = authorizationUtil.getLoginId().equals(userId);
             }
             Optional<Trainer> trainer = trainerRepository.findById(answer.getTrainer().getId());
             if (trainer.isPresent()) {

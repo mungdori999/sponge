@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BookmarkRepository extends JpaRepository<Bookmark,Long> {
-    @Query("SELECT bm FROM Bookmark bm WHERE bm.problemPost.id = :problemPostId AND bm.userEntity.id = :userId")
+    @Query("SELECT bm FROM Bookmark bm WHERE bm.postEntity.id = :problemPostId AND bm.userEntity.id = :userId")
     Optional<Bookmark> findBookmark(@Param("problemPostId") Long problemPostId, @Param("userId") Long loginId);
 
 }

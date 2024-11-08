@@ -1,11 +1,13 @@
 package com.petweb.sponge.post.controller;
 
 import com.petweb.sponge.auth.UserAuth;
-import com.petweb.sponge.post.dto.post.PostDetailDTO;
+import com.petweb.sponge.post.controller.response.PostDetailsResponse;
+import com.petweb.sponge.post.controller.response.PostListResponse;
+import com.petweb.sponge.post.domain.post.Post;
 import com.petweb.sponge.post.dto.post.PostIdDTO;
 import com.petweb.sponge.post.dto.post.ProblemPostDTO;
 import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
-import com.petweb.sponge.post.service.ProblemPostService;
+import com.petweb.sponge.post.service.PostService;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,26 +15,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/post")
-public class ProblemPostController {
+public class PostController {
 
 
-    private final ProblemPostService problemPostService;
+    private final PostService postService;
     private final AuthorizationUtil authorizationUtil;
 
     /**
      * 글 단건 조회
      *
-     * @param problemPostId
+     * @param id
      * @return
      */
-    @GetMapping("/{problemPostId}")
-    public ResponseEntity<PostDetailDTO> getPost(@PathVariable("problemPostId") Long problemPostId) {
-        PostDetailDTO problemPost = problemPostService.findPost(problemPostId);
-        return new ResponseEntity<>(problemPost, HttpStatus.OK);
+    @GetMapping("/{id}")
+    public ResponseEntity<PostDetailsResponse> getById(@PathVariable("id") Long id) {
+        PostDetailsResponse post = postService.findById(id);
+        return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
     /**
@@ -42,20 +45,21 @@ public class ProblemPostController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<ProblemPostListDTO>> getAllPost(@RequestParam("problemTypeCode") Long problemTypeCode, @RequestParam("page") int page) {
-        List<ProblemPostListDTO> problemPostList = problemPostService.findPostList(problemTypeCode, page);
-        return new ResponseEntity<>(problemPostList, HttpStatus.OK);
+    public ResponseEntity<List<PostListResponse>> getAllPost(@RequestParam("problemTypeCode") Long problemTypeCode, @RequestParam("page") int page) {
+        List<Post> postList = postService.findPostList(problemTypeCode, page);
+        return new ResponseEntity<>(postList.stream().map(PostListResponse::from).collect(Collectors.toList()), HttpStatus.OK);
     }
 
     /**
      * 검색 기능
+     *
      * @param keyword
      * @param page
      * @return
      */
     @GetMapping("/search")
     public ResponseEntity<List<ProblemPostListDTO>> searchPost(@RequestParam("keyword") String keyword, @RequestParam("page") int page) {
-        List<ProblemPostListDTO> problemPostList = problemPostService.searchPost(keyword,page);
+        List<ProblemPostListDTO> problemPostList = postService.searchPost(keyword, page);
         return new ResponseEntity<>(problemPostList, HttpStatus.OK);
     }
 
@@ -67,7 +71,7 @@ public class ProblemPostController {
     @PostMapping
     @UserAuth
     public void writePost(@RequestBody ProblemPostDTO problemPostDTO) {
-        problemPostService.savePost(authorizationUtil.getLoginId(), problemPostDTO);
+        postService.savePost(authorizationUtil.getLoginId(), problemPostDTO);
     }
 
     /**
@@ -79,7 +83,7 @@ public class ProblemPostController {
     @PatchMapping("/{problemPostId}")
     @UserAuth
     public void updatePost(@PathVariable("problemPostId") Long problemPostId, @RequestBody ProblemPostDTO problemPostDTO) {
-        problemPostService.updatePost(authorizationUtil.getLoginId(),problemPostId,problemPostDTO);
+        postService.updatePost(authorizationUtil.getLoginId(), problemPostId, problemPostDTO);
     }
 
     /**
@@ -90,7 +94,7 @@ public class ProblemPostController {
     @DeleteMapping("/{problemPostId}")
     @UserAuth
     public void removePost(@PathVariable("problemPostId") Long problemPostId) {
-        problemPostService.deletePost(authorizationUtil.getLoginId(),problemPostId);
+        postService.deletePost(authorizationUtil.getLoginId(), problemPostId);
     }
 
     /**
@@ -101,7 +105,7 @@ public class ProblemPostController {
     @PostMapping("/like")
     @UserAuth
     public void updateLikeCount(@RequestBody PostIdDTO postIdDto) {
-        problemPostService.updateLikeCount(postIdDto.getProblemPostId(), authorizationUtil.getLoginId());
+        postService.updateLikeCount(postIdDto.getProblemPostId(), authorizationUtil.getLoginId());
     }
 
 
