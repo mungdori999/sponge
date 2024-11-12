@@ -5,7 +5,7 @@ import com.petweb.sponge.post.controller.response.PostDetailsResponse;
 import com.petweb.sponge.post.controller.response.PostListResponse;
 import com.petweb.sponge.post.domain.post.Post;
 import com.petweb.sponge.post.dto.post.PostIdDTO;
-import com.petweb.sponge.post.dto.post.ProblemPostDTO;
+import com.petweb.sponge.post.dto.post.PostCreate;
 import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
 import com.petweb.sponge.post.service.PostService;
 import com.petweb.sponge.utils.AuthorizationUtil;
@@ -66,12 +66,14 @@ public class PostController {
     /**
      * 글 작성 저장
      *
-     * @param problemPostDTO
+     * @param postCreate
+     * @return
      */
     @PostMapping
     @UserAuth
-    public void writePost(@RequestBody ProblemPostDTO problemPostDTO) {
-        postService.savePost(authorizationUtil.getLoginId(), problemPostDTO);
+    public ResponseEntity<PostDetailsResponse> create(@RequestBody PostCreate postCreate) {
+        PostDetailsResponse post = postService.create(authorizationUtil.getLoginId(), postCreate);
+        return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
     /**
@@ -82,8 +84,8 @@ public class PostController {
      */
     @PatchMapping("/{problemPostId}")
     @UserAuth
-    public void updatePost(@PathVariable("problemPostId") Long problemPostId, @RequestBody ProblemPostDTO problemPostDTO) {
-        postService.updatePost(authorizationUtil.getLoginId(), problemPostId, problemPostDTO);
+    public void update(@PathVariable("problemPostId") Long problemPostId, @RequestBody PostCreate problemPostDTO) {
+        postService.update(authorizationUtil.getLoginId(), problemPostId, problemPostDTO);
     }
 
     /**

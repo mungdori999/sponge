@@ -1,8 +1,6 @@
 package com.petweb.sponge.post.repository.post;
 
 import com.petweb.sponge.post.domain.ProblemType;
-import com.petweb.sponge.post.repository.post.PostEntity;
-import com.petweb.sponge.utils.ProblemTypeCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,19 +17,22 @@ public class PostCategoryEntity {
     @GeneratedValue
     private Long id;
 
+    private Long categoryCode;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private PostEntity postEntity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "problem_type_id")
-    private ProblemType problemType;
+
+
     @Builder
-    public PostCategoryEntity(PostEntity postEntity, ProblemType problemType) {
+    public PostCategoryEntity(PostEntity postEntity, Long categoryCode) {
         this.postEntity = postEntity;
-        this.problemType = problemType;
+        this.categoryCode = categoryCode;
     }
-    public String toModel() {
-        return problemType.getDescription();
+
+
+    public Long toModel() {
+        return categoryCode;
     }
+
 }

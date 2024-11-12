@@ -5,13 +5,13 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class ProblemPostDTO {
+public class PostCreate {
 
     private Long petId;
     private String title;
     private String content;
     private String duration;
-    private List<Long> problemTypeList;
+    private List<Long> categoryList;
     private List<String> hasTagList;
     private List<String> fileUrlList;
 }

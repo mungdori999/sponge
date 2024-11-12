@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -41,8 +42,6 @@ public class PostEntity {
 
     @LastModifiedDate
     private Timestamp modifiedAt;
-
-
     private Long userId;
 
     private Long petId;
@@ -70,21 +69,26 @@ public class PostEntity {
     }
 
     public Post toModel() {
-        List<PostFile> postFileList = Optional.ofNullable(postFileEntityList)
-                .orElse(Collections.emptyList())
-                .stream()
+
+        List<PostFile> postFileList = (!Hibernate.isInitialized(postFileEntityList) || postFileEntityList == null || postFileEntityList.isEmpty())
+                ? Collections.emptyList()
+                : postFileEntityList.stream()
                 .map(PostFileEntity::toModel)
                 .collect(Collectors.toList());
 
-        List<Tag> tagList = Optional.ofNullable(tagEntityList)
-                .orElse(Collections.emptyList())
-                .stream()
+
+        List<Tag> tagList = (!Hibernate.isInitialized(tagEntityList) || tagEntityList == null || tagEntityList.isEmpty())
+                ? Collections.emptyList()
+                : tagEntityList.stream()
                 .map(TagEntity::toModel)
                 .collect(Collectors.toList());
 
-        List<String> categoryList = Optional.ofNullable(postCategoryEntityList).orElse(Collections.emptyList())
-                .stream().map(PostCategoryEntity::toModel)
+        List<Long> categoryList = (!Hibernate.isInitialized(postCategoryEntityList) || postCategoryEntityList == null || postCategoryEntityList.isEmpty())
+                ? Collections.emptyList()
+                : postCategoryEntityList.stream()
+                .map(PostCategoryEntity::toModel)
                 .collect(Collectors.toList());
+
 
         return Post.builder()
                 .id(id)
@@ -97,5 +101,31 @@ public class PostEntity {
                 .tagList(tagList)
                 .categoryList(categoryList)
                 .build();
+    }
+
+    public static PostEntity from(Post post) {
+        PostEntity postEntity = new PostEntity();
+        postEntity.title = post.getPostContent().getTitle();
+        postEntity.content = post.getPostContent().getContent();
+        postEntity.duration = post.getPostContent().getDuration();
+        postEntity.likeCount = post.getLikeCount();
+        postEntity.answerCount = post.getAnswerCount();
+        postEntity.userId = post.getUserId();
+        postEntity.petId = post.getPetId();
+
+        postEntity.tagEntityList = post.getTagList().stream()
+                .map(tag -> TagEntity.builder()
+                        .hashtag(tag.getHashtag())
+                        .postEntity(postEntity)
+                        .build())
+                .collect(Collectors.toList());
+        postEntity.postCategoryEntityList = post.getCategoryList().stream().map(category -> PostCategoryEntity.builder()
+                .categoryCode(category)
+                .postEntity(postEntity).build()
+        ).collect(Collectors.toList());
+        postEntity.postFileEntityList = post.getPostFileList().stream().map(postFile -> PostFileEntity.builder()
+                .fileUrl(postFile.getFileUrl())
+                .postEntity(postEntity).build()).collect(Collectors.toList());
+        return postEntity;
     }
 }

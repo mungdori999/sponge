@@ -1,7 +1,7 @@
 package com.petweb.sponge.post.repository.post;
 
-import com.petweb.sponge.post.domain.post.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 

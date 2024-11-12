@@ -8,15 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.petweb.sponge.post.domain.QProblemType.*;
-import static com.petweb.sponge.post.domain.post.QBookmark.*;
 import static com.petweb.sponge.post.repository.post.QPostCategoryEntity.*;
 import static com.petweb.sponge.post.repository.post.QPostEntity.*;
 import static com.petweb.sponge.post.repository.post.QPostFileEntity.*;
 import static com.petweb.sponge.post.repository.post.QTagEntity.*;
-import static com.petweb.sponge.user.repository.QUserEntity.*;
 
 public class PostQueryDslRepositoryImpl implements PostQueryDslRepository {
 
@@ -42,7 +39,6 @@ public class PostQueryDslRepositoryImpl implements PostQueryDslRepository {
                 .fetch();
         List<PostCategoryEntity> postCategoryEntityList = queryFactory
                 .selectFrom(postCategoryEntity)
-                .leftJoin(postCategoryEntity.problemType, problemType).fetchJoin()
                 .where(postCategoryEntity.postEntity.id.eq(id))
                 .fetch();
         if (post != null) {
@@ -74,7 +70,6 @@ public class PostQueryDslRepositoryImpl implements PostQueryDslRepository {
             List<Long> problemPostIds = queryFactory
                     .select(postCategoryEntity.postEntity.id)
                     .from(postCategoryEntity)
-                    .where(postCategoryEntity.problemType.code.eq(problemTypeCode))
                     .orderBy(postCategoryEntity.postEntity.createdAt.desc())  // 최신순으로 정렬
                     .offset(offset)
                     .limit(PAGE_SIZE)
@@ -90,6 +85,8 @@ public class PostQueryDslRepositoryImpl implements PostQueryDslRepository {
                     .fetch();
         }
     }
+
+
 
 //    @Override
 //    public List<PostEntity> searchPostByKeyword(String keyword, int page) {

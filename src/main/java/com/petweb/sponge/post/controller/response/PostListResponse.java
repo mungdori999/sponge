@@ -17,7 +17,7 @@ public class PostListResponse {
     private int likeCount;
     private int answerCount;
     private Long userId;
-    private List<String> categoryList;
+    private List<Long> categoryList;
 
     public static PostListResponse from(Post post) {
         return PostListResponse.builder()

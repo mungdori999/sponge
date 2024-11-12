@@ -11,4 +11,6 @@ public interface PostRepository  {
      Optional<Post> findById(Long id);
 
     List<Post> findListByCode(Long problemTypeCode, int page);
+
+    Post save(Post post);
 }

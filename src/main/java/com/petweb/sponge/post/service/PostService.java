@@ -1,27 +1,24 @@
 package com.petweb.sponge.post.service;
 
-import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.exception.error.NotFoundPet;
 import com.petweb.sponge.exception.error.NotFoundPost;
+import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.pet.domain.Pet;
-import com.petweb.sponge.pet.repository.PetEntity;
 import com.petweb.sponge.pet.service.port.PetRepository;
 import com.petweb.sponge.post.controller.response.PostDetailsResponse;
 import com.petweb.sponge.post.domain.post.Post;
-import com.petweb.sponge.post.dto.post.ProblemPostDTO;
+import com.petweb.sponge.post.dto.post.PostCreate;
 import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
 import com.petweb.sponge.post.repository.post.*;
 import com.petweb.sponge.post.repository.ProblemTypeRepository;
-import com.petweb.sponge.user.repository.UserEntity;
+import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -48,7 +45,7 @@ public class PostService {
                 NotFoundPost::new);
         Pet pet = petRepository.findById(post.getPetId()).orElseThrow(
                 NotFoundPet::new);
-        return PostDetailsResponse.from(post,pet);
+        return PostDetailsResponse.from(post, pet);
     }
 
     /**
@@ -74,54 +71,28 @@ public class PostService {
     public List<ProblemPostListDTO> searchPost(String keyword, int page) {
 //        List<PostEntity> postEntities = postRepository.searchPostByKeyword(keyword, page);
 //        return toPostListDto(postEntities);
-        return  null;
+        return null;
     }
 
     /**
      * 글 작성 저장
      *
      * @param loginId
-     * @param problemPostDTO
+     * @param postCreate
+     * @return
      */
     @Transactional
-    public void savePost(Long loginId, ProblemPostDTO problemPostDTO) {
-//        //현재 로그인 유저 정보 가져오기
-//        UserEntity userEntity = userRepository.findById(loginId).orElseThrow(
-//                NotFoundUser::new);
-//        //선택한 반려동물 정보 가져오기
-//        PetEntity petEntity = petRepository.findById(problemPostDTO.getPetId()).orElseThrow(
-//                NotFoundPet::new);
-//
-//        ProblemPost problemPost = toEntity(problemPostDTO, userEntity, petEntity);
-//
-//        //ProblemType 조회해서 -> PostCategory로 변환 저장
-//        problemTypeRepository.findAllByCodeIn(problemPostDTO.getProblemTypeList())
-//                .stream().map(problemType -> PostCategory.builder()
-//                        .problemPost(problemPost)
-//                        .problemType(problemType)
-//                        .build()).collect(Collectors.toList())
-//                .forEach(postCategory -> problemPost.getPostCategories().add(postCategory));
-//
-//        // tag 클래스 생성해서 저장
-//        problemPostDTO.getHasTagList().stream().map(hashTag -> Tag.builder()
-//                .hashtag(hashTag)
-//                .problemPost(problemPost)
-//                .build()).collect(Collectors.toList()).forEach(tag -> {
-//            problemPost.getTags().add(tag);
-//        });
-//
-//        //PostImage클래스 생성해서 저장
-//        problemPostDTO.getFileUrlList().stream().map(imageUrl ->
-//                        PostFile.builder()
-//                                .fileUrl(imageUrl)
-//                                .problemPost(problemPost)
-//                                .build()
-//                ).collect(Collectors.toList())
-//                .forEach(postFile -> problemPost.getPostFiles().add(postFile));
-//
-//
-//        problemPostRepository.save(problemPost);
+    public PostDetailsResponse create(Long loginId, PostCreate postCreate) {
+        //현재 로그인 유저 정보 가져오기
+        User user = userRepository.findById(loginId).orElseThrow(
+                NotFoundUser::new);
 
+//        //선택한 반려동물 정보 가져오기
+        Pet pet = petRepository.findById(postCreate.getPetId()).orElseThrow(
+                NotFoundPet::new);
+        Post post = Post.from(user.getId(), pet.getId(), postCreate);
+        post = postRepository.save(post);
+        return PostDetailsResponse.from(post, pet);
     }
 
     /**
@@ -132,7 +103,7 @@ public class PostService {
      * @param problemPostDTO
      */
     @Transactional
-    public void updatePost(Long loginId, Long problemPostId, ProblemPostDTO problemPostDTO) {
+    public void update(Long loginId, Long problemPostId, PostCreate problemPostDTO) {
 //        PostEntity postEntity = postRepository.findById(problemPostId).orElseThrow(
 //                NotFoundPost::new);
 //        // 글을 쓴 유저가 아닌경우
@@ -218,7 +189,6 @@ public class PostService {
 //            postRecommendRepository.save(likeEntity);
 //        }
     }
-
 
 
 }

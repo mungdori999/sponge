@@ -25,7 +25,7 @@ public class PostDetailsResponse {
     private PetResponse pet;
     private List<PostFileResponse> postFileList;
     private List<TagResponse> tagList;
-    private List<String> categoryList;
+    private List<Long> categoryList;
 
     public static PostDetailsResponse from(Post post, Pet pet) {
         return PostDetailsResponse.builder()

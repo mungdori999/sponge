@@ -22,4 +22,9 @@ public class PostRepositoryImpl implements PostRepository {
     public List<Post> findListByCode(Long problemTypeCode, int page) {
         return postJpaRepository.findListByCode(problemTypeCode, page).stream().map(PostEntity::toModel).collect(Collectors.toList());
     }
+
+    @Override
+    public Post save(Post post) {
+        return postJpaRepository.save(PostEntity.from(post)).toModel();
+    }
 }
