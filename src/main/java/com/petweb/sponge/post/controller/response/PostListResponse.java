@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -17,7 +18,7 @@ public class PostListResponse {
     private int likeCount;
     private int answerCount;
     private Long userId;
-    private List<Long> categoryList;
+    private List<PostCategoryResponse> postCategoryList;
 
     public static PostListResponse from(Post post) {
         return PostListResponse.builder()
@@ -28,7 +29,7 @@ public class PostListResponse {
                 .likeCount(post.getLikeCount())
                 .answerCount(post.getAnswerCount())
                 .userId(post.getUserId())
-                .categoryList(post.getCategoryList())
+                .postCategoryList(post.getPostCategoryList().stream().map(PostCategoryResponse::from).collect(Collectors.toList()))
                 .build();
 
 

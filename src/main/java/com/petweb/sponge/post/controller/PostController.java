@@ -6,6 +6,7 @@ import com.petweb.sponge.post.controller.response.PostListResponse;
 import com.petweb.sponge.post.domain.post.Post;
 import com.petweb.sponge.post.dto.post.PostIdDTO;
 import com.petweb.sponge.post.dto.post.PostCreate;
+import com.petweb.sponge.post.dto.post.PostUpdate;
 import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
 import com.petweb.sponge.post.service.PostService;
 import com.petweb.sponge.utils.AuthorizationUtil;
@@ -57,11 +58,11 @@ public class PostController {
      * @param page
      * @return
      */
-    @GetMapping("/search")
-    public ResponseEntity<List<ProblemPostListDTO>> searchPost(@RequestParam("keyword") String keyword, @RequestParam("page") int page) {
-        List<ProblemPostListDTO> problemPostList = postService.searchPost(keyword, page);
-        return new ResponseEntity<>(problemPostList, HttpStatus.OK);
-    }
+//    @GetMapping("/search")
+//    public ResponseEntity<List<ProblemPostListDTO>> searchPost(@RequestParam("keyword") String keyword, @RequestParam("page") int page) {
+//        List<ProblemPostListDTO> problemPostList = postService.searchPost(keyword, page);
+//        return new ResponseEntity<>(problemPostList, HttpStatus.OK);
+//    }
 
     /**
      * 글 작성 저장
@@ -79,24 +80,26 @@ public class PostController {
     /**
      * 글 수정
      *
-     * @param problemPostId
-     * @param problemPostDTO
+     * @param id
+     * @param postUpdate
+     * @return
      */
-    @PatchMapping("/{problemPostId}")
+    @PatchMapping("/{id}")
     @UserAuth
-    public void update(@PathVariable("problemPostId") Long problemPostId, @RequestBody PostCreate problemPostDTO) {
-        postService.update(authorizationUtil.getLoginId(), problemPostId, problemPostDTO);
+    public ResponseEntity<PostDetailsResponse> update(@PathVariable("id") Long id, @RequestBody PostUpdate postUpdate) {
+        PostDetailsResponse post = postService.update(authorizationUtil.getLoginId(), id, postUpdate);
+        return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
     /**
      * 글 삭제
      *
-     * @param problemPostId
+     * @param id
      */
-    @DeleteMapping("/{problemPostId}")
+    @DeleteMapping("/{id}")
     @UserAuth
-    public void removePost(@PathVariable("problemPostId") Long problemPostId) {
-        postService.deletePost(authorizationUtil.getLoginId(), problemPostId);
+    public void delete(@PathVariable("id") Long id) {
+        postService.delete(authorizationUtil.getLoginId(), id);
     }
 
     /**
@@ -104,11 +107,11 @@ public class PostController {
      *
      * @param postIdDto
      */
-    @PostMapping("/like")
-    @UserAuth
-    public void updateLikeCount(@RequestBody PostIdDTO postIdDto) {
-        postService.updateLikeCount(postIdDto.getProblemPostId(), authorizationUtil.getLoginId());
-    }
+//    @PostMapping("/like")
+//    @UserAuth
+//    public void updateLikeCount(@RequestBody PostIdDTO postIdDto) {
+//        postService.updateLikeCount(postIdDto.getProblemPostId(), authorizationUtil.getLoginId());
+//    }
 
 
 }

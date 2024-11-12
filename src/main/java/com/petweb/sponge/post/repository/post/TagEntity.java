@@ -18,14 +18,16 @@ public class TagEntity {
     private Long id;
     private String hashtag;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "problem_post_id")
+    @JoinColumn(name = "post_id")
     private PostEntity postEntity;
 
     @Builder
-    public TagEntity(String hashtag, PostEntity postEntity) {
+    public TagEntity(Long id, String hashtag, PostEntity postEntity) {
+        this.id = id;
         this.hashtag = hashtag;
         this.postEntity = postEntity;
     }
+
     public Tag toModel() {
         return Tag.builder()
                 .id(id)

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.petweb.sponge.post.domain.QProblemType.*;
 import static com.petweb.sponge.post.repository.post.QPostCategoryEntity.*;
 import static com.petweb.sponge.post.repository.post.QPostEntity.*;
 import static com.petweb.sponge.post.repository.post.QPostFileEntity.*;
@@ -86,6 +85,21 @@ public class PostQueryDslRepositoryImpl implements PostQueryDslRepository {
         }
     }
 
+    @Override
+    public void initPost(Long id) {
+        queryFactory
+                .delete(postCategoryEntity)
+                .where(postCategoryEntity.postEntity.id.eq(id))
+                .execute();
+        queryFactory
+                .delete(postFileEntity)
+                .where(postFileEntity.postEntity.id.eq(id))
+                .execute();
+        queryFactory
+                .delete(tagEntity)
+                .where(tagEntity.postEntity.id.eq(id))
+                .execute();
+    }
 
 
 //    @Override

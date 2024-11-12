@@ -1,6 +1,7 @@
 package com.petweb.sponge.post.repository.post;
 
 import com.petweb.sponge.post.domain.ProblemType;
+import com.petweb.sponge.post.domain.post.PostCategory;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -22,17 +23,17 @@ public class PostCategoryEntity {
     @JoinColumn(name = "post_id")
     private PostEntity postEntity;
 
-
-
     @Builder
-    public PostCategoryEntity(PostEntity postEntity, Long categoryCode) {
-        this.postEntity = postEntity;
+    public PostCategoryEntity(Long id, Long categoryCode, PostEntity postEntity) {
+        this.id = id;
         this.categoryCode = categoryCode;
+        this.postEntity = postEntity;
     }
 
-
-    public Long toModel() {
-        return categoryCode;
+    public PostCategory toModel() {
+        return PostCategory.builder()
+                .id(id)
+                .categoryCode(categoryCode).build();
     }
 
 }

@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface PostJpaRepository extends JpaRepository<PostEntity,Long>, PostQueryDslRepository {
 
+
 }

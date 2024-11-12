@@ -27,4 +27,16 @@ public class PostRepositoryImpl implements PostRepository {
     public Post save(Post post) {
         return postJpaRepository.save(PostEntity.from(post)).toModel();
     }
+
+    @Override
+    public void delete(Post post) {
+        postJpaRepository.delete(PostEntity.from(post));
+    }
+
+    @Override
+    public void initPost(Long id) {
+        postJpaRepository.initPost(id);
+    }
+
+
 }

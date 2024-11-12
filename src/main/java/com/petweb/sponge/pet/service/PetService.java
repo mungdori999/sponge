@@ -74,7 +74,8 @@ public class PetService {
     @Transactional
     public Pet update(Long loginId, Long id, PetUpdate petUpdate) {
         Pet pet = petRepository.findById(id).orElseThrow(NotFoundPet::new);
-        pet = pet.update(petUpdate, loginId);
+        pet.checkUser(loginId);
+        pet = pet.update(petUpdate);
         petRepository.save(pet);
         return pet;
     }
@@ -88,9 +89,7 @@ public class PetService {
     @Transactional
     public void delete(Long loginId, Long id) {
         Pet pet = petRepository.findById(id).orElseThrow(NotFoundPet::new);
-        if (!pet.getId().equals(loginId)) {
-            throw new LoginIdError();
-        }
+        pet.checkUser(loginId);
         petRepository.delete(pet);
     }
 

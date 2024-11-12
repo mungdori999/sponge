@@ -25,7 +25,7 @@ public class PostDetailsResponse {
     private PetResponse pet;
     private List<PostFileResponse> postFileList;
     private List<TagResponse> tagList;
-    private List<Long> categoryList;
+    private List<PostCategoryResponse> postCategoryList;
 
     public static PostDetailsResponse from(Post post, Pet pet) {
         return PostDetailsResponse.builder()
@@ -41,7 +41,7 @@ public class PostDetailsResponse {
                 .pet(PetResponse.from(pet))
                 .postFileList(post.getPostFileList().stream().map(PostFileResponse::from).collect(Collectors.toList()))
                 .tagList(post.getTagList().stream().map(TagResponse::from).collect(Collectors.toList()))
-                .categoryList(post.getCategoryList())
+                .postCategoryList(post.getPostCategoryList().stream().map(PostCategoryResponse::from).collect(Collectors.toList()))
                 .build();
 
 

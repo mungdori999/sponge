@@ -50,11 +50,8 @@ public class Pet {
                     .build();
     }
 
-    public Pet update(PetUpdate petUpdate, Long loginId) {
+    public Pet update(PetUpdate petUpdate) {
 
-        if (!userId.equals(loginId)) {
-            throw new LoginIdError();
-        }
         return Pet.builder()
                 .id(id)
                 .name(petUpdate.getName())
@@ -66,5 +63,10 @@ public class Pet {
                 .userId(userId)
                 .createdAt(createdAt)
                 .build();
+    }
+    public void checkUser(Long loginId) {
+        if (!userId.equals(loginId)) {
+            throw new LoginIdError();
+        }
     }
 }

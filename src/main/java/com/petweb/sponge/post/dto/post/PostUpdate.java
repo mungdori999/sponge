@@ -5,9 +5,7 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class PostCreate {
-
-    private Long petId;
+public class PostUpdate {
     private String title;
     private String content;
     private String duration;

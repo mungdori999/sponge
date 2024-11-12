@@ -8,6 +8,7 @@ import com.petweb.sponge.pet.service.port.PetRepository;
 import com.petweb.sponge.post.controller.response.PostDetailsResponse;
 import com.petweb.sponge.post.domain.post.Post;
 import com.petweb.sponge.post.dto.post.PostCreate;
+import com.petweb.sponge.post.dto.post.PostUpdate;
 import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
 import com.petweb.sponge.post.repository.post.*;
 import com.petweb.sponge.post.repository.ProblemTypeRepository;
@@ -86,8 +87,7 @@ public class PostService {
         //현재 로그인 유저 정보 가져오기
         User user = userRepository.findById(loginId).orElseThrow(
                 NotFoundUser::new);
-
-//        //선택한 반려동물 정보 가져오기
+        //선택한 반려동물 정보 가져오기
         Pet pet = petRepository.findById(postCreate.getPetId()).orElseThrow(
                 NotFoundPet::new);
         Post post = Post.from(user.getId(), pet.getId(), postCreate);
@@ -99,32 +99,21 @@ public class PostService {
      * 글 수정
      *
      * @param loginId
-     * @param problemPostId
-     * @param problemPostDTO
+     * @param id
+     * @param postUpdate
+     * @return
      */
     @Transactional
-    public void update(Long loginId, Long problemPostId, PostCreate problemPostDTO) {
-//        PostEntity postEntity = postRepository.findById(problemPostId).orElseThrow(
-//                NotFoundPost::new);
-//        // 글을 쓴 유저가 아닌경우
-//        if (!postEntity.getUserEntity().getId().equals(loginId)) {
-//            throw new LoginIdError();
-//        }
-//        //글 초기화
-//        postRepository.initProblemPost(problemPostId);
-//
-//        postEntity.updatePost(problemPostDTO.getTitle()
-//                , problemPostDTO.getContent()
-//                , problemPostDTO.getFileUrlList()
-//                , problemPostDTO.getHasTagList());
-//
-//        //ProblemType 조회해서 -> PostCategory로 변환 저장
-//        problemTypeRepository.findAllByCodeIn(problemPostDTO.getProblemTypeList())
-//                .stream().map(problemType -> PostCategoryEntity.builder()
-//                        .problemPost(postEntity)
-//                        .problemType(problemType)
-//                        .build()).collect(Collectors.toList())
-//                .forEach(postCategory -> postEntity.getPostCategories().add(postCategory));
+    public PostDetailsResponse update(Long loginId, Long id, PostUpdate postUpdate) {
+        Post post = postRepository.findById(id).orElseThrow(
+                NotFoundPost::new);
+        Pet pet = petRepository.findById(post.getPetId()).orElseThrow(
+                NotFoundPet::new);
+        post.checkUser(loginId);
+        postRepository.initPost(post.getId());
+        post = post.update(postUpdate);
+        post = postRepository.save(post);
+        return PostDetailsResponse.from(post, pet);
     }
 
 
@@ -132,18 +121,14 @@ public class PostService {
      * 글 삭제
      *
      * @param loginId
-     * @param problemPostId
+     * @param id
      */
     @Transactional
-    public void deletePost(Long loginId, Long problemPostId) {
-//        PostEntity postEntity = postRepository.findById(problemPostId).orElseThrow(
-//                NotFoundPost::new);
-//        ;
-//        // 글을 쓴 유저가 아닌경우
-//        if (!postEntity.getUserEntity().getId().equals(loginId)) {
-//            throw new LoginIdError();
-//        }
-//        postRepository.deletePost(problemPostId);
+    public void delete(Long loginId, Long id) {
+        Post post = postRepository.findById(id).orElseThrow(
+                NotFoundPost::new);
+        post.checkUser(loginId);
+        postRepository.delete(post);
     }
 
     /**

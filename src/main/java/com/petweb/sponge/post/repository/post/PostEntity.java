@@ -1,14 +1,8 @@
 package com.petweb.sponge.post.repository.post;
 
-import com.petweb.sponge.pet.repository.PetEntity;
-import com.petweb.sponge.post.domain.post.Post;
-import com.petweb.sponge.post.domain.post.PostContent;
-import com.petweb.sponge.post.domain.post.PostFile;
-import com.petweb.sponge.post.domain.post.Tag;
-import com.petweb.sponge.user.repository.UserEntity;
+import com.petweb.sponge.post.domain.post.*;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
@@ -20,7 +14,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Entity
@@ -39,14 +32,11 @@ public class PostEntity {
     private int answerCount; // 답변수
     @CreatedDate
     private Timestamp createdAt;
-
     @LastModifiedDate
     private Timestamp modifiedAt;
     private Long userId;
 
     private Long petId;
-
-
     @OneToMany(mappedBy = "postEntity", cascade = CascadeType.ALL)
     private List<PostCategoryEntity> postCategoryEntityList = new ArrayList<>();
 
@@ -83,7 +73,7 @@ public class PostEntity {
                 .map(TagEntity::toModel)
                 .collect(Collectors.toList());
 
-        List<Long> categoryList = (!Hibernate.isInitialized(postCategoryEntityList) || postCategoryEntityList == null || postCategoryEntityList.isEmpty())
+        List<PostCategory> postCategoryList = (!Hibernate.isInitialized(postCategoryEntityList) || postCategoryEntityList == null || postCategoryEntityList.isEmpty())
                 ? Collections.emptyList()
                 : postCategoryEntityList.stream()
                 .map(PostCategoryEntity::toModel)
@@ -99,12 +89,13 @@ public class PostEntity {
                 .petId(petId)
                 .postFileList(postFileList)
                 .tagList(tagList)
-                .categoryList(categoryList)
+                .postCategoryList(postCategoryList)
                 .build();
     }
 
     public static PostEntity from(Post post) {
         PostEntity postEntity = new PostEntity();
+        postEntity.id = post.getId();
         postEntity.title = post.getPostContent().getTitle();
         postEntity.content = post.getPostContent().getContent();
         postEntity.duration = post.getPostContent().getDuration();
@@ -112,18 +103,22 @@ public class PostEntity {
         postEntity.answerCount = post.getAnswerCount();
         postEntity.userId = post.getUserId();
         postEntity.petId = post.getPetId();
+        postEntity.createdAt = post.getPostContent().getCreatedAt();
 
         postEntity.tagEntityList = post.getTagList().stream()
                 .map(tag -> TagEntity.builder()
+                        .id(tag.getId())
                         .hashtag(tag.getHashtag())
                         .postEntity(postEntity)
                         .build())
                 .collect(Collectors.toList());
-        postEntity.postCategoryEntityList = post.getCategoryList().stream().map(category -> PostCategoryEntity.builder()
-                .categoryCode(category)
+        postEntity.postCategoryEntityList = post.getPostCategoryList().stream().map(postCategory -> PostCategoryEntity.builder()
+                .id(postCategory.getId())
+                .categoryCode(postCategory.getCategoryCode())
                 .postEntity(postEntity).build()
         ).collect(Collectors.toList());
         postEntity.postFileEntityList = post.getPostFileList().stream().map(postFile -> PostFileEntity.builder()
+                .id(postFile.getId())
                 .fileUrl(postFile.getFileUrl())
                 .postEntity(postEntity).build()).collect(Collectors.toList());
         return postEntity;

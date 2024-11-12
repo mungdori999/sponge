@@ -19,11 +19,12 @@ public class PostFileEntity {
     private String fileUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "problem_post_id")
+    @JoinColumn(name = "post_id")
     private PostEntity postEntity;
 
     @Builder
-    public PostFileEntity(String fileUrl, PostEntity postEntity) {
+    public PostFileEntity(Long id, String fileUrl, PostEntity postEntity) {
+        this.id = id;
         this.fileUrl = fileUrl;
         this.postEntity = postEntity;
     }
