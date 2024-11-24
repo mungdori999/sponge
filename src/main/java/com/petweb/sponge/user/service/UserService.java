@@ -1,11 +1,6 @@
 package com.petweb.sponge.user.service;
 
-import com.petweb.sponge.exception.error.NotFoundPost;
 import com.petweb.sponge.exception.error.NotFoundUser;
-import com.petweb.sponge.post.domain.post.Bookmark;
-import com.petweb.sponge.post.repository.post.PostEntity;
-import com.petweb.sponge.post.dto.post.PostIdDTO;
-import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
 import com.petweb.sponge.post.repository.post.BookmarkRepository;
 import com.petweb.sponge.post.repository.post.PostRepository;
 import com.petweb.sponge.user.domain.User;
@@ -16,10 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -90,19 +81,19 @@ public class UserService {
      * @param loginId
      * @return
      */
-    @Transactional(readOnly = true)
-    public List<ProblemPostListDTO> findBookmark(Long loginId) {
-//        List<PostEntity> postEntityList = postRepository.findAllPostByBookmark(loginId);
-//        return toPostListDto(postEntityList);
-        return null;
-    }
+//    @Transactional(readOnly = true)
+//    public List<ProblemPostListDTO> findBookmark(Long loginId) {
+////        List<PostEntity> postEntityList = postRepository.findAllPostByBookmark(loginId);
+////        return toPostListDto(postEntityList);
+//        return null;
+//    }
     /**
      * 북마크 업데이트
      *
      * @param postIdDTO
      * @param loginId
      */
-    public void updateBookmark(PostIdDTO postIdDTO, Long loginId) {
+//    public void updateBookmark(PostIdDTO postIdDTO, Long loginId) {
 //        Optional<Bookmark> bookmark = bookmarkRepository.findBookmark(postIdDTO.getProblemPostId(), loginId);
 //        PostEntity postEntity = postRepository.findPostWithUser(postIdDTO.getProblemPostId()).orElseThrow(
 //                NotFoundPost::new);;
@@ -118,7 +109,7 @@ public class UserService {
 //            bookmarkRepository.save(buildBookmark);
 //        }
 
-    }
+//    }
 
 
 

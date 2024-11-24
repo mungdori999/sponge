@@ -4,10 +4,8 @@ import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.post.controller.response.PostDetailsResponse;
 import com.petweb.sponge.post.controller.response.PostListResponse;
 import com.petweb.sponge.post.domain.post.Post;
-import com.petweb.sponge.post.dto.post.PostIdDTO;
 import com.petweb.sponge.post.dto.post.PostCreate;
 import com.petweb.sponge.post.dto.post.PostUpdate;
-import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
 import com.petweb.sponge.post.service.PostService;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +31,7 @@ public class PostController {
      * @param id
      * @return
      */
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<PostDetailsResponse> getById(@PathVariable("id") Long id) {
         PostDetailsResponse post = postService.findById(id);
         return new ResponseEntity<>(post, HttpStatus.OK);
@@ -42,12 +40,12 @@ public class PostController {
     /**
      * 카테고리별 글 전체조회
      *
-     * @param problemTypeCode
+     * @param categoryCode
      * @return
      */
-    @GetMapping
-    public ResponseEntity<List<PostListResponse>> getAllPost(@RequestParam("problemTypeCode") Long problemTypeCode, @RequestParam("page") int page) {
-        List<Post> postList = postService.findPostList(problemTypeCode, page);
+    @GetMapping(produces = "application/json; charset=UTF-8")
+    public ResponseEntity<List<PostListResponse>> getAllPost(@RequestParam("categoryCode") Long categoryCode, @RequestParam("page") int page) {
+        List<Post> postList = postService.findPostList(categoryCode, page);
         return new ResponseEntity<>(postList.stream().map(PostListResponse::from).collect(Collectors.toList()), HttpStatus.OK);
     }
 
@@ -58,11 +56,11 @@ public class PostController {
      * @param page
      * @return
      */
-//    @GetMapping("/search")
-//    public ResponseEntity<List<ProblemPostListDTO>> searchPost(@RequestParam("keyword") String keyword, @RequestParam("page") int page) {
-//        List<ProblemPostListDTO> problemPostList = postService.searchPost(keyword, page);
-//        return new ResponseEntity<>(problemPostList, HttpStatus.OK);
-//    }
+    @GetMapping(value = "/search", produces = "application/json; charset=UTF-8")
+    public ResponseEntity<List<PostListResponse>> search(@RequestParam("keyword") String keyword, @RequestParam("page") int page) {
+        List<Post> postList = postService.search(keyword, page);
+        return new ResponseEntity<>(postList.stream().map(PostListResponse::from).collect(Collectors.toList()), HttpStatus.OK);
+    }
 
     /**
      * 글 작성 저장

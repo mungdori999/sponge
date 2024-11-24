@@ -3,7 +3,7 @@ package com.petweb.sponge.utils;
 import lombok.Getter;
 
 @Getter
-public enum ProblemTypeCode {
+public enum CategoryCode {
 
     ALL(0L,"전체"),
     SEPARATION(100L,"분리불안"),
@@ -15,7 +15,7 @@ public enum ProblemTypeCode {
     private final String description;
 
 
-    ProblemTypeCode(Long code, String description) {
+    CategoryCode(Long code, String description) {
         this.code = code;
         this.description = description;
     }

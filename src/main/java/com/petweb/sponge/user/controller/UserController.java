@@ -2,8 +2,6 @@ package com.petweb.sponge.user.controller;
 
 import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.exception.error.LoginIdError;
-import com.petweb.sponge.post.dto.post.PostIdDTO;
-import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
 import com.petweb.sponge.user.controller.response.UserResponse;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.dto.UserUpdate;
@@ -88,21 +86,21 @@ public class UserController {
         response.setStatus(200);
     }
 
-    @GetMapping("/bookmark")
-    @UserAuth
-    public ResponseEntity<List<ProblemPostListDTO>> getBookmark() {
-        List<ProblemPostListDTO> bookmarkList = userService.findBookmark(authorizationUtil.getLoginId());
-        return new ResponseEntity<>(bookmarkList,HttpStatus.OK);
-    }
+//    @GetMapping("/bookmark")
+//    @UserAuth
+//    public ResponseEntity<List<ProblemPostListDTO>> getBookmark() {
+//        List<ProblemPostListDTO> bookmarkList = userService.findBookmark(authorizationUtil.getLoginId());
+//        return new ResponseEntity<>(bookmarkList,HttpStatus.OK);
+//    }
     /**
      * 글 북마크 업데이트
      *
      * @param postIdDTO
      */
-    @PostMapping("/bookmark")
-    @UserAuth
-    public void updateBookmark(@RequestBody PostIdDTO postIdDTO) {
-        userService.updateBookmark(postIdDTO, authorizationUtil.getLoginId());
-    }
+//    @PostMapping("/bookmark")
+//    @UserAuth
+//    public void updateBookmark(@RequestBody PostIdDTO postIdDTO) {
+//        userService.updateBookmark(postIdDTO, authorizationUtil.getLoginId());
+//    }
 
 }

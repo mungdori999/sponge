@@ -5,14 +5,19 @@ import com.petweb.sponge.post.domain.post.Post;
 import java.util.List;
 import java.util.Optional;
 
-public interface PostRepository  {
+public interface PostRepository {
 
-     Optional<Post> findById(Long id);
+    Optional<Post> findById(Long id);
 
-    List<Post> findListByCode(Long problemTypeCode, int page);
+    List<Post> findByKeyword(String keyword, int page);
+
+    List<Post> findListByCode(Long categoryCode, int page);
 
     Post save(Post post);
+
     void delete(Post post);
 
     void initPost(Long id);
+
+
 }

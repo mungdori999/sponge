@@ -1,6 +1,6 @@
 package com.petweb.sponge.post.repository.post;
 
-import com.petweb.sponge.utils.ProblemTypeCode;
+import com.petweb.sponge.utils.CategoryCode;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
@@ -17,6 +17,7 @@ import static com.petweb.sponge.post.repository.post.QTagEntity.*;
 public class PostQueryDslRepositoryImpl implements PostQueryDslRepository {
 
     private final JPAQueryFactory queryFactory;
+    private static final int PAGE_SIZE = 10;  // 페이지당 항목 수
 
     public PostQueryDslRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
@@ -48,13 +49,41 @@ public class PostQueryDslRepositoryImpl implements PostQueryDslRepository {
         return Optional.ofNullable(post);
     }
 
-    private static final int PAGE_SIZE = 10;  // 페이지당 항목 수
-
     @Override
-    public List<PostEntity> findListByCode(Long problemTypeCode, int page) {
+    public List<PostEntity> findListByKeyword(String keyword, int page) {
         // 페이지 번호와 페이지 크기를 계산
         int offset = page * PAGE_SIZE;
-        if (Objects.equals(problemTypeCode, ProblemTypeCode.ALL.getCode())) {
+        List<PostEntity> postEntityList = queryFactory
+                .select(postEntity)
+                .from(postEntity)
+                .leftJoin(postEntity.tagEntityList, tagEntity).fetchJoin()
+                .where(postEntity.title.containsIgnoreCase(keyword) // 제목에서 검색
+                        .or(postEntity.content.containsIgnoreCase(keyword))
+                        .or(tagEntity.hashtag.containsIgnoreCase(keyword)))
+                .orderBy(postEntity.createdAt.desc()) //최신순 정렬
+                .offset(offset)
+                .limit(PAGE_SIZE)
+                .fetch();
+
+        List<Long> postIdList = postEntityList.stream().map(PostEntity::getId).toList();
+
+        // 포스트 카테고리 조인
+        List<PostCategoryEntity> postCategoryEntityList = queryFactory
+                .selectFrom(postCategoryEntity)
+                .where(postCategoryEntity.postEntity.id.in(postIdList))
+                .fetch();
+        postEntityList.forEach(post -> post.addPostCategoryList(postCategoryEntityList.stream().filter(
+                category -> Objects.equals(post.getId(), category.getPostEntity().getId())
+        ).toList()));
+        return postEntityList;
+    }
+
+
+    @Override
+    public List<PostEntity> findListByCode(Long categoryCode, int page) {
+        // 페이지 번호와 페이지 크기를 계산
+        int offset = page * PAGE_SIZE;
+        if (Objects.equals(categoryCode, CategoryCode.ALL.getCode())) {
             //전체 조회
             return queryFactory
                     .select(postEntity)
@@ -66,21 +95,23 @@ public class PostQueryDslRepositoryImpl implements PostQueryDslRepository {
                     .fetch();
         } else {
             // 카테고리에 해당하는 글 ID 조회
-            List<Long> problemPostIds = queryFactory
+            List<Long> postIdList = queryFactory
                     .select(postCategoryEntity.postEntity.id)
                     .from(postCategoryEntity)
+                    .where(postCategoryEntity.categoryCode.eq(categoryCode))
                     .orderBy(postCategoryEntity.postEntity.createdAt.desc())  // 최신순으로 정렬
                     .offset(offset)
                     .limit(PAGE_SIZE)
                     .fetch();
-            if (problemPostIds.isEmpty()) {
+            if (postIdList.isEmpty()) {
                 return new ArrayList<>();  // 결과가 없으면 빈 리스트 반환
             }
             return queryFactory
                     .selectDistinct(postEntity)
                     .from(postEntity)
                     .leftJoin(postEntity.postCategoryEntityList, postCategoryEntity).fetchJoin()
-                    .where(postEntity.id.in(problemPostIds))  // IN 절 사용
+                    .orderBy(postEntity.createdAt.desc()) //최신순 정렬
+                    .where(postEntity.id.in(postIdList))  // IN 절 사용
                     .fetch();
         }
     }

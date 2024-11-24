@@ -9,7 +9,6 @@ import com.petweb.sponge.post.controller.response.PostDetailsResponse;
 import com.petweb.sponge.post.domain.post.Post;
 import com.petweb.sponge.post.dto.post.PostCreate;
 import com.petweb.sponge.post.dto.post.PostUpdate;
-import com.petweb.sponge.post.dto.post.ProblemPostListDTO;
 import com.petweb.sponge.post.repository.post.*;
 import com.petweb.sponge.post.repository.ProblemTypeRepository;
 import com.petweb.sponge.user.domain.User;
@@ -52,13 +51,12 @@ public class PostService {
     /**
      * 카테고리별 글 전체 조회
      *
-     * @param problemTypeCode
+     * @param categoryCode
      * @return
      */
     @Transactional(readOnly = true)
-    public List<Post> findPostList(Long problemTypeCode, int page) {
-        List<Post> postList = postRepository.findListByCode(problemTypeCode, page);
-        return postList;
+    public List<Post> findPostList(Long categoryCode, int page) {
+        return postRepository.findListByCode(categoryCode, page);
     }
 
     /**
@@ -69,10 +67,8 @@ public class PostService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<ProblemPostListDTO> searchPost(String keyword, int page) {
-//        List<PostEntity> postEntities = postRepository.searchPostByKeyword(keyword, page);
-//        return toPostListDto(postEntities);
-        return null;
+    public List<Post> search(String keyword, int page) {
+        return postRepository.findByKeyword(keyword, page);
     }
 
     /**

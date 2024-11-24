@@ -29,13 +29,13 @@ public class PostFileController {
     /**
      * 게시글 이미지,동영상 업로드
      *
-     * @param multipartFiles
+     * @param multipartFileList
      * @return
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @UserAuth
-    public ResponseEntity<List<String>> uploadPostFiles(@RequestPart List<MultipartFile> multipartFiles) {
-        List<String> saveFiles = s3UploadService.saveFiles(multipartFiles, "post");
+    public ResponseEntity<List<String>> uploadPostFiles(@RequestPart List<MultipartFile> multipartFileList) {
+        List<String> saveFiles = s3UploadService.saveFiles(multipartFileList, "post");
         return new ResponseEntity<>(saveFiles, HttpStatus.OK);
     }
 
@@ -45,12 +45,12 @@ public class PostFileController {
      *
      * @param fileListDTO
      */
-    @DeleteMapping("/{problemPostId}")
+    @DeleteMapping("/{postId}")
     @UserAuth
-    public void deletePostFile(@PathVariable Long problemPostId, @RequestBody FileListDTO fileListDTO) {
+    public void deletePostFile(@PathVariable Long postId, @RequestBody FileListDTO fileListDTO) {
         // S3에서 삭제
         s3DeleteService.deleteFiles(fileListDTO.getFileUrlList());
         // DB에서 링크 삭제
-        postService.deletePostFiles(authorizationUtil.getLoginId(), problemPostId, fileListDTO.getFileUrlList());
+        postService.deletePostFiles(authorizationUtil.getLoginId(), postId, fileListDTO.getFileUrlList());
     }
 }

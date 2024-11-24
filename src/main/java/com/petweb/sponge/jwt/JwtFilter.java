@@ -1,6 +1,8 @@
 package com.petweb.sponge.jwt;
 
 import com.amazonaws.HttpMethod;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.petweb.sponge.exception.ResponseError;
 import com.petweb.sponge.exception.error.NotFoundToken;
 import com.petweb.sponge.oauth2.dto.CustomOAuth2User;
 import com.petweb.sponge.oauth2.dto.LoginAuth;
@@ -28,89 +30,83 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
-    @Value("${spring.jwt.expire-length}")
-    private long expireLong;
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String requestUri = request.getRequestURI();
 
-        // /login 또는 /oauth2 경로를 필터링하지 않음
-        if (requestUri.matches("^\\/login(?:\\/.*)?$") || requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
+        // /api/auth/** 경로를 필터링하지 않음
+        if (requestUri.matches("^/api/auth(?:/.*)?$")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        //cookie들을 불러온 뒤 token Key에 담긴 쿠키를 찾음
-        String authorization = null;
-        Cookie[] cookies = request.getCookies();
-        /**
-         * P: early return을 쓰는게 어떨까요?
-         * if (cookies == null) throw ~~
-         */
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("Authorization")) {
-                    authorization = cookie.getValue();
-                }
+        String token = request.getHeader("Authorization");
+
+        if (token == null && !request.getMethod().equalsIgnoreCase("GET")) {
+            response.setStatus(401);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            try {
+                String json = new ObjectMapper().writeValueAsString(new ResponseError(401, "토큰이 없습니다."));
+                response.getWriter().write(json);
+            } catch (Exception e) {
+                log.error(e.getMessage());
             }
-        }
-
-        //Authorization 검증
-        if (authorization == null) {
-            log.info("token is null!");
-            request.setAttribute("exception", new NotFoundToken());
-            filterChain.doFilter(request, response);
-            //조건이 해당되면 메소드 종료 (필수)
             return;
         }
 
-        //토큰
-        String token = authorization;
+        if (token != null) {
 
-        //토큰 소멸 시간 검증
-        try {
-            jwtUtil.isExpired(token);
+            //토큰 소멸 시간 검증
+            try {
+                jwtUtil.isExpired(token);
 
-        } catch (ExpiredJwtException e) {
-            log.info("token is expired!");
-            //토큰쿠키 삭제
-            Cookie newToken = new Cookie("Authorization", null);
-            newToken.setMaxAge(0);
-            newToken.setPath("/");
-            response.addCookie(newToken);
-            request.setAttribute("exception", e);
+            } catch (ExpiredJwtException jwtException) {
+                response.setStatus(401);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                try {
+                    String json = new ObjectMapper().writeValueAsString(new ResponseError(401, "토큰이 만료되었습니다."));
+                    response.getWriter().write(json);
+                } catch (Exception e) {
+                    log.error(e.getMessage());
+                }
+                return;
+            } catch (SignatureException signatureException) {
+                response.setStatus(401);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                try {
+                    String json = new ObjectMapper().writeValueAsString(new ResponseError(401, "위조된 토큰입니다."));
+                    response.getWriter().write(json);
+                } catch (Exception e) {
+                    log.error(e.getMessage());
+                }
+                return;
+            }
+
+
+            //토큰에서 id 획득
+            Long id = jwtUtil.getId(token);
+            String loginType = jwtUtil.getLoginType(token);
+
+            LoginAuth loginAuth = LoginAuth.builder()
+                    .id(id)
+                    .loginType(loginType)
+                    .build();
+
+            //UserDetails에 회원 정보 객체 담기
+            CustomOAuth2User customOAuth2User = new CustomOAuth2User(loginAuth);
+
+            //스프링 시큐리티 인증 토큰 생성
+            Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null);
+            //세션에 사용자 등록
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+
             filterChain.doFilter(request, response);
-            return;
-        } catch (SignatureException e) {
-            //토큰쿠키 삭제
-            Cookie newToken = new Cookie("Authorization", null);
-            newToken.setMaxAge(0);
-            newToken.setPath("/");
-            response.addCookie(newToken);
-            request.setAttribute("exception", e);
+        } else {
             filterChain.doFilter(request, response);
-            return;
         }
-
-        //토큰에서 id 획득
-        Long id = jwtUtil.getId(token);
-        String loginType = jwtUtil.getLoginType(token);
-
-        LoginAuth loginAuth = LoginAuth.builder()
-                .id(id)
-                .loginType(loginType)
-                .build();
-
-        //UserDetails에 회원 정보 객체 담기
-        CustomOAuth2User customOAuth2User = new CustomOAuth2User(loginAuth);
-
-        //스프링 시큐리티 인증 토큰 생성
-        Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
-        //세션에 사용자 등록
-        SecurityContextHolder.getContext().setAuthentication(authToken);
-
-        filterChain.doFilter(request, response);
     }
 }
