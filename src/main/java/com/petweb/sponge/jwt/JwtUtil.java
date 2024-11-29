@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.PublicKey;
 import java.util.Date;
 
 @Slf4j
@@ -16,8 +15,10 @@ import java.util.Date;
 public class JwtUtil {
 
     private final SecretKey secretKey;
-    @Value("${spring.jwt.expire-length}")
-    private long expireLong;
+    @Value("${spring.jwt.accessToken-expire-length}")
+    private long accessExpireLong;
+    @Value("${spring.jwt.refresh-expire-length}")
+    private long refreshExpireLong;
 
     public JwtUtil(@Value("${spring.jwt.secret}") String secret) {
         secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
@@ -34,14 +35,24 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    public String createJwt(Long id, String name,String loginType) {
-        return Jwts.builder()
+    public Token createToken(Long id, String name, String loginType) {
+        String accessToken = Jwts.builder()
                 .claim("id", id)
                 .claim("name", name)
                 .claim("loginType", loginType)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expireLong))
+                .expiration(new Date(System.currentTimeMillis() + accessExpireLong))
                 .signWith(secretKey)
                 .compact();
+
+        String refreshToken = Jwts.builder()
+                .claim("id", id)
+                .claim("name", name)
+                .claim("loginType", loginType)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + refreshExpireLong))
+                .signWith(secretKey)
+                .compact();
+        return Token.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 }

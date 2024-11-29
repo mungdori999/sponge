@@ -47,7 +47,11 @@ public class PostService {
                 NotFoundPet::new);
         return PostDetailsResponse.from(post, pet);
     }
+    @Transactional(readOnly = true)
+    public List<Post> findMyInfo(Long loginId) {
+            return postRepository.findListByUserId(loginId);
 
+    }
     /**
      * 카테고리별 글 전체 조회
      *
@@ -170,6 +174,7 @@ public class PostService {
 //            postRecommendRepository.save(likeEntity);
 //        }
     }
+
 
 
 }

@@ -37,6 +37,13 @@ public class PostController {
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
+    @GetMapping("/my_info")
+    @UserAuth
+    public ResponseEntity<List<PostListResponse>> getMyPost() {
+        List<Post> postList = postService.findMyInfo(authorizationUtil.getLoginId());
+        return new ResponseEntity<>(postList.stream().map(PostListResponse::from).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
     /**
      * 카테고리별 글 전체조회
      *

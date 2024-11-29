@@ -6,6 +6,7 @@ import com.petweb.sponge.exception.ResponseError;
 import com.petweb.sponge.exception.error.NotFoundToken;
 import com.petweb.sponge.oauth2.dto.CustomOAuth2User;
 import com.petweb.sponge.oauth2.dto.LoginAuth;
+import com.petweb.sponge.utils.ResponseHttpStatus;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
@@ -16,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,45 +46,20 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = request.getHeader("Authorization");
 
         if (token == null && !request.getMethod().equalsIgnoreCase("GET")) {
-            response.setStatus(401);
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            try {
-                String json = new ObjectMapper().writeValueAsString(new ResponseError(401, "토큰이 없습니다."));
-                response.getWriter().write(json);
-            } catch (Exception e) {
-                log.error(e.getMessage());
-            }
+            settingResponse(new ResponseError(401, "토큰이 없습니다."), response);
             return;
         }
 
         if (token != null) {
-
             //토큰 소멸 시간 검증
             try {
                 jwtUtil.isExpired(token);
 
             } catch (ExpiredJwtException jwtException) {
-                response.setStatus(401);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                try {
-                    String json = new ObjectMapper().writeValueAsString(new ResponseError(401, "토큰이 만료되었습니다."));
-                    response.getWriter().write(json);
-                } catch (Exception e) {
-                    log.error(e.getMessage());
-                }
+                settingResponse(new ResponseError(ResponseHttpStatus.EXPIRE_TOKEN.getCode(), "토큰이 만료되었습니다."), response);
                 return;
             } catch (SignatureException signatureException) {
-                response.setStatus(401);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                try {
-                    String json = new ObjectMapper().writeValueAsString(new ResponseError(401, "위조된 토큰입니다."));
-                    response.getWriter().write(json);
-                } catch (Exception e) {
-                    log.error(e.getMessage());
-                }
+                settingResponse(new ResponseError(401, "위조된 토큰입니다."), response);
                 return;
             }
 
@@ -107,6 +84,19 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } else {
             filterChain.doFilter(request, response);
+        }
+    }
+
+
+    private void settingResponse(ResponseError error, HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        try {
+            String json = new ObjectMapper().writeValueAsString(error);
+            response.getWriter().write(json);
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
     }
 }

@@ -19,6 +19,11 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
+    public List<Post> findListByUserId(Long loginId) {
+        return postJpaRepository.findListByUserId(loginId).stream().map(PostEntity::toModel).collect(Collectors.toList());
+    }
+
+    @Override
     public List<Post> findByKeyword(String keyword, int page) {
         return postJpaRepository.findListByKeyword(keyword, page).stream().map(PostEntity::toModel).collect(Collectors.toList());
     }

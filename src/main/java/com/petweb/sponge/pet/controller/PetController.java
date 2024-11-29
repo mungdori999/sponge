@@ -50,6 +50,17 @@ public class PetController {
     }
 
     /**
+     * 내정보로 조회
+     * @return
+     */
+    @GetMapping("/my_info")
+    @UserAuth
+    public ResponseEntity<List<PetResponse>> getMyInfo() {
+        List<Pet> petList = petService.getAllByUserId(authorizationUtil.getLoginId());
+        return new ResponseEntity<>(petList.stream().map(PetResponse::from).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    /**
      * 반려동물 등록
      *
      * @param petCreate

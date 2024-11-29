@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface PostRepository {
 
     Optional<Post> findById(Long id);
+    List<Post> findListByUserId(Long loginId);
 
     List<Post> findByKeyword(String keyword, int page);
 
@@ -18,6 +19,5 @@ public interface PostRepository {
     void delete(Post post);
 
     void initPost(Long id);
-
 
 }

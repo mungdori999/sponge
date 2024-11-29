@@ -44,7 +44,7 @@ public class Post {
                 .userId(userId)
                 .petId(petId)
                 .postFileList(postCreate.getFileUrlList().stream().map((fileUrl) -> PostFile.builder().fileUrl(fileUrl).build()).collect(Collectors.toList()))
-                .tagList(postCreate.getHasTagList().stream().map((hasTag) -> Tag.builder().hashtag(hasTag).build()).collect(Collectors.toList()))
+                .tagList(postCreate.getHashTagList().stream().map((hasTag) -> Tag.builder().hashtag(hasTag).build()).collect(Collectors.toList()))
                 .postCategoryList(postCreate.getCategoryCodeList().stream().map(category -> PostCategory.builder().categoryCode(category).build()).collect(Collectors.toList()))
                 .build();
     }
