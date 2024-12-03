@@ -27,9 +27,16 @@ public class JwtUtil {
     public Long getId(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("id", Long.class);
     }
+    public String getName(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("name",String.class);
+    }
     public String getLoginType(String token){
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("loginType", String.class);
     }
+    public String getCategory(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category",String.class);
+    }
+
 
     public Boolean isExpired(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
@@ -40,6 +47,7 @@ public class JwtUtil {
                 .claim("id", id)
                 .claim("name", name)
                 .claim("loginType", loginType)
+                .claim("category","accessToken")
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + accessExpireLong))
                 .signWith(secretKey)
@@ -49,6 +57,7 @@ public class JwtUtil {
                 .claim("id", id)
                 .claim("name", name)
                 .claim("loginType", loginType)
+                .claim("category","refreshToken")
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + refreshExpireLong))
                 .signWith(secretKey)

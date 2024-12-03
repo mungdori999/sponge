@@ -2,6 +2,7 @@ package com.petweb.sponge.oauth2.controller;
 
 import com.petweb.sponge.exception.error.NotFoundToken;
 import com.petweb.sponge.jwt.JwtUtil;
+import com.petweb.sponge.jwt.RefreshRepository;
 import com.petweb.sponge.jwt.Token;
 import com.petweb.sponge.oauth2.controller.response.UserOauth2Response;
 import com.petweb.sponge.oauth2.dto.LoginRequest;
@@ -28,6 +29,7 @@ public class OAuth2Controller {
     private final OAuth2Service oAuth2Service;
     private final KaKaoService kaKaoService;
     private final JwtUtil jwtUtil;
+    private final RefreshRepository refreshRepository;
 
 
     @PostMapping("/kakao")
@@ -37,6 +39,7 @@ public class OAuth2Controller {
             if (userOAuth2 != null) {
                 User user = oAuth2Service.loadUser(userOAuth2);
                 Token token = jwtUtil.createToken(user.getId(), user.getName(), loginRequest.getLoginType());
+                refreshRepository.save(token.getRefreshToken());
                 return ResponseEntity.ok().header("Authorization",token.getAccessToken())
                         .body(UserOauth2Response.from(user,token.getRefreshToken()));
             }

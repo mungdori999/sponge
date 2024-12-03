@@ -1,9 +1,7 @@
 package com.petweb.sponge.jwt;
 
-import com.amazonaws.HttpMethod;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.petweb.sponge.exception.ResponseError;
-import com.petweb.sponge.exception.error.NotFoundToken;
 import com.petweb.sponge.oauth2.dto.CustomOAuth2User;
 import com.petweb.sponge.oauth2.dto.LoginAuth;
 import com.petweb.sponge.utils.ResponseHttpStatus;
@@ -11,20 +9,16 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -56,7 +50,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 jwtUtil.isExpired(token);
 
             } catch (ExpiredJwtException jwtException) {
-                settingResponse(new ResponseError(ResponseHttpStatus.EXPIRE_TOKEN.getCode(), "토큰이 만료되었습니다."), response);
+                settingResponse(new ResponseError(ResponseHttpStatus.EXPIRE_ACCESS_TOKEN.getCode(), "토큰이 만료되었습니다."), response);
                 return;
             } catch (SignatureException signatureException) {
                 settingResponse(new ResponseError(401, "위조된 토큰입니다."), response);
