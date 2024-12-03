@@ -47,11 +47,13 @@ public class PostService {
                 NotFoundPet::new);
         return PostDetailsResponse.from(post, pet);
     }
+
     @Transactional(readOnly = true)
-    public List<Post> findMyInfo(Long loginId) {
-            return postRepository.findListByUserId(loginId);
+    public List<Post> findMyInfo(Long loginId, int page) {
+        return postRepository.findListByUserId(loginId, page);
 
     }
+
     /**
      * 카테고리별 글 전체 조회
      *
@@ -150,14 +152,14 @@ public class PostService {
     /**
      * 추천수 업데이트
      *
-     * @param problemPostId
      * @param loginId
+     * @param postId
      */
-    public void updateLikeCount(Long problemPostId, Long loginId) {
-        Optional<LikeEntity> recommend = postRecommendRepository.findRecommend(problemPostId, loginId);
-//        PostEntity postEntity = postRepository.findPostWithUser(problemPostId).orElseThrow(
+    public void updateLikeCount(Long loginId, Long postId) {
+        Optional<LikeEntity> recommend = postRecommendRepository.findRecommend(postId, loginId);
+//        PostEntity postEntity = postRepository.findPostWithUser(postId).orElseThrow(
 //                NotFoundPost::new);
-//        ;
+
 //        /**
 //         * 추천이 이미 있다면 추천을 삭제 추천수 -1
 //         * 추천이 없다면 추천을 저장 추천수 +1
@@ -174,7 +176,6 @@ public class PostService {
 //            postRecommendRepository.save(likeEntity);
 //        }
     }
-
 
 
 }

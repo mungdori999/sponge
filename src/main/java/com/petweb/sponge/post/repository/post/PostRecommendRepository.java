@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface PostRecommendRepository extends JpaRepository<LikeEntity,Long> {
 
-    @Query("SELECT pr FROM LikeEntity pr WHERE pr.postEntity.id = :problemPostId AND pr.userId = :userId")
-    Optional<LikeEntity> findRecommend(@Param("problemPostId") Long problemPostId, @Param("userId") Long userId);
+    @Query("SELECT pr FROM LikeEntity pr WHERE pr.postEntity.id = :postId AND pr.userId = :userId")
+    Optional<LikeEntity> findRecommend(@Param("postId") Long postId, @Param("userId") Long userId);
 }

@@ -40,10 +40,9 @@ public class OAuth2Controller {
                 User user = oAuth2Service.loadUser(userOAuth2);
                 Token token = jwtUtil.createToken(user.getId(), user.getName(), loginRequest.getLoginType());
                 refreshRepository.save(token.getRefreshToken());
-                return ResponseEntity.ok().header("Authorization",token.getAccessToken())
-                        .body(UserOauth2Response.from(user,token.getRefreshToken()));
-            }
-            else {
+                return ResponseEntity.ok().header("Authorization", token.getAccessToken())
+                        .body(UserOauth2Response.from(user, token.getRefreshToken()));
+            } else {
                 throw new NotFoundToken();
             }
         }

@@ -11,23 +11,21 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Table(name = "like")
+@Table(name = "post_like")
 public class LikeEntity {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "problem_post_id")
-    private PostEntity postEntity;
+    private Long postId;
 
     private Long userId;
 
     @Builder
-    public LikeEntity(Long id, PostEntity postEntity, Long userId) {
+    public LikeEntity(Long id, Long postId, Long userId) {
         this.id = id;
-        this.postEntity = postEntity;
+        this.postId = postId;
         this.userId = userId;
     }
 }

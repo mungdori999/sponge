@@ -37,10 +37,15 @@ public class PostController {
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
+    /**
+     * 내가쓴글 조회
+     *
+     * @return
+     */
     @GetMapping("/my_info")
     @UserAuth
-    public ResponseEntity<List<PostListResponse>> getMyPost() {
-        List<Post> postList = postService.findMyInfo(authorizationUtil.getLoginId());
+    public ResponseEntity<List<PostListResponse>> getMyPost(@RequestParam("page") int page) {
+        List<Post> postList = postService.findMyInfo(authorizationUtil.getLoginId(),page);
         return new ResponseEntity<>(postList.stream().map(PostListResponse::from).collect(Collectors.toList()), HttpStatus.OK);
     }
 
@@ -50,7 +55,7 @@ public class PostController {
      * @param categoryCode
      * @return
      */
-    @GetMapping(produces = "application/json; charset=UTF-8")
+    @GetMapping()
     public ResponseEntity<List<PostListResponse>> getAllPost(@RequestParam("categoryCode") Long categoryCode, @RequestParam("page") int page) {
         List<Post> postList = postService.findPostList(categoryCode, page);
         return new ResponseEntity<>(postList.stream().map(PostListResponse::from).collect(Collectors.toList()), HttpStatus.OK);
@@ -109,14 +114,13 @@ public class PostController {
 
     /**
      * 추천수 업데이트
-     *
-     * @param postIdDto
+     * @param postId
      */
-//    @PostMapping("/like")
-//    @UserAuth
-//    public void updateLikeCount(@RequestBody PostIdDTO postIdDto) {
-//        postService.updateLikeCount(postIdDto.getProblemPostId(), authorizationUtil.getLoginId());
-//    }
+    @PostMapping("/like")
+    @UserAuth
+    public void updateLikeCount(@RequestParam("postId") Long postId) {
+        postService.updateLikeCount(authorizationUtil.getLoginId(), postId);
+    }
 
 
 }
