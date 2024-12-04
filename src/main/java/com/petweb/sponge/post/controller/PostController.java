@@ -120,6 +120,7 @@ public class PostController {
     @UserAuth
     public void updateLikeCount(@RequestParam("postId") Long postId) {
         postService.updateLikeCount(authorizationUtil.getLoginId(), postId);
+
     }
 
 

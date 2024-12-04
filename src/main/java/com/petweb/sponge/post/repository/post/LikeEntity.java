@@ -1,5 +1,6 @@
 package com.petweb.sponge.post.repository.post;
 
+import com.petweb.sponge.post.domain.Like;
 import com.petweb.sponge.post.repository.post.PostEntity;
 import com.petweb.sponge.user.repository.UserEntity;
 import jakarta.persistence.*;
@@ -27,5 +28,21 @@ public class LikeEntity {
         this.id = id;
         this.postId = postId;
         this.userId = userId;
+    }
+
+    public Like toModel() {
+        return Like.builder()
+                .id(id)
+                .postId(postId)
+                .userId(userId)
+                .build();
+    }
+
+    public static LikeEntity from(Like like) {
+        LikeEntity likeEntity = new LikeEntity();
+        likeEntity.id = like.getId();
+        likeEntity.postId= like.getPostId();
+        likeEntity.userId = like.getUserId();
+        return likeEntity;
     }
 }

@@ -16,4 +16,12 @@ public class Like {
         this.postId = postId;
         this.userId = userId;
     }
+
+
+    public static Like from(Long postId,Long userId) {
+        return Like.builder()
+                .postId(postId)
+                .userId(userId)
+                .build();
+    }
 }

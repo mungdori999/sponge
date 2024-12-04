@@ -6,9 +6,11 @@ import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.service.port.PetRepository;
 import com.petweb.sponge.post.controller.response.PostDetailsResponse;
+import com.petweb.sponge.post.domain.Like;
 import com.petweb.sponge.post.domain.post.Post;
 import com.petweb.sponge.post.dto.post.PostCreate;
 import com.petweb.sponge.post.dto.post.PostUpdate;
+import com.petweb.sponge.post.repository.LikeRepository;
 import com.petweb.sponge.post.repository.post.*;
 import com.petweb.sponge.post.repository.ProblemTypeRepository;
 import com.petweb.sponge.user.domain.User;
@@ -28,8 +30,8 @@ public class PostService {
     private final UserRepository userRepository;
     private final PetRepository petRepository;
     private final PostRepository postRepository;
+    private final LikeRepository likeRepository;
     private final ProblemTypeRepository problemTypeRepository;
-    private final PostRecommendRepository postRecommendRepository;
     private final PostFileRepository postFileRepository;
 
 
@@ -156,26 +158,21 @@ public class PostService {
      * @param postId
      */
     public void updateLikeCount(Long loginId, Long postId) {
-        Optional<LikeEntity> recommend = postRecommendRepository.findRecommend(postId, loginId);
-//        PostEntity postEntity = postRepository.findPostWithUser(postId).orElseThrow(
-//                NotFoundPost::new);
-
-//        /**
-//         * 추천이 이미 있다면 추천을 삭제 추천수 -1
-//         * 추천이 없다면 추천을 저장 추천수 +1
-//         */
-//        if (recommend.isPresent()) {
-//            postEntity.decreaseLikeCount();
-//            postRecommendRepository.delete(recommend.get());
-//        } else {
-//            LikeEntity likeEntity = LikeEntity.builder()
-//                    .problemPost(postEntity)
-//                    .userEntity(postEntity.getUserEntity())
-//                    .build();
-//            postEntity.increaseLikeCount();
-//            postRecommendRepository.save(likeEntity);
-//        }
+        Optional<Like> like = likeRepository.findLike(postId, loginId);
+        Post post = postRepository.findById(postId).orElseThrow(
+                NotFoundPost::new);
+        /**
+         * 추천이 이미 있다면 추천을 삭제 추천수 -1
+         * 추천이 없다면 추천을 저장 추천수 +1
+         */
+        if (like.isPresent()) {
+            post.decreaseLikeCount();
+            likeRepository.delete(like.get());
+            postRepository.save(post);
+        } else {
+            Like newLike = Like.from(postId, loginId);
+            post.increaseLikeCount();
+            likeRepository.save(newLike);
+        }
     }
-
-
 }

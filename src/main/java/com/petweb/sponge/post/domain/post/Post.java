@@ -72,4 +72,13 @@ public class Post {
             throw new LoginIdError();
         }
     }
+
+    public void increaseLikeCount() {
+        likeCount++;
+    }
+    public void decreaseLikeCount() {
+        likeCount--;
+    }
+
+
 }
