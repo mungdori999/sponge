@@ -157,7 +157,7 @@ public class PostService {
      * @param loginId
      * @param postId
      */
-    public void updateLikeCount(Long loginId, Long postId) {
+    public void updateLike(Long loginId, Long postId) {
         Optional<Like> like = likeRepository.findLike(postId, loginId);
         Post post = postRepository.findById(postId).orElseThrow(
                 NotFoundPost::new);
@@ -173,6 +173,9 @@ public class PostService {
             Like newLike = Like.from(postId, loginId);
             post.increaseLikeCount();
             likeRepository.save(newLike);
+            postRepository.save(post);
         }
     }
+
+
 }

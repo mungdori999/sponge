@@ -118,9 +118,8 @@ public class PostController {
      */
     @PostMapping("/like")
     @UserAuth
-    public void updateLikeCount(@RequestParam("postId") Long postId) {
-        postService.updateLikeCount(authorizationUtil.getLoginId(), postId);
-
+    public void updateLike(@RequestParam("postId") Long postId) {
+        postService.updateLike(authorizationUtil.getLoginId(), postId);
     }
 
 
