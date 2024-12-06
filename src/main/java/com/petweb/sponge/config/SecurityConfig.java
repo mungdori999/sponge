@@ -45,6 +45,8 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, "/**")
                         .permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/**")
+                        .permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/**")
                         .permitAll()
                         .anyRequest()

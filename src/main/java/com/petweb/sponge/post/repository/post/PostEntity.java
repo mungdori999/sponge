@@ -104,6 +104,7 @@ public class PostEntity {
         postEntity.userId = post.getUserId();
         postEntity.petId = post.getPetId();
         postEntity.createdAt = post.getPostContent().getCreatedAt();
+        postEntity.modifiedAt = post.getPostContent().getModifiedAt();
 
         postEntity.tagEntityList = post.getTagList().stream()
                 .map(tag -> TagEntity.builder()

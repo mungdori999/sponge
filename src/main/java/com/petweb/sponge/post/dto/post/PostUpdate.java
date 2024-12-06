@@ -10,6 +10,6 @@ public class PostUpdate {
     private String content;
     private String duration;
     private List<Long> categoryCodeList;
-    private List<String> hasTagList;
+    private List<String> hashTagList;
     private List<String> fileUrlList;
 }

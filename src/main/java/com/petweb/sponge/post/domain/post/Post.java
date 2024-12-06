@@ -57,7 +57,7 @@ public class Post {
                 .userId(userId)
                 .petId(petId)
                 .postFileList(postUpdate.getFileUrlList().stream().map((fileUrl) -> PostFile.builder().fileUrl(fileUrl).build()).collect(Collectors.toList()))
-                .tagList(postUpdate.getHasTagList().stream().map((hasTag) -> Tag.builder().hashtag(hasTag).build()).collect(Collectors.toList()))
+                .tagList(postUpdate.getHashTagList().stream().map((hasTag) -> Tag.builder().hashtag(hasTag).build()).collect(Collectors.toList()))
                 .postCategoryList(postUpdate.getCategoryCodeList().stream().map(category -> PostCategory.builder().categoryCode(category).build()).collect(Collectors.toList()))
                 .build();
     }
