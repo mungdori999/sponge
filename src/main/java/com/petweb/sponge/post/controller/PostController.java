@@ -1,6 +1,7 @@
 package com.petweb.sponge.post.controller;
 
 import com.petweb.sponge.auth.UserAuth;
+import com.petweb.sponge.post.controller.response.CheckResponse;
 import com.petweb.sponge.post.controller.response.PostDetailsResponse;
 import com.petweb.sponge.post.controller.response.PostListResponse;
 import com.petweb.sponge.post.domain.post.Post;
@@ -112,6 +113,22 @@ public class PostController {
         postService.delete(authorizationUtil.getLoginId(), id);
     }
 
+    @GetMapping("/check")
+    @UserAuth
+    public ResponseEntity<CheckResponse> findCheck(@RequestParam("postId") Long postId) {
+        CheckResponse checkResponse = postService.findCheck(authorizationUtil.getLoginId(), postId);
+        return new ResponseEntity<>(checkResponse, HttpStatus.OK);
+
+    }
+    /**
+     * 북마크 업데이트
+     * @param postId
+     */
+    @PostMapping("/bookmark")
+    @UserAuth
+    public void updateBookmark(@RequestParam("postId") Long postId) {
+        postService.updateBookmark(authorizationUtil.getLoginId(),postId);
+    }
     /**
      * 추천수 업데이트
      * @param postId

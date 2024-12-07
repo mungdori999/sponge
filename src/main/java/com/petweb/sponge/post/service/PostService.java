@@ -5,8 +5,10 @@ import com.petweb.sponge.exception.error.NotFoundPost;
 import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.service.port.PetRepository;
+import com.petweb.sponge.post.controller.response.CheckResponse;
 import com.petweb.sponge.post.controller.response.PostDetailsResponse;
 import com.petweb.sponge.post.domain.Like;
+import com.petweb.sponge.post.domain.post.Bookmark;
 import com.petweb.sponge.post.domain.post.Post;
 import com.petweb.sponge.post.dto.post.PostCreate;
 import com.petweb.sponge.post.dto.post.PostUpdate;
@@ -31,6 +33,7 @@ public class PostService {
     private final PetRepository petRepository;
     private final PostRepository postRepository;
     private final LikeRepository likeRepository;
+    private final BookmarkRepository bookmarkRepository;
     private final ProblemTypeRepository problemTypeRepository;
     private final PostFileRepository postFileRepository;
 
@@ -107,6 +110,7 @@ public class PostService {
      * @param postUpdate
      * @return
      */
+    // TODO update하면 좋아요가 초기화되는 문제있음
     @Transactional
     public PostDetailsResponse update(Long loginId, Long id, PostUpdate postUpdate) {
         Post post = postRepository.findById(id).orElseThrow(
@@ -151,12 +155,44 @@ public class PostService {
 //        postFileRepository.deleteByFiles(fileUrlList);
     }
 
+
+    /**
+     * 북마크,좋아요가 눌러있는지 없는지 조회
+     *
+     * @param loginId
+     * @param postId
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public CheckResponse findCheck(Long loginId, Long postId) {
+        Optional<Like> like = likeRepository.findLike(postId, loginId);
+        Optional<Bookmark> bookmark = bookmarkRepository.findBookmark(postId, loginId);
+        return CheckResponse.from(like,bookmark);
+
+    }
+    /**
+     * 북마크 업데이트
+     * @param loginId
+     * @param postId
+     */
+    @Transactional
+    public void updateBookmark(Long loginId, Long postId) {
+        Optional<Bookmark> bookmark = bookmarkRepository.findBookmark(postId, loginId);
+        if (bookmark.isPresent()) {
+            bookmarkRepository.delete(bookmark.get());
+        }
+        else {
+            Bookmark newBookmark = Bookmark.from(postId, loginId);
+            bookmarkRepository.save(newBookmark);
+        }
+    }
     /**
      * 추천수 업데이트
      *
      * @param loginId
      * @param postId
      */
+    @Transactional
     public void updateLike(Long loginId, Long postId) {
         Optional<Like> like = likeRepository.findLike(postId, loginId);
         Post post = postRepository.findById(postId).orElseThrow(
@@ -176,6 +212,7 @@ public class PostService {
             postRepository.save(post);
         }
     }
+
 
 
 }

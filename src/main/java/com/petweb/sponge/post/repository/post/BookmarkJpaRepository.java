@@ -7,11 +7,9 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface BookmarkRepository {
+public interface BookmarkJpaRepository extends JpaRepository<BookmarkEntity,Long> {
 
-    Optional<Bookmark> findBookmark(Long postId, Long loginId);
-    void save(Bookmark newBookmark);
 
-    void delete(Bookmark bookmark);
-
+    @Query("SELECT be FROM BookmarkEntity be WHERE be.postId = :postId AND be.userId = :loginId")
+    Optional<BookmarkEntity> findBookmark(@Param("postId") Long postId, @Param("loginId") Long loginId);
 }
