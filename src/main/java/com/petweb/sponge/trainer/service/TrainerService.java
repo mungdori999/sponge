@@ -1,13 +1,12 @@
 package com.petweb.sponge.trainer.service;
 
 import com.petweb.sponge.exception.error.NotFoundTrainer;
-import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.trainer.domain.Review;
 import com.petweb.sponge.trainer.domain.Trainer;
+import com.petweb.sponge.trainer.repository.TrainerEntity;
 import com.petweb.sponge.trainer.dto.*;
 import com.petweb.sponge.trainer.repository.ReviewRepository;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
-import com.petweb.sponge.user.repository.UserEntity;
 import com.petweb.sponge.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,14 +27,13 @@ public class TrainerService {
     /**
      * 훈련사 단건 조회
      *
-     * @param trainerId
+     * @param id
      * @return
      */
     @Transactional(readOnly = true)
-    public TrainerDetailDTO findTrainer(Long trainerId) {
-        Trainer trainer = trainerRepository.findTrainerWithAddress(trainerId).orElseThrow(
+    public Trainer getById(Long id) {
+        return trainerRepository.findById(id).orElseThrow(
                 NotFoundTrainer::new);
-        return toDetailDto(trainer);
     }
 
     /**
@@ -45,11 +43,9 @@ public class TrainerService {
      * @return
      */
     @Transactional(readOnly = true)
-    public TrainerDetailDTO findMyInfo(Long loginId) {
-        // trainer, address 한번에 조회
-        Trainer trainer = trainerRepository.findTrainerWithAddress(loginId).orElseThrow(
+    public Trainer findMyInfo(Long loginId) {
+        return trainerRepository.findById(loginId).orElseThrow(
                 NotFoundTrainer::new);
-        return toDetailDto(trainer);
     }
 
 
@@ -63,11 +59,11 @@ public class TrainerService {
     @Transactional
     public void saveTrainer(Long loginId, TrainerDetailDTO trainerDetailDTO) {
         //로그인하자마자 저장 되어있던 trainer 조회
-        Trainer trainer = trainerRepository.findById(loginId).orElseThrow(
-                NotFoundTrainer::new);
-        //trainer에 정보 셋팅 및 저장
-        trainer.settingTrainer(trainerDetailDTO);
-        trainerRepository.save(trainer);
+//        TrainerEntity trainerEntity = trainerRepository.findById(loginId).orElseThrow(
+//                NotFoundTrainer::new);
+//        //trainer에 정보 셋팅 및 저장
+//        trainerEntity.settingTrainer(trainerDetailDTO);
+//        trainerRepository.save(trainerEntity);
     }
 
     /**
@@ -78,11 +74,11 @@ public class TrainerService {
      */
     @Transactional
     public void updateTrainer(Long trainerId, TrainerDetailDTO trainerDetailDTO) {
-        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
-                NotFoundTrainer::new);
-        trainerRepository.initTrainer(trainerId);
-        //trainer 정보 수정
-        trainer.settingTrainer(trainerDetailDTO);
+//        TrainerEntity trainerEntity = trainerRepository.findById(trainerId).orElseThrow(
+//                NotFoundTrainer::new);
+//        trainerRepository.initTrainer(trainerId);
+//        //trainer 정보 수정
+//        trainerEntity.settingTrainer(trainerDetailDTO);
     }
 
     /**
@@ -92,11 +88,11 @@ public class TrainerService {
      */
     @Transactional
     public void deleteTrainer(Long trainerId) {
-        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
-                NotFoundTrainer::new);
-
-        //벌크성 쿼리로 history, address 한번에 삭제
-        trainerRepository.deleteTrainer(trainer.getId());
+//        TrainerEntity trainerEntity = trainerRepository.findById(trainerId).orElseThrow(
+//                NotFoundTrainer::new);
+//
+//        //벌크성 쿼리로 history, address 한번에 삭제
+//        trainerRepository.deleteTrainer(trainerEntity.getId());
     }
 
     /**
@@ -106,9 +102,9 @@ public class TrainerService {
      */
     @Transactional
     public void deleteTrainerImg(Long trainerId) {
-        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
-                NotFoundTrainer::new);
-        trainer.setProfileImgUrl(null);
+//        TrainerEntity trainerEntity = trainerRepository.findById(trainerId).orElseThrow(
+//                NotFoundTrainer::new);
+//        trainerEntity.setProfileImgUrl(null);
     }
 
     /**
@@ -152,29 +148,29 @@ public class TrainerService {
     /**
      * Dto로 변환하는 메소드
      *
-     * @param trainer
+     * @param trainerEntity
      * @return
      */
-    private TrainerDetailDTO toDetailDto(Trainer trainer) {
-        List<AddressDTO> addressDTOList = trainer.getTrainerAddresses().stream().map(address -> AddressDTO.builder()
+    private TrainerDetailDTO toDetailDto(TrainerEntity trainerEntity) {
+        List<AddressDTO> addressDTOList = trainerEntity.getTrainerAddressEntityList().stream().map(address -> AddressDTO.builder()
                 .city(address.getCity())
                 .town(address.getTown())
                 .build()).collect(Collectors.toList());
-        List<HistoryDTO> historyDTOList = trainer.getHistories().stream().map(history -> HistoryDTO.builder()
+        List<HistoryDTO> historyDTOList = trainerEntity.getHistoryEntityList().stream().map(history -> HistoryDTO.builder()
                 .title(history.getTitle())
                 .startDt(history.getStartDt())
                 .endDt(history.getEndDt())
                 .description(history.getDescription()).build()).collect(Collectors.toList());
         return TrainerDetailDTO.builder()
-                .trainerId(trainer.getId())
-                .name(trainer.getName())
-                .gender(trainer.getGender())
-                .phone(trainer.getPhone())
-                .profileImgUrl(trainer.getProfileImgUrl())
-                .content(trainer.getContent())
-                .years(trainer.getYears())
-                .adoptCount(trainer.getAdopt_count())
-                .chatCount(trainer.getChat_count())
+                .trainerId(trainerEntity.getId())
+                .name(trainerEntity.getName())
+                .gender(trainerEntity.getGender())
+                .phone(trainerEntity.getPhone())
+                .profileImgUrl(trainerEntity.getProfileImgUrl())
+                .content(trainerEntity.getContent())
+                .years(trainerEntity.getYears())
+                .adoptCount(trainerEntity.getAdoptCount())
+                .chatCount(trainerEntity.getChatCount())
                 .addressList(addressDTOList)
                 .historyList(historyDTOList)
                 .build();

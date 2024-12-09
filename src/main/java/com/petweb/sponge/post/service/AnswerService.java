@@ -3,7 +3,6 @@ package com.petweb.sponge.post.service;
 import com.petweb.sponge.exception.error.*;
 import com.petweb.sponge.post.domain.answer.AdoptAnswer;
 import com.petweb.sponge.post.domain.answer.Answer;
-import com.petweb.sponge.post.repository.post.PostEntity;
 import com.petweb.sponge.post.dto.answer.AdoptAnswerDTO;
 import com.petweb.sponge.post.dto.answer.AnswerDTO;
 import com.petweb.sponge.post.dto.answer.AnswerDetailDTO;
@@ -12,7 +11,7 @@ import com.petweb.sponge.post.repository.answer.AdoptAnswerRepository;
 import com.petweb.sponge.post.repository.answer.AnswerRecommendRepository;
 import com.petweb.sponge.post.repository.answer.AnswerRepository;
 import com.petweb.sponge.post.repository.post.PostRepository;
-import com.petweb.sponge.trainer.domain.Trainer;
+import com.petweb.sponge.trainer.repository.TrainerEntity;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
 import com.petweb.sponge.user.service.port.UserRepository;
 import com.petweb.sponge.utils.AuthorizationUtil;
@@ -46,8 +45,9 @@ public class AnswerService {
      */
     @Transactional(readOnly = true)
     public List<AnswerDetailDTO> findAnswerList(Long problemPostId) {
-        List<Answer> answerList = answerRepository.findAllAnswerWithTrainer(problemPostId);
-        return toDetailDto(answerList);
+//        List<Answer> answerList = answerRepository.findAllAnswerWithTrainer(problemPostId);
+//        return toDetailDto(answerList);
+        return  null;
     }
 
 
@@ -83,7 +83,7 @@ public class AnswerService {
     public void updateAnswer(Long answerId, AnswerUpdateDTO answerUpdateDTO, Long loginId) {
         Answer answer = answerRepository.findById(answerId).orElseThrow(
                 NotFoundAnswer::new);
-        if (!loginId.equals(answer.getTrainer().getId())) {
+        if (!loginId.equals(answer.getTrainerEntity().getId())) {
             throw new LoginIdError();
         }
         answer.setContent(answerUpdateDTO.getContent());
@@ -113,8 +113,8 @@ public class AnswerService {
          * 답변과 관련하여 채택이 없다면 채택만 삭제, 채택수는 그대로
          */
         if (adoptAnswer.isPresent()) {
-            Trainer trainer = adoptAnswer.get().getTrainer();
-            trainer.decreaseAdoptCount();
+//            TrainerEntity trainerEntity = adoptAnswer.get().getTrainerEntity();
+//            trainerEntity.decreaseAdoptCount();
 //            answer.getPostEntity().decreaseAnswerCount();
         }
         answerRepository.deleteAnswer(answerId, loginId);
@@ -178,57 +178,6 @@ public class AnswerService {
 //        }
     }
 
-    /**
-     * Dto 변환
-     *
-     * @param answerList
-     * @return
-     */
-    private List<AnswerDetailDTO> toDetailDto(List<Answer> answerList) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-        return answerList.stream().map(answer ->
-        {
-
-            AdoptAnswer adoptAnswer = answer.getAdoptAnswer();
-            // 채택되면 true 안되있으면 false
-            boolean adoptCheck = adoptAnswer != null;
-
-            // 문제행동글 작성자면 true 작성자가 아니라면 false
-            boolean postWriter = false;
-            if (authorizationUtil.getLoginType().equals(LoginType.USER.getLoginType())) {
-//                Long userId = answer.getPostEntity().getUserEntity().getId();
-//                postWriter = authorizationUtil.getLoginId().equals(userId);
-            }
-            Optional<Trainer> trainer = trainerRepository.findById(answer.getTrainer().getId());
-            if (trainer.isPresent()) {
-                //훈련사의 정보가 있다면
-                return AnswerDetailDTO.builder()
-                        .answerId(answer.getId())
-                        .trainerId(answer.getTrainer().getId())
-                        .trainerName(answer.getTrainer().getName())
-                        .adopt_count(answer.getTrainer().getAdopt_count())
-                        .chat_count(answer.getTrainer().getChat_count())
-                        .content(answer.getContent())
-                        .likeCount(answer.getLikeCount())
-                        .adoptCheck(adoptCheck)
-                        .postWriter(postWriter)
-                        .createdAt(formatter.format(answer.getCreatedAt()))
-                        .build();
-            } else {
-                //훈련사가 탈퇴했다면
-                return AnswerDetailDTO.builder()
-                        .answerId(answer.getId())
-                        .content(answer.getContent())
-                        .likeCount(answer.getLikeCount())
-                        .adoptCheck(adoptCheck)
-                        .postWriter(postWriter)
-                        .createdAt(formatter.format(answer.getCreatedAt()))
-                        .build();
-            }
-
-        }).collect(Collectors.toList());
-    }
 
 
 }

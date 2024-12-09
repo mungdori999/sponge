@@ -113,12 +113,16 @@ public class PostController {
         postService.delete(authorizationUtil.getLoginId(), id);
     }
 
+    /**
+     * 북마크, 좋아요 눌러져있는지 조회
+     * @param postId
+     * @return
+     */
     @GetMapping("/check")
     @UserAuth
-    public ResponseEntity<CheckResponse> findCheck(@RequestParam("postId") Long postId) {
+    public ResponseEntity<CheckResponse> getMyCheck(@RequestParam("postId") Long postId) {
         CheckResponse checkResponse = postService.findCheck(authorizationUtil.getLoginId(), postId);
         return new ResponseEntity<>(checkResponse, HttpStatus.OK);
-
     }
     /**
      * 북마크 업데이트

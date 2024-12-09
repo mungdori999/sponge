@@ -3,6 +3,8 @@ package com.petweb.sponge.trainer.controller;
 import com.petweb.sponge.auth.TrainerAuth;
 import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.exception.error.LoginIdError;
+import com.petweb.sponge.trainer.controller.response.TrainerResponse;
+import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.dto.ReviewDTO;
 import com.petweb.sponge.trainer.dto.ReviewDetailDTO;
 import com.petweb.sponge.trainer.dto.TrainerDetailDTO;
@@ -27,13 +29,13 @@ public class TrainerController {
 
     /**
      * 훈련사 단건조회
-     * @param trainerId
+     * @param id
      * @return
      */
-    @GetMapping("/{trainerId}")
-    public ResponseEntity<TrainerDetailDTO> getTrainer(@PathVariable("trainerId") Long trainerId) {
-        TrainerDetailDTO trainer = trainerService.findTrainer(trainerId);
-        return new ResponseEntity<>(trainer, HttpStatus.OK);
+    @GetMapping("/{id}")
+    public ResponseEntity<TrainerResponse> getById(@PathVariable("id") Long id) {
+        Trainer trainer = trainerService.getById(id);
+        return new ResponseEntity<>(TrainerResponse.from(trainer), HttpStatus.OK);
     }
 
     /**
@@ -42,9 +44,9 @@ public class TrainerController {
      */
     @GetMapping("/my_info")
     @TrainerAuth
-    public ResponseEntity<TrainerDetailDTO> getMyInfo() {
-        TrainerDetailDTO trainer = trainerService.findMyInfo(authorizationUtil.getLoginId());
-        return new ResponseEntity<>(trainer, HttpStatus.OK);
+    public ResponseEntity<TrainerResponse> getMyInfo() {
+        Trainer trainer = trainerService.findMyInfo(authorizationUtil.getLoginId());
+        return new ResponseEntity<>(TrainerResponse.from(trainer), HttpStatus.OK);
     }
 
     /**

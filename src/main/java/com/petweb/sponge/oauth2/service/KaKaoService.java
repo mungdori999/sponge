@@ -12,7 +12,7 @@ import java.util.Map;
 @Service
 public class KaKaoService {
 
-    public UserOAuth2 getKaKaoInfo(String accessToken) {
+    public LoginOAuth2 getKaKaoInfo(String accessToken) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
@@ -34,7 +34,7 @@ public class KaKaoService {
             String email = (String) kakaoAccount.get("email");
             String name = profile != null ? (String) profile.get("nickname") : null;
 
-            return new UserOAuth2(name, email);
+            return new LoginOAuth2(name, email);
 
         } catch (Exception e) {
             e.printStackTrace();

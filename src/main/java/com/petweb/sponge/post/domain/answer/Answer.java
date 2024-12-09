@@ -1,7 +1,7 @@
 package com.petweb.sponge.post.domain.answer;
 
 import com.petweb.sponge.post.repository.post.PostEntity;
-import com.petweb.sponge.trainer.domain.Trainer;
+import com.petweb.sponge.trainer.repository.TrainerEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,7 +37,7 @@ public class Answer {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trainer_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Trainer trainer;
+    private TrainerEntity trainerEntity;
 
     @OneToOne(mappedBy = "answer", fetch = FetchType.LAZY)
     private AdoptAnswer adoptAnswer;
@@ -56,14 +56,14 @@ public class Answer {
     }
 
     @Builder
-    public Answer(String content, PostEntity postEntity, Trainer trainer) {
+    public Answer(String content, PostEntity postEntity, TrainerEntity trainerEntity) {
         this.content = content;
         this.postEntity = postEntity;
-        this.trainer = trainer;
+        this.trainerEntity = trainerEntity;
     }
     // 답변글 작성 아이디와 로그인아이디가 맞는지
     public boolean isWriteTrainer(Long loginId) {
-        return getTrainer().getId().equals(loginId);
+        return getTrainerEntity().getId().equals(loginId);
     }
     // 문젬행동글을 작성한 유저인지 아닌지
     public boolean isPostWriteUser(Long userId) {
