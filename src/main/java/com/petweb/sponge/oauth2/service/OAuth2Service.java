@@ -32,19 +32,8 @@ public class OAuth2Service {
         }
     }
 
-    public Trainer loadTrainer(LoginOAuth2 loginOAuth2) {
+    public Trainer checkTrainer(LoginOAuth2 loginOAuth2) {
         Trainer existData = trainerRepository.findByEmail(loginOAuth2.getEmail()).orElse(null);
-
-        if (existData == null) {
-            Trainer trainer = Trainer.builder()
-                    .email(loginOAuth2.getEmail())
-                    .name(loginOAuth2.getName())
-                    .build();
-            Trainer savedTrainer = trainerRepository.register(trainer);
-            return savedTrainer;
-
-        } else {
-            return existData;
-        }
+        return existData;
     }
 }
