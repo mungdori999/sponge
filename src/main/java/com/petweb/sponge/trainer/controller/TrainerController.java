@@ -55,9 +55,8 @@ public class TrainerController {
      * @return
      */
     @PostMapping()
-    @TrainerAuth
-    public void signup(@RequestBody TrainerDetailDTO trainerDetailDTO) {
-        trainerService.saveTrainer(authorizationUtil.getLoginId(), trainerDetailDTO);
+    public void create(@RequestBody TrainerDetailDTO trainerDetailDTO) {
+        trainerService.saveTrainer(trainerDetailDTO);
     }
 
     /**

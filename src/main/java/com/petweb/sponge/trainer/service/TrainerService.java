@@ -52,12 +52,11 @@ public class TrainerService {
     /**
      * 훈련사 정보저장
      *
-     * @param loginId
      * @param trainerDetailDTO
      * @return
      */
     @Transactional
-    public void saveTrainer(Long loginId, TrainerDetailDTO trainerDetailDTO) {
+    public void saveTrainer(TrainerDetailDTO trainerDetailDTO) {
         //로그인하자마자 저장 되어있던 trainer 조회
 //        TrainerEntity trainerEntity = trainerRepository.findById(loginId).orElseThrow(
 //                NotFoundTrainer::new);
