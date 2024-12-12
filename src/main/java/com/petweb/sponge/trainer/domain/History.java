@@ -9,11 +9,11 @@ import java.sql.Timestamp;
 public class History {
 
     private Long id;
-
     private String title;
     private String startDt;
     private String endDt;
     private String description;
+    private Long trainerId;
     private Timestamp createdAt;
     private Timestamp modifiedAt;
 

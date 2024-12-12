@@ -45,10 +45,6 @@ public class TrainerEntity {
     private Timestamp createdAt;
     @LastModifiedDate
     private Timestamp modifiedAt;
-
-    @OneToMany(mappedBy = "trainerEntity", cascade = CascadeType.ALL)
-    private List<HistoryEntity> historyEntityList = new ArrayList<>();
-
     @OneToMany(mappedBy = "trainerEntity", cascade = CascadeType.ALL)
     private List<TrainerAddressEntity> trainerAddressEntityList = new ArrayList<>();
 
@@ -61,22 +57,12 @@ public class TrainerEntity {
     public void addTrainerAddressList(List<TrainerAddressEntity> trainerAddressEntityList) {
             this.trainerAddressEntityList = trainerAddressEntityList;
     }
-    public void addHistoryList(List<HistoryEntity> historyEntityList) {
-            this.historyEntityList = historyEntityList;
-    }
     public Trainer toModel() {
 
         List<TrainerAddress> trainerAddressList =(!Hibernate.isInitialized(trainerAddressEntityList) || trainerAddressEntityList == null || trainerAddressEntityList.isEmpty())
                 ? Collections.emptyList()
                 : trainerAddressEntityList.stream()
                 .map(TrainerAddressEntity::toModel)
-                .collect(Collectors.toList());
-
-
-        List<History> historyList =(!Hibernate.isInitialized(historyEntityList) || historyEntityList == null || historyEntityList.isEmpty())
-                ? Collections.emptyList()
-                : historyEntityList.stream()
-                .map(HistoryEntity::toModel)
                 .collect(Collectors.toList());
 
         return Trainer.builder()
@@ -93,7 +79,6 @@ public class TrainerEntity {
                 .createdAt(createdAt)
                 .modifiedAt(modifiedAt)
                 .trainerAddressList(trainerAddressList)
-                .historyList(historyList)
                 .build();
 
     }

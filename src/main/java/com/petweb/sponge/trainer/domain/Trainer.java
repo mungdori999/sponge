@@ -21,11 +21,10 @@ public class Trainer {
     private int chatCount; // 1대1 채팅 수
     private Timestamp createdAt;
     private Timestamp modifiedAt;
-    private List<History> historyList;
     private List<TrainerAddress> trainerAddressList;
 
     @Builder
-    public Trainer(Long id, String email, String name, int gender, String phone, String profileImgUrl, String content, int years, int adoptCount, int chatCount, Timestamp createdAt, Timestamp modifiedAt, List<History> historyList, List<TrainerAddress> trainerAddressList) {
+    public Trainer(Long id, String email, String name, int gender, String phone, String profileImgUrl, String content, int years, int adoptCount, int chatCount, Timestamp createdAt, Timestamp modifiedAt, List<TrainerAddress> trainerAddressList) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -38,7 +37,6 @@ public class Trainer {
         this.chatCount = chatCount;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
-        this.historyList = historyList;
         this.trainerAddressList = trainerAddressList;
     }
 }

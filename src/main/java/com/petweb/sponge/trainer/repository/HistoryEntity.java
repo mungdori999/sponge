@@ -29,23 +29,18 @@ public class HistoryEntity {
     private String startDt;
     private String endDt;
     private String description;
-
+    private Long trainerId;
     @CreatedDate
     private Timestamp createdAt;
     @LastModifiedDate
     private Timestamp modifiedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trainer_id")
-    private TrainerEntity trainerEntity;
-
     @Builder
-    public HistoryEntity(String title, String startDt, String endDt, String description, TrainerEntity trainerEntity) {
+    public HistoryEntity(String title, String startDt, String endDt, String description) {
         this.title = title;
         this.startDt = startDt;
         this.endDt = endDt;
         this.description = description;
-        this.trainerEntity = trainerEntity;
     }
 
 
