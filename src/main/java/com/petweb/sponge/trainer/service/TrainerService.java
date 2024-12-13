@@ -144,36 +144,6 @@ public class TrainerService {
 //        reviewRepository.save(review);
     }
 
-    /**
-     * Dto로 변환하는 메소드
-     *
-     * @param trainerEntity
-     * @return
-     */
-    private TrainerDetailDTO toDetailDto(TrainerEntity trainerEntity) {
-        List<AddressDTO> addressDTOList = trainerEntity.getTrainerAddressEntityList().stream().map(address -> AddressDTO.builder()
-                .city(address.getCity())
-                .town(address.getTown())
-                .build()).collect(Collectors.toList());
-        List<HistoryDTO> historyDTOList = trainerEntity.getHistoryEntityList().stream().map(history -> HistoryDTO.builder()
-                .title(history.getTitle())
-                .startDt(history.getStartDt())
-                .endDt(history.getEndDt())
-                .description(history.getDescription()).build()).collect(Collectors.toList());
-        return TrainerDetailDTO.builder()
-                .trainerId(trainerEntity.getId())
-                .name(trainerEntity.getName())
-                .gender(trainerEntity.getGender())
-                .phone(trainerEntity.getPhone())
-                .profileImgUrl(trainerEntity.getProfileImgUrl())
-                .content(trainerEntity.getContent())
-                .years(trainerEntity.getYears())
-                .adoptCount(trainerEntity.getAdoptCount())
-                .chatCount(trainerEntity.getChatCount())
-                .addressList(addressDTOList)
-                .historyList(historyDTOList)
-                .build();
-    }
 
 
 }

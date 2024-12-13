@@ -23,7 +23,6 @@ public class TrainerResponse {
     private int adoptCount; // 채택 답변 수
     private int chatCount; // 1대1 채팅 수
     private List<TrainerAddressResponse> trainerAddressList;
-    private List<HistoryResponse> historyList;
 
     public static TrainerResponse from(Trainer trainer) {
         return TrainerResponse.builder()
@@ -38,7 +37,6 @@ public class TrainerResponse {
                 .adoptCount(trainer.getAdoptCount())
                 .chatCount(trainer.getChatCount())
                 .trainerAddressList(trainer.getTrainerAddressList().stream().map(TrainerAddressResponse::from).collect(Collectors.toList()))
-                .historyList(trainer.getHistoryList().stream().map(HistoryResponse::from).collect(Collectors.toList()))
                 .build();
     }
 }
