@@ -8,7 +8,6 @@ public interface TrainerRepository {
 
     Optional<Trainer> findByEmail(String email);
     Optional<Trainer> findById(Long id);
-
-    Trainer register(Trainer trainer);
+    Trainer save(Trainer trainer);
 
 }

@@ -1,9 +1,9 @@
 package com.petweb.sponge.trainer.service;
 
 import com.petweb.sponge.exception.error.NotFoundTrainer;
+import com.petweb.sponge.trainer.domain.History;
 import com.petweb.sponge.trainer.domain.Review;
 import com.petweb.sponge.trainer.domain.Trainer;
-import com.petweb.sponge.trainer.repository.TrainerEntity;
 import com.petweb.sponge.trainer.dto.*;
 import com.petweb.sponge.trainer.repository.ReviewRepository;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
@@ -52,27 +52,21 @@ public class TrainerService {
     /**
      * 훈련사 정보저장
      *
-     * @param trainerDetailDTO
      * @return
      */
     @Transactional
-    public void saveTrainer(TrainerDetailDTO trainerDetailDTO) {
-        //로그인하자마자 저장 되어있던 trainer 조회
-//        TrainerEntity trainerEntity = trainerRepository.findById(loginId).orElseThrow(
-//                NotFoundTrainer::new);
-//        //trainer에 정보 셋팅 및 저장
-//        trainerEntity.settingTrainer(trainerDetailDTO);
-//        trainerRepository.save(trainerEntity);
+    public Trainer create(TrainerCreate trainerCreate) {
+        Trainer trainer = Trainer.from(trainerCreate);
+        return trainerRepository.save(trainer);
     }
 
     /**
      * 훈련사 정보 수정
      *
      * @param trainerId
-     * @param trainerDetailDTO
      */
     @Transactional
-    public void updateTrainer(Long trainerId, TrainerDetailDTO trainerDetailDTO) {
+    public void updateTrainer(Long trainerId) {
 //        TrainerEntity trainerEntity = trainerRepository.findById(trainerId).orElseThrow(
 //                NotFoundTrainer::new);
 //        trainerRepository.initTrainer(trainerId);

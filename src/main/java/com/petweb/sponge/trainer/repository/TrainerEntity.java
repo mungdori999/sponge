@@ -1,7 +1,5 @@
 package com.petweb.sponge.trainer.repository;
 
-import com.petweb.sponge.post.domain.post.PostFile;
-import com.petweb.sponge.post.repository.post.PostFileEntity;
 import com.petweb.sponge.trainer.domain.History;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.domain.TrainerAddress;
@@ -48,21 +46,34 @@ public class TrainerEntity {
     @OneToMany(mappedBy = "trainerEntity", cascade = CascadeType.ALL)
     private List<TrainerAddressEntity> trainerAddressEntityList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "trainerEntity", cascade = CascadeType.ALL)
+    private List<HistoryEntity> historyEntityList = new ArrayList<>();
+
     @Builder
     public TrainerEntity(String email, String name) {
         this.email = email;
         this.name = name;
     }
 
+
     public void addTrainerAddressList(List<TrainerAddressEntity> trainerAddressEntityList) {
-            this.trainerAddressEntityList = trainerAddressEntityList;
+        this.trainerAddressEntityList = trainerAddressEntityList;
     }
+    public void addHistoryList(List<HistoryEntity> historyEntityList) {
+        this.historyEntityList = historyEntityList;
+    }
+
     public Trainer toModel() {
 
-        List<TrainerAddress> trainerAddressList =(!Hibernate.isInitialized(trainerAddressEntityList) || trainerAddressEntityList == null || trainerAddressEntityList.isEmpty())
+        List<TrainerAddress> trainerAddressList = (!Hibernate.isInitialized(trainerAddressEntityList) || trainerAddressEntityList == null || trainerAddressEntityList.isEmpty())
                 ? Collections.emptyList()
                 : trainerAddressEntityList.stream()
                 .map(TrainerAddressEntity::toModel)
+                .collect(Collectors.toList());
+        List<History> historyList = (!Hibernate.isInitialized(historyEntityList) || historyEntityList == null || historyEntityList.isEmpty())
+                ? Collections.emptyList()
+                : historyEntityList.stream()
+                .map(HistoryEntity::toModel)
                 .collect(Collectors.toList());
 
         return Trainer.builder()
@@ -79,10 +90,46 @@ public class TrainerEntity {
                 .createdAt(createdAt)
                 .modifiedAt(modifiedAt)
                 .trainerAddressList(trainerAddressList)
+                .historyList(historyList)
                 .build();
 
     }
 
+    public static TrainerEntity from(Trainer trainer) {
+        TrainerEntity trainerEntity = new TrainerEntity();
+        trainerEntity.id = trainer.getId();
+        trainerEntity.email = trainer.getEmail();
+        trainerEntity.name = trainer.getName();
+        trainerEntity.gender = trainer.getGender();
+        trainerEntity.phone = trainer.getPhone();
+        trainerEntity.profileImgUrl = trainer.getProfileImgUrl();
+        trainerEntity.content = trainer.getContent();
+        trainerEntity.years = trainer.getYears();
+        trainerEntity.adoptCount = trainer.getAdoptCount();
+        trainerEntity.chatCount = trainer.getChatCount();
+        trainerEntity.createdAt = trainer.getCreatedAt();
+        trainerEntity.modifiedAt = trainer.getModifiedAt();
+
+        trainerEntity.trainerAddressEntityList = trainer.getTrainerAddressList().stream()
+                .map(trainerAddress -> TrainerAddressEntity.builder()
+                        .id(trainerAddress.getId())
+                        .city(trainerAddress.getCity())
+                        .town(trainerAddress.getTown())
+                        .trainerEntity(trainerEntity)
+                        .build())
+                .collect(Collectors.toList());
+
+        trainerEntity.historyEntityList = trainer.getHistoryList().stream()
+                .map(history -> HistoryEntity.builder()
+                        .id(history.getId())
+                        .title(history.getTitle())
+                        .startDt(history.getStartDt())
+                        .endDt(history.getEndDt())
+                        .description(history.getDescription())
+                        .trainerEntity(trainerEntity)
+                        .build()).collect(Collectors.toList());
+        return trainerEntity;
+    }
 
 
 }

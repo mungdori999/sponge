@@ -21,11 +21,8 @@ public class TrainerRepositoryImpl implements TrainerRepository{
     }
 
     @Override
-    public Trainer register(Trainer trainer) {
-        TrainerEntity trainerEntity = TrainerEntity.builder()
-                .email(trainer.getEmail())
-                .name(trainer.getName())
-                .build();
-        return trainerJpaRepository.save(trainerEntity).toModel();
+    public Trainer save(Trainer trainer) {
+        return trainerJpaRepository.save(TrainerEntity.from(trainer)).toModel();
     }
+
 }
