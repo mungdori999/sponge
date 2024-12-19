@@ -1,7 +1,6 @@
 package com.petweb.sponge.trainer.service;
 
 import com.petweb.sponge.exception.error.NotFoundTrainer;
-import com.petweb.sponge.trainer.domain.History;
 import com.petweb.sponge.trainer.domain.Review;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.dto.*;
@@ -63,15 +62,15 @@ public class TrainerService {
     /**
      * 훈련사 정보 수정
      *
-     * @param trainerId
+     * @param id
+     * @param trainerUpdate
      */
     @Transactional
-    public void updateTrainer(Long trainerId) {
-//        TrainerEntity trainerEntity = trainerRepository.findById(trainerId).orElseThrow(
-//                NotFoundTrainer::new);
-//        trainerRepository.initTrainer(trainerId);
-//        //trainer 정보 수정
-//        trainerEntity.settingTrainer(trainerDetailDTO);
+    public void update(Long id, TrainerUpdate trainerUpdate) {
+        Trainer trainer = trainerRepository.findById(id).orElseThrow(
+                NotFoundTrainer::new);
+        trainerRepository.initTrainer(id);
+        trainer.update(trainerUpdate);
     }
 
     /**

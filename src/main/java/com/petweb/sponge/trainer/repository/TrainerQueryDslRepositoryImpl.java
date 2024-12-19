@@ -36,4 +36,16 @@ public class TrainerQueryDslRepositoryImpl implements TrainerQueryDslRepository{
         }
         return Optional.ofNullable(trainer);
     }
+
+    @Override
+    public void initTrainer(Long id) {
+            queryFactory
+                    .delete(historyEntity)
+                    .where(historyEntity.trainerEntity.id.eq(id))
+                    .execute();
+            queryFactory
+                    .delete(trainerAddressEntity)
+                    .where(trainerAddressEntity.trainerEntity.id.eq(id))
+                    .execute();
+    }
 }

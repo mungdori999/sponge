@@ -10,4 +10,5 @@ public interface TrainerRepository {
     Optional<Trainer> findById(Long id);
     Trainer save(Trainer trainer);
 
+    void initTrainer(Long id);
 }

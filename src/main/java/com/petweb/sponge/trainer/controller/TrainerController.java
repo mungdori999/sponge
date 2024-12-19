@@ -12,6 +12,7 @@ import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.dto.ReviewDTO;
 import com.petweb.sponge.trainer.dto.ReviewDetailDTO;
 import com.petweb.sponge.trainer.dto.TrainerCreate;
+import com.petweb.sponge.trainer.dto.TrainerUpdate;
 import com.petweb.sponge.trainer.service.TrainerService;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import com.petweb.sponge.utils.LoginType;
@@ -76,15 +77,14 @@ public class TrainerController {
     /**
      * 훈련사 정보 수정
      *
-     * @param trainerId
+     * @param id
      */
-    @PatchMapping("/{trainerId}")
+    @PatchMapping("/{id}")
     @TrainerAuth
-    public void updateTrainer(@PathVariable("trainerId") Long trainerId) {
-        if (authorizationUtil.getLoginId().equals(trainerId)) {
-            trainerService.updateTrainer(trainerId);
-        } else {
-            throw new LoginIdError();
+    public void update(@PathVariable("id") Long id, @RequestBody TrainerUpdate trainerUpdate) {
+        if (authorizationUtil.getLoginId().equals(id)) {
+            trainerService.update(id,trainerUpdate);
+
         }
     }
 

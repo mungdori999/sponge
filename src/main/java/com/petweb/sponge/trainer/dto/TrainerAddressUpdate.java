@@ -1,11 +1,10 @@
 package com.petweb.sponge.trainer.dto;
 
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
-public class AddressDTO {
+public class TrainerAddressUpdate {
+
     private String city;
     private String town;
 }

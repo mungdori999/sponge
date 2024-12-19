@@ -25,4 +25,9 @@ public class TrainerRepositoryImpl implements TrainerRepository{
         return trainerJpaRepository.save(TrainerEntity.from(trainer)).toModel();
     }
 
+    @Override
+    public void initTrainer(Long id) {
+        trainerJpaRepository.initTrainer(id);
+    }
+
 }

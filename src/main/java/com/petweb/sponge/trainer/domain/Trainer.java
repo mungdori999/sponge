@@ -1,6 +1,7 @@
 package com.petweb.sponge.trainer.domain;
 
 import com.petweb.sponge.trainer.dto.TrainerCreate;
+import com.petweb.sponge.trainer.dto.TrainerUpdate;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -51,6 +52,7 @@ public class Trainer {
                 .gender(trainerCreate.getGender())
                 .phone(trainerCreate.getPhone())
                 .profileImgUrl(trainerCreate.getProfileImgUrl())
+                .years(trainerCreate.getYears())
                 .content(trainerCreate.getContent())
                 .trainerAddressList(trainerCreate.getTrainerAddressList().stream()
                         .map((trainerAddress) -> TrainerAddress.builder().city(trainerAddress.getCity()).town(trainerAddress.getTown()).build()).collect(Collectors.toList()))
@@ -59,5 +61,21 @@ public class Trainer {
                                 .description(history.getDescription()).build()).collect(Collectors.toList()))
                 .build();
 
+    }
+
+    public Trainer update(TrainerUpdate trainerUpdate) {
+            return Trainer.builder()
+                    .name(trainerUpdate.getName())
+                    .gender(trainerUpdate.getGender())
+                    .phone(trainerUpdate.getPhone())
+                    .profileImgUrl(trainerUpdate.getProfileImgUrl())
+                    .years(trainerUpdate.getYears())
+                    .content(trainerUpdate.getContent())
+                    .trainerAddressList(trainerUpdate.getTrainerAddressList().stream()
+                            .map((trainerAddress) -> TrainerAddress.builder().city(trainerAddress.getCity()).town(trainerAddress.getTown()).build()).collect(Collectors.toList()))
+                    .historyList(trainerUpdate.getHistoryList().stream()
+                            .map((history) -> History.builder().title(history.getTitle()).startDt(history.getStartDt()).endDt(history.getEndDt())
+                                    .description(history.getDescription()).build()).collect(Collectors.toList()))
+                    .build();
     }
 }

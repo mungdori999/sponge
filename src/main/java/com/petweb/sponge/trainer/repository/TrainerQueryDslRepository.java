@@ -6,4 +6,6 @@ import java.util.Optional;
 
 public interface TrainerQueryDslRepository {
     Optional<TrainerEntity> findTrainerById(Long id);
+
+    void initTrainer(Long id);
 }
