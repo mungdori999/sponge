@@ -170,6 +170,11 @@ public class PostService {
         return CheckResponse.from(like,bookmark);
 
     }
+    @Transactional(readOnly = true)
+    public void findPostListByBookmark(Long loginId, int page) {
+
+    }
+
     /**
      * 북마크 업데이트
      * @param loginId

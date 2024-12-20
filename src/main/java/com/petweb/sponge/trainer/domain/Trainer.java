@@ -65,12 +65,17 @@ public class Trainer {
 
     public Trainer update(TrainerUpdate trainerUpdate) {
             return Trainer.builder()
+                    .id(id)
+                    .email(email)
                     .name(trainerUpdate.getName())
                     .gender(trainerUpdate.getGender())
                     .phone(trainerUpdate.getPhone())
                     .profileImgUrl(trainerUpdate.getProfileImgUrl())
                     .years(trainerUpdate.getYears())
                     .content(trainerUpdate.getContent())
+                    .chatCount(chatCount)
+                    .adoptCount(adoptCount)
+                    .createdAt(createdAt)
                     .trainerAddressList(trainerUpdate.getTrainerAddressList().stream()
                             .map((trainerAddress) -> TrainerAddress.builder().city(trainerAddress.getCity()).town(trainerAddress.getTown()).build()).collect(Collectors.toList()))
                     .historyList(trainerUpdate.getHistoryList().stream()

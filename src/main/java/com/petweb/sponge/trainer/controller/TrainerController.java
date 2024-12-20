@@ -84,6 +84,8 @@ public class TrainerController {
     public void update(@PathVariable("id") Long id, @RequestBody TrainerUpdate trainerUpdate) {
         if (authorizationUtil.getLoginId().equals(id)) {
             trainerService.update(id,trainerUpdate);
+        }
+        else {
 
         }
     }

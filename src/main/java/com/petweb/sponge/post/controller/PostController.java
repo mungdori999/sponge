@@ -46,7 +46,7 @@ public class PostController {
     @GetMapping("/my_info")
     @UserAuth
     public ResponseEntity<List<PostListResponse>> getMyPost(@RequestParam("page") int page) {
-        List<Post> postList = postService.findMyInfo(authorizationUtil.getLoginId(),page);
+        List<Post> postList = postService.findMyInfo(authorizationUtil.getLoginId(), page);
         return new ResponseEntity<>(postList.stream().map(PostListResponse::from).collect(Collectors.toList()), HttpStatus.OK);
     }
 
@@ -115,6 +115,7 @@ public class PostController {
 
     /**
      * 북마크, 좋아요 눌러져있는지 조회
+     *
      * @param postId
      * @return
      */
@@ -124,17 +125,28 @@ public class PostController {
         CheckResponse checkResponse = postService.findCheck(authorizationUtil.getLoginId(), postId);
         return new ResponseEntity<>(checkResponse, HttpStatus.OK);
     }
+
+    @GetMapping("/bookmark")
+    @UserAuth
+    public ResponseEntity<List<PostListResponse>> getBookmarkPost(@RequestParam("page") int page) {
+            postService.findPostListByBookmark(authorizationUtil.getLoginId(),page);
+            return null;
+    }
+
     /**
      * 북마크 업데이트
+     *
      * @param postId
      */
     @PostMapping("/bookmark")
     @UserAuth
     public void updateBookmark(@RequestParam("postId") Long postId) {
-        postService.updateBookmark(authorizationUtil.getLoginId(),postId);
+        postService.updateBookmark(authorizationUtil.getLoginId(), postId);
     }
+
     /**
      * 추천수 업데이트
+     *
      * @param postId
      */
     @PostMapping("/like")

@@ -70,7 +70,8 @@ public class TrainerService {
         Trainer trainer = trainerRepository.findById(id).orElseThrow(
                 NotFoundTrainer::new);
         trainerRepository.initTrainer(id);
-        trainer.update(trainerUpdate);
+        trainer = trainer.update(trainerUpdate);
+        trainer = trainerRepository.save(trainer);
     }
 
     /**
