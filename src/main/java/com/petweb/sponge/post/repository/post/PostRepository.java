@@ -20,4 +20,5 @@ public interface PostRepository {
 
     void initPost(Long id);
 
+    List<Post> findByBookmark(Long loginId, int page);
 }

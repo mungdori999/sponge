@@ -53,6 +53,12 @@ public class PostService {
         return PostDetailsResponse.from(post, pet);
     }
 
+    /**
+     * 내가 쓴글 조회
+     * @param loginId
+     * @param page
+     * @return
+     */
     @Transactional(readOnly = true)
     public List<Post> findMyInfo(Long loginId, int page) {
         return postRepository.findListByUserId(loginId, page);
@@ -110,7 +116,6 @@ public class PostService {
      * @param postUpdate
      * @return
      */
-    // TODO update하면 좋아요가 초기화되는 문제있음
     @Transactional
     public PostDetailsResponse update(Long loginId, Long id, PostUpdate postUpdate) {
         Post post = postRepository.findById(id).orElseThrow(
@@ -170,9 +175,16 @@ public class PostService {
         return CheckResponse.from(like,bookmark);
 
     }
-    @Transactional(readOnly = true)
-    public void findPostListByBookmark(Long loginId, int page) {
 
+    /**
+     * 북마크 저장되어있는 글 조회
+     * @param loginId
+     * @param page
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public List<Post> findPostListByBookmark(Long loginId, int page) {
+        return postRepository.findByBookmark(loginId,page);
     }
 
     /**

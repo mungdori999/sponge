@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.petweb.sponge.post.repository.post.QBookmarkEntity.*;
 import static com.petweb.sponge.post.repository.post.QPostCategoryEntity.*;
 import static com.petweb.sponge.post.repository.post.QPostEntity.*;
 import static com.petweb.sponge.post.repository.post.QPostFileEntity.*;
@@ -148,96 +149,27 @@ public class PostQueryDslRepositoryImpl implements PostQueryDslRepository {
                 .execute();
     }
 
+    @Override
+    public List<PostEntity> findListByBookmark(Long loginId, int page) {
+        // 페이지 번호와 페이지 크기를 계산
+        int offset = page * PAGE_SIZE;
+        List<Long> postIdList = queryFactory
+                .select(bookmarkEntity.postId)
+                .where(bookmarkEntity.userId.eq(loginId))
+                .from(bookmarkEntity)
+                .offset(offset)
+                .limit(PAGE_SIZE)
+                .fetch();
 
-//    @Override
-//    public List<PostEntity> searchPostByKeyword(String keyword, int page) {
-//        // 페이지 번호와 페이지 크기를 계산
-//        int offset = page * PAGE_SIZE;
-//        List<PostEntity> postEntities = queryFactory
-//                .selectFrom(problemPost)
-//                .leftJoin(problemPost.tags, tag).fetchJoin()
-//                .where(problemPost.title.containsIgnoreCase(keyword) // 제목에서 검색
-//                        .or(problemPost.content.containsIgnoreCase(keyword))
-//                        .or(tag.hashtag.containsIgnoreCase(keyword))) // 내용에서 검색
-//                .orderBy(problemPost.createdAt.desc()) // 최신순 정렬
-//                .offset(offset)
-//                .limit(PAGE_SIZE)
-//                .fetch();
-//        List<Long> problemPostIds = postEntities.stream().map(PostEntity::getId).collect(Collectors.toList());
-//
-//        // 포스트 카테고리 조인
-//        List<PostCategoryEntity> postCategoryEntityList = queryFactory
-//                .selectFrom(postCategory)
-//                .where(postCategory.problemPost.id.in(problemPostIds))
-//                .fetch();
-//        postEntities.forEach(post -> post.setPostCategories(postCategoryEntityList.stream().filter(
-//                category -> Objects.equals(post.getId(), category.getPostEntity().getId())
-//        ).toList()));
-//        return postEntities;
-//    }
-//
-//    @Override
-//    public List<PostEntity> findAllPostByBookmark(Long loginId) {
-//
-//        return queryFactory
-//                .select(bookmark.problemPost)
-//                .from(bookmark)
-//                .leftJoin(bookmark.problemPost.postCategories, postCategory).fetchJoin()
-//                .where(bookmark.userEntity.id.eq(loginId))
-//                .fetch();
-//
-//    }
-//
-//    @Override
-//    public void deletePost(Long problemPostId) {
-//        //카테고리별 글 삭제
-//        queryFactory
-//                .delete(postCategory)
-//                .where(postCategory.problemPost.id.eq(problemPostId))
-//                .execute();
-//        //게시글 추천 삭제
-//        queryFactory
-//                .delete(postRecommend)
-//                .where(postRecommend.problemPost.id.eq(problemPostId))
-//                .execute();
-//        //북마크 삭제
-//        queryFactory
-//                .delete(bookmark)
-//                .where(bookmark.problemPost.id.eq(problemPostId))
-//                .execute();
-//        //해시태그 삭제
-//        queryFactory
-//                .delete(tag)
-//                .where(tag.problemPost.id.eq(problemPostId))
-//                .execute();
-//        //이미지 삭제
-//        queryFactory
-//                .delete(postFile)
-//                .where(postFile.problemPost.id.eq(problemPostId))
-//                .execute();
-//        //게시글 삭제
-//        queryFactory
-//                .delete(problemPost)
-//                .where(problemPost.id.eq(problemPostId))
-//                .execute();
-//    }
-//
-//    @Override
-//    public void initProblemPost(Long problemPostId) {
-//        //카테고리별 글 삭제
-//        queryFactory
-//                .delete(postCategory)
-//                .where(postCategory.problemPost.id.eq(problemPostId))
-//                .execute();
-//        //해시태그 삭제
-//        queryFactory
-//                .delete(tag)
-//                .where(tag.problemPost.id.eq(problemPostId))
-//                .execute();
-//        //이미지 삭제
-//        queryFactory
-//                .delete(postFile)
-//                .where(postFile.problemPost.id.eq(problemPostId))
-//                .execute();
-//    }
+        if (postIdList.isEmpty()) {
+            return new ArrayList<>();  // 결과가 없으면 빈 리스트 반환
+        }
+        return queryFactory
+                .selectDistinct(postEntity)
+                .from(postEntity)
+                .leftJoin(postEntity.postCategoryEntityList, postCategoryEntity).fetchJoin()
+                .orderBy(postEntity.createdAt.desc()) //최신순 정렬
+                .where(postEntity.id.in(postIdList))  // IN 절 사용
+                .fetch();
+    }
 }

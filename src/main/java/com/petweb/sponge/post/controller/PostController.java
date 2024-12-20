@@ -126,11 +126,16 @@ public class PostController {
         return new ResponseEntity<>(checkResponse, HttpStatus.OK);
     }
 
+    /**
+     * 내가 저장한 글 조회
+     * @param page
+     * @return
+     */
     @GetMapping("/bookmark")
     @UserAuth
     public ResponseEntity<List<PostListResponse>> getBookmarkPost(@RequestParam("page") int page) {
-            postService.findPostListByBookmark(authorizationUtil.getLoginId(),page);
-            return null;
+        List<Post> postList = postService.findPostListByBookmark(authorizationUtil.getLoginId(), page);
+        return new ResponseEntity<>(postList.stream().map(PostListResponse::from).collect(Collectors.toList()), HttpStatus.OK);
     }
 
     /**
