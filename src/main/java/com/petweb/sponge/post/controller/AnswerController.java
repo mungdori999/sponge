@@ -35,12 +35,12 @@ public class AnswerController {
 
     /**
      * 훈련사 답변 작성
-     * @param answerDTO
+     * @param answerCreate
      */
     @PostMapping
     @TrainerAuth
-    public void writeAnswer(@RequestBody AnswerDTO answerDTO) {
-        answerService.saveAnswer(authorizationUtil.getLoginId(), answerDTO);
+    public void create(@RequestBody AnswerCreate answerCreate) {
+        answerService.create(authorizationUtil.getLoginId(), answerCreate);
     }
 
     /**

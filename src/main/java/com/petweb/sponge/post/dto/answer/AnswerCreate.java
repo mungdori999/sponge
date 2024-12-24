@@ -3,8 +3,9 @@ package com.petweb.sponge.post.dto.answer;
 import lombok.Getter;
 
 @Getter
-public class AnswerDTO {
+public class AnswerCreate {
 
-    private Long problemPostId;
+    private Long postId;
     private String content;
+
 }

@@ -83,4 +83,10 @@ public class Post {
     }
 
 
+    public void increaseAnswerCount() {
+        answerCount++;
+    }
+    public void decreaseAnswerCount() {
+        answerCount--;
+    }
 }

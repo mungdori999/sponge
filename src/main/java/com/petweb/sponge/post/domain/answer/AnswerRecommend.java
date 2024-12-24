@@ -1,5 +1,6 @@
 package com.petweb.sponge.post.domain.answer;
 
+import com.petweb.sponge.post.repository.answer.AnswerEntity;
 import com.petweb.sponge.user.repository.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -22,11 +23,11 @@ public class AnswerRecommend {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "answer_id")
-    private Answer answer;
+    private AnswerEntity answerEntity;
 
     @Builder
-    public AnswerRecommend(UserEntity userEntity, Answer answer) {
+    public AnswerRecommend(UserEntity userEntity, AnswerEntity answerEntity) {
         this.userEntity = userEntity;
-        this.answer = answer;
+        this.answerEntity = answerEntity;
     }
 }

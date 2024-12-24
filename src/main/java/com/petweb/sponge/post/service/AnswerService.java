@@ -1,29 +1,29 @@
 package com.petweb.sponge.post.service;
 
 import com.petweb.sponge.exception.error.*;
+import com.petweb.sponge.post.controller.response.AnswerResponse;
 import com.petweb.sponge.post.domain.answer.AdoptAnswer;
 import com.petweb.sponge.post.domain.answer.Answer;
+import com.petweb.sponge.post.domain.post.Post;
+import com.petweb.sponge.post.repository.answer.AnswerEntity;
 import com.petweb.sponge.post.dto.answer.AdoptAnswerDTO;
-import com.petweb.sponge.post.dto.answer.AnswerDTO;
+import com.petweb.sponge.post.dto.answer.AnswerCreate;
 import com.petweb.sponge.post.dto.answer.AnswerDetailDTO;
 import com.petweb.sponge.post.dto.answer.AnswerUpdateDTO;
 import com.petweb.sponge.post.repository.answer.AdoptAnswerRepository;
 import com.petweb.sponge.post.repository.answer.AnswerRecommendRepository;
 import com.petweb.sponge.post.repository.answer.AnswerRepository;
 import com.petweb.sponge.post.repository.post.PostRepository;
-import com.petweb.sponge.trainer.repository.TrainerEntity;
+import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
 import com.petweb.sponge.user.service.port.UserRepository;
 import com.petweb.sponge.utils.AuthorizationUtil;
-import com.petweb.sponge.utils.LoginType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +34,6 @@ public class AnswerService {
     private final PostRepository postRepository;
     private final AnswerRepository answerRepository;
     private final AdoptAnswerRepository adoptAnswerRepository;
-    private final AnswerRecommendRepository answerRecommendRepository;
-    private final AuthorizationUtil authorizationUtil;
 
     /**
      * 훈련사 답변 조회
@@ -55,21 +53,19 @@ public class AnswerService {
      * 훈련사 답변 저장
      *
      * @param loginId
-     * @param answerDTO
+     * @param answerCreate
      */
     @Transactional
-    public void saveAnswer(Long loginId, AnswerDTO answerDTO) {
-//        PostEntity postEntity = postRepository.findById(answerDTO.getProblemPostId()).orElseThrow(
-//                NotFoundPost::new);
-//        Trainer trainer = trainerRepository.findById(loginId).orElseThrow(
-//                NotFoundTrainer::new);
-//        Answer answer = Answer.builder()
-//                .content(answerDTO.getContent())
-//                .problemPost(postEntity)
-//                .trainer(trainer).build();
-//        //답변수 증가
-//        postEntity.increaseAnswerCount();
-//        answerRepository.save(answer);
+    public void create(Long loginId, AnswerCreate answerCreate) {
+        Post post = postRepository.findById(answerCreate.getPostId()).orElseThrow(
+                NotFoundPost::new);
+        Trainer trainer = trainerRepository.findById(loginId).orElseThrow(
+                NotFoundTrainer::new);
+        Answer answer = Answer.from(trainer.getId(), post.getId(), answerCreate);
+        answer = answerRepository.save(answer);
+
+        post.increaseAnswerCount();
+        postRepository.save(post);
     }
 
     /**
@@ -81,12 +77,12 @@ public class AnswerService {
      */
     @Transactional
     public void updateAnswer(Long answerId, AnswerUpdateDTO answerUpdateDTO, Long loginId) {
-        Answer answer = answerRepository.findById(answerId).orElseThrow(
-                NotFoundAnswer::new);
-        if (!loginId.equals(answer.getTrainerEntity().getId())) {
-            throw new LoginIdError();
-        }
-        answer.setContent(answerUpdateDTO.getContent());
+//        AnswerEntity answerEntity = answerRepository.findById(answerId).orElseThrow(
+//                NotFoundAnswer::new);
+//        if (!loginId.equals(answerEntity.getTrainerEntity().getId())) {
+//            throw new LoginIdError();
+//        }
+//        answerEntity.setContent(answerUpdateDTO.getContent());
     }
 
     /**
@@ -97,27 +93,27 @@ public class AnswerService {
      */
     @Transactional
     public void deleteAnswer(Long answerId, Long loginId) {
-        Optional<AdoptAnswer> adoptAnswer = adoptAnswerRepository.findAdoptAnswer(answerId, loginId);
-        Answer answer = answerRepository.findAnswer(answerId).orElseThrow(
-                NotFoundAnswer::new);
-        /**
-         * T: 객체 (answer)에게 메시지를 전달하는 방식을 사용해보는건 어떨까요?
-         * get 메서드가 체이닝되어 있어 가독성이 떨어지고 응집도가 낮아보입니다.
-         * 디미터의 법칙: https://mangkyu.tistory.com/147
-         */
-        if (!answer.isWriteTrainer(loginId)) {
-            throw new NotFoundTrainer();
-        }
-        /**
-         * 답변과 관련하여 채택이 있다면 채택과 같이 답변삭제, 채택수 -1
-         * 답변과 관련하여 채택이 없다면 채택만 삭제, 채택수는 그대로
-         */
-        if (adoptAnswer.isPresent()) {
-//            TrainerEntity trainerEntity = adoptAnswer.get().getTrainerEntity();
-//            trainerEntity.decreaseAdoptCount();
-//            answer.getPostEntity().decreaseAnswerCount();
-        }
-        answerRepository.deleteAnswer(answerId, loginId);
+//        Optional<AdoptAnswer> adoptAnswer = adoptAnswerRepository.findAdoptAnswer(answerId, loginId);
+//        AnswerEntity answerEntity = answerRepository.findAnswer(answerId).orElseThrow(
+//                NotFoundAnswer::new);
+//        /**
+//         * T: 객체 (answer)에게 메시지를 전달하는 방식을 사용해보는건 어떨까요?
+//         * get 메서드가 체이닝되어 있어 가독성이 떨어지고 응집도가 낮아보입니다.
+//         * 디미터의 법칙: https://mangkyu.tistory.com/147
+//         */
+//        if (!answerEntity.isWriteTrainer(loginId)) {
+//            throw new NotFoundTrainer();
+//        }
+//        /**
+//         * 답변과 관련하여 채택이 있다면 채택과 같이 답변삭제, 채택수 -1
+//         * 답변과 관련하여 채택이 없다면 채택만 삭제, 채택수는 그대로
+//         */
+//        if (adoptAnswer.isPresent()) {
+////            TrainerEntity trainerEntity = adoptAnswer.get().getTrainerEntity();
+////            trainerEntity.decreaseAdoptCount();
+////            answer.getPostEntity().decreaseAnswerCount();
+//        }
+//        answerRepository.deleteAnswer(answerId, loginId);
     }
 
     /**
