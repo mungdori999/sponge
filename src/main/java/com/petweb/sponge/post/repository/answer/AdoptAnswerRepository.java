@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface AdoptAnswerRepository extends JpaRepository<AdoptAnswer,Long> {
 
-    @Query("SELECT adn FROM AdoptAnswer adn JOIN FETCH adn.trainerEntity WHERE adn.answer.id = :answerId AND adn.trainerEntity.id = :trainerId")
+    @Query("SELECT adn FROM AdoptAnswer adn JOIN FETCH adn.trainerId WHERE adn.answerId = :answerId AND adn.trainerId = :trainerId")
     Optional<AdoptAnswer> findAdoptAnswer(@Param("answerId") Long answerId, @Param("trainerId") Long trainerId);
 }

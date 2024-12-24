@@ -17,17 +17,14 @@ public class AnswerRecommend {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private UserEntity userEntity;
+    private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "answer_id")
-    private AnswerEntity answerEntity;
+    private Long answerId;
 
     @Builder
-    public AnswerRecommend(UserEntity userEntity, AnswerEntity answerEntity) {
-        this.userEntity = userEntity;
-        this.answerEntity = answerEntity;
+    public AnswerRecommend(Long id, Long userId, Long answerId) {
+        this.id = id;
+        this.userId = userId;
+        this.answerId = answerId;
     }
 }

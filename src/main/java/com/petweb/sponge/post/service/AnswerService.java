@@ -1,29 +1,22 @@
 package com.petweb.sponge.post.service;
 
 import com.petweb.sponge.exception.error.*;
-import com.petweb.sponge.post.controller.response.AnswerResponse;
-import com.petweb.sponge.post.domain.answer.AdoptAnswer;
 import com.petweb.sponge.post.domain.answer.Answer;
 import com.petweb.sponge.post.domain.post.Post;
-import com.petweb.sponge.post.repository.answer.AnswerEntity;
 import com.petweb.sponge.post.dto.answer.AdoptAnswerDTO;
 import com.petweb.sponge.post.dto.answer.AnswerCreate;
-import com.petweb.sponge.post.dto.answer.AnswerDetailDTO;
 import com.petweb.sponge.post.dto.answer.AnswerUpdateDTO;
 import com.petweb.sponge.post.repository.answer.AdoptAnswerRepository;
-import com.petweb.sponge.post.repository.answer.AnswerRecommendRepository;
 import com.petweb.sponge.post.repository.answer.AnswerRepository;
 import com.petweb.sponge.post.repository.post.PostRepository;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
 import com.petweb.sponge.user.service.port.UserRepository;
-import com.petweb.sponge.utils.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,14 +31,12 @@ public class AnswerService {
     /**
      * 훈련사 답변 조회
      *
-     * @param problemPostId
+     * @param postId
      * @return
      */
     @Transactional(readOnly = true)
-    public List<AnswerDetailDTO> findAnswerList(Long problemPostId) {
-//        List<Answer> answerList = answerRepository.findAllAnswerWithTrainer(problemPostId);
-//        return toDetailDto(answerList);
-        return  null;
+    public List<Answer> findAnswerList(Long postId) {
+        return answerRepository.findListByPostId(postId);
     }
 
 

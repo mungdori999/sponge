@@ -2,6 +2,8 @@ package com.petweb.sponge.post.controller;
 
 import com.petweb.sponge.auth.TrainerAuth;
 import com.petweb.sponge.auth.UserAuth;
+import com.petweb.sponge.post.controller.response.AnswerResponse;
+import com.petweb.sponge.post.domain.answer.Answer;
 import com.petweb.sponge.post.dto.answer.*;
 import com.petweb.sponge.post.service.AnswerService;
 import com.petweb.sponge.utils.AuthorizationUtil;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,13 +27,13 @@ public class AnswerController {
     /**
      * 문제행동글에 딸린 훈련사 답변 조회
      *
-     * @param problemPostId
+     * @param postId
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<AnswerDetailDTO>> getAllAnswer(@RequestParam Long problemPostId) {
-        List<AnswerDetailDTO> answerList = answerService.findAnswerList(problemPostId);
-        return new ResponseEntity<>(answerList, HttpStatus.OK);
+    public ResponseEntity<List<AnswerResponse>> getAllAnswer(@RequestParam Long postId) {
+        List<Answer> answerList = answerService.findAnswerList(postId);
+        return new ResponseEntity<>(answerList.stream().map(AnswerResponse::from).collect(Collectors.toList()), HttpStatus.OK);
     }
 
     /**
