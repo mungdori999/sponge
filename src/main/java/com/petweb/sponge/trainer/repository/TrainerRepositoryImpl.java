@@ -4,7 +4,9 @@ import com.petweb.sponge.trainer.domain.Trainer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -13,6 +15,11 @@ public class TrainerRepositoryImpl implements TrainerRepository{
     @Override
     public Optional<Trainer> findByEmail(String email) {
         return trainerJpaRepository.findByEmail(email).map(TrainerEntity::toModel);
+    }
+
+    @Override
+    public List<Trainer> findShortById(List<Long> trainerIdList) {
+        return trainerJpaRepository.findShortById(trainerIdList).stream().map(TrainerEntity::toModel).collect(Collectors.toList());
     }
 
     @Override

@@ -7,8 +7,8 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface AdoptAnswerRepository extends JpaRepository<AdoptAnswer,Long> {
+public interface AdoptAnswerRepository  {
 
-    @Query("SELECT adn FROM AdoptAnswer adn JOIN FETCH adn.trainerId WHERE adn.answerId = :answerId AND adn.trainerId = :trainerId")
-    Optional<AdoptAnswer> findAdoptAnswer(@Param("answerId") Long answerId, @Param("trainerId") Long trainerId);
+
+    Optional<AdoptAnswer> findByPostId(Long postId);
 }

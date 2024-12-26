@@ -2,7 +2,8 @@ package com.petweb.sponge.post.controller;
 
 import com.petweb.sponge.auth.TrainerAuth;
 import com.petweb.sponge.auth.UserAuth;
-import com.petweb.sponge.post.controller.response.AnswerResponse;
+import com.petweb.sponge.post.controller.response.answer.AnswerListResponse;
+import com.petweb.sponge.post.controller.response.answer.AnswerResponse;
 import com.petweb.sponge.post.domain.answer.Answer;
 import com.petweb.sponge.post.dto.answer.*;
 import com.petweb.sponge.post.service.AnswerService;
@@ -31,9 +32,9 @@ public class AnswerController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<AnswerResponse>> getAllAnswer(@RequestParam Long postId) {
-        List<Answer> answerList = answerService.findAnswerList(postId);
-        return new ResponseEntity<>(answerList.stream().map(AnswerResponse::from).collect(Collectors.toList()), HttpStatus.OK);
+    public ResponseEntity<List<AnswerListResponse>> getAllAnswer(@RequestParam Long postId) {
+        List<AnswerListResponse> answerList = answerService.findAnswerList(postId);
+        return new ResponseEntity<>(answerList, HttpStatus.OK);
     }
 
     /**

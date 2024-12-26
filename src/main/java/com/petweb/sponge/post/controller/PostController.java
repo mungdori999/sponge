@@ -1,9 +1,9 @@
 package com.petweb.sponge.post.controller;
 
 import com.petweb.sponge.auth.UserAuth;
-import com.petweb.sponge.post.controller.response.CheckResponse;
-import com.petweb.sponge.post.controller.response.PostDetailsResponse;
-import com.petweb.sponge.post.controller.response.PostListResponse;
+import com.petweb.sponge.post.controller.response.post.CheckResponse;
+import com.petweb.sponge.post.controller.response.post.PostDetailsResponse;
+import com.petweb.sponge.post.controller.response.post.PostListResponse;
 import com.petweb.sponge.post.domain.post.Post;
 import com.petweb.sponge.post.dto.post.PostCreate;
 import com.petweb.sponge.post.dto.post.PostUpdate;

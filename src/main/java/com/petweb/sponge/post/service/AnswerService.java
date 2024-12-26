@@ -1,6 +1,10 @@
 package com.petweb.sponge.post.service;
 
 import com.petweb.sponge.exception.error.*;
+import com.petweb.sponge.post.controller.response.answer.AnswerListResponse;
+import com.petweb.sponge.post.controller.response.answer.AnswerResponse;
+import com.petweb.sponge.post.controller.response.answer.TrainerShortResponse;
+import com.petweb.sponge.post.domain.answer.AdoptAnswer;
 import com.petweb.sponge.post.domain.answer.Answer;
 import com.petweb.sponge.post.domain.post.Post;
 import com.petweb.sponge.post.dto.answer.AdoptAnswerDTO;
@@ -17,6 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,8 +44,24 @@ public class AnswerService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<Answer> findAnswerList(Long postId) {
-        return answerRepository.findListByPostId(postId);
+    public List<AnswerListResponse> findAnswerList(Long postId) {
+        List<Answer> answerList = answerRepository.findListByPostId(postId);
+        List<Long> trainerIdList = answerList.stream().map((Answer::getTrainerId)).collect(Collectors.toList());
+        List<Trainer> trainerList = trainerRepository.findShortById(trainerIdList);
+        Optional<AdoptAnswer> adoptAnswer = adoptAnswerRepository.findByPostId(postId);
+
+        Map<Long, Trainer> trainerMap = trainerList.stream()
+                .collect(Collectors.toMap(Trainer::getId, Function.identity()));
+        return answerList.stream()
+                .map(answer -> {
+                    Trainer trainer = trainerMap.get(answer.getTrainerId());
+                    boolean adoptCheck = adoptAnswer.map(adoptAnswerPresent ->
+                            Objects.equals(adoptAnswerPresent.getTrainerId(), trainer.getId())
+                    ).orElse(false);
+                    return AnswerListResponse.from(AnswerResponse.from(answer), TrainerShortResponse.from(trainer),adoptCheck);
+                })
+                .collect(Collectors.toList());
+
     }
 
 

@@ -1,6 +1,5 @@
 package com.petweb.sponge.trainer.controller.response;
 
-import com.petweb.sponge.post.controller.response.PostFileResponse;
 import com.petweb.sponge.trainer.domain.Trainer;
 import lombok.Builder;
 import lombok.Getter;

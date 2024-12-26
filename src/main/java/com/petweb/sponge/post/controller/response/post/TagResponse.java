@@ -1,4 +1,4 @@
-package com.petweb.sponge.post.controller.response;
+package com.petweb.sponge.post.controller.response.post;
 
 import com.petweb.sponge.post.domain.post.Tag;
 import lombok.Builder;
