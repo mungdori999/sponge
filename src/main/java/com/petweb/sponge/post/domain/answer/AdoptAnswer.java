@@ -1,5 +1,6 @@
 package com.petweb.sponge.post.domain.answer;
 
+import com.petweb.sponge.exception.error.LoginIdError;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,4 +21,6 @@ public class AdoptAnswer {
         this.userId = userId;
         this.answerId = answerId;
     }
+
+
 }

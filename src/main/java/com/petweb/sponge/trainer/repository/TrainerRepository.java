@@ -8,7 +8,8 @@ import java.util.Optional;
 public interface TrainerRepository {
 
     Optional<Trainer> findByEmail(String email);
-    List<Trainer> findShortById(List<Long> trainerIdList);
+    Optional<Trainer> findShortById(Long id);
+    List<Trainer> findShortByIdList(List<Long> trainerIdList);
     Optional<Trainer> findById(Long id);
     Trainer save(Trainer trainer);
 

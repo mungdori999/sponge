@@ -41,23 +41,8 @@ public class AnswerQueryDslRepositoryImpl implements AnswerQueryDslRepository {
 //                .leftJoin(answer.problemPost, problemPost).fetchJoin()
 //                .where(answer.id.eq(answerId))
 //                .fetchOne());
-return null;
+        return null;
     }
 
-    @Override
-    public void deleteAnswer(Long answerId, Long loginId) {
-//        queryFactory
-//                .delete(adoptAnswer)
-//                .where(adoptAnswer.answer.id.eq(answerId)
-//                        .and(adoptAnswer.trainer.id.eq(loginId)))
-//                .execute();
-//        queryFactory
-//                .delete(answerRecommend)
-//                .where(answerRecommend.answer.id.eq(answerId))
-//                .execute();
-//        queryFactory
-//                .delete(answer)
-//                .where(answer.id.eq(answerId))
-//                .execute();
-    }
+
 }

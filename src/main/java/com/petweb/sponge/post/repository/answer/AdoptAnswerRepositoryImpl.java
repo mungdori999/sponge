@@ -13,6 +13,11 @@ public class AdoptAnswerRepositoryImpl implements AdoptAnswerRepository{
     private final AdoptAnswerJpaRepository adoptAnswerJpaRepository;
 
     @Override
+    public Optional<AdoptAnswer> findByAnswerId(Long answerId) {
+        return adoptAnswerJpaRepository.findById(answerId).map(AdoptAnswerEntity::toModel);
+    }
+
+    @Override
     public Optional<AdoptAnswer> findByPostId(Long postId) {
         return adoptAnswerJpaRepository.findById(postId).map(AdoptAnswerEntity::toModel);
     }

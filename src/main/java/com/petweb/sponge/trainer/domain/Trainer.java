@@ -83,4 +83,8 @@ public class Trainer {
                                     .description(history.getDescription()).build()).collect(Collectors.toList()))
                     .build();
     }
+
+    public void decreaseAdoptCount() {
+        adoptCount--;
+    }
 }

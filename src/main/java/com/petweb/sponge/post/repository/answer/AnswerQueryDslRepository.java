@@ -7,6 +7,5 @@ public interface AnswerQueryDslRepository {
     List<AnswerEntity> findAllAnswerWithTrainer(Long problemPostId);
     Optional<AnswerEntity> findAnswer(Long answerId);
 
-    void deleteAnswer(Long answerId, Long loginId);
 
 }

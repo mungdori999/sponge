@@ -3,8 +3,6 @@ package com.petweb.sponge.post.controller;
 import com.petweb.sponge.auth.TrainerAuth;
 import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.post.controller.response.answer.AnswerListResponse;
-import com.petweb.sponge.post.controller.response.answer.AnswerResponse;
-import com.petweb.sponge.post.domain.answer.Answer;
 import com.petweb.sponge.post.dto.answer.*;
 import com.petweb.sponge.post.service.AnswerService;
 import com.petweb.sponge.utils.AuthorizationUtil;
@@ -14,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,6 +36,7 @@ public class AnswerController {
 
     /**
      * 훈련사 답변 작성
+     *
      * @param answerCreate
      */
     @PostMapping
@@ -56,38 +54,40 @@ public class AnswerController {
     @PatchMapping("/{answerId}")
     @TrainerAuth
     public void modifyAnswer(@PathVariable Long answerId, @RequestBody AnswerUpdateDTO answerUpdateDTO) {
-        answerService.updateAnswer(answerId, answerUpdateDTO,authorizationUtil.getLoginId());
+        answerService.updateAnswer(answerId, answerUpdateDTO, authorizationUtil.getLoginId());
     }
 
     /**
      * 훈련사 답변 삭제
      *
-     * @param answerId
+     * @param id
      */
-    @DeleteMapping("/{answerId}")
+    @DeleteMapping("/{id}")
     @TrainerAuth
-    public void removeAnswer(@PathVariable Long answerId) {
-        answerService.deleteAnswer(answerId, authorizationUtil.getLoginId());
+    public void delete(@PathVariable Long id) {
+        answerService.delete(authorizationUtil.getLoginId(), id);
     }
 
     /**
      * 훈련사 답변 채택
+     *
      * @param adoptAnswerDTO
      */
     @PostMapping("/adopt")
     @UserAuth
     public void registerAdoptAnswer(@RequestBody AdoptAnswerDTO adoptAnswerDTO) {
-        answerService.saveAdoptAnswer(adoptAnswerDTO,authorizationUtil.getLoginId());
+        answerService.saveAdoptAnswer(adoptAnswerDTO, authorizationUtil.getLoginId());
     }
 
     /**
      * 훈련사 답변 추천
+     *
      * @param answerRecommendDTO
      */
     @PostMapping("/like")
     @UserAuth
     public void updateLikeCount(@RequestBody AnswerRecommendDTO answerRecommendDTO) {
-        answerService.updateLikeCount(answerRecommendDTO.getAnswerId(),authorizationUtil.getLoginId());
+        answerService.updateLikeCount(answerRecommendDTO.getAnswerId(), authorizationUtil.getLoginId());
 
     }
 

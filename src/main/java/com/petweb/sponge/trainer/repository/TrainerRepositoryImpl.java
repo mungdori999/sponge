@@ -18,7 +18,13 @@ public class TrainerRepositoryImpl implements TrainerRepository{
     }
 
     @Override
-    public List<Trainer> findShortById(List<Long> trainerIdList) {
+    public Optional<Trainer> findShortById(Long id) {
+        return trainerJpaRepository.findById(id).map(TrainerEntity::toModel);
+    }
+
+
+    @Override
+    public List<Trainer> findShortByIdList(List<Long> trainerIdList) {
         return trainerJpaRepository.findShortById(trainerIdList).stream().map(TrainerEntity::toModel).collect(Collectors.toList());
     }
 

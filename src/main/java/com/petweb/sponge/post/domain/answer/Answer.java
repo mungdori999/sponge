@@ -1,5 +1,6 @@
 package com.petweb.sponge.post.domain.answer;
 
+import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.post.dto.answer.AnswerCreate;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,5 +35,11 @@ public class Answer {
                 .postId(postId)
                 .trainerId(trainerId)
                 .build();
+    }
+
+    public void checkTrainer(Long loginId) {
+        if (!trainerId.equals(loginId)) {
+            throw new LoginIdError();
+        }
     }
 }

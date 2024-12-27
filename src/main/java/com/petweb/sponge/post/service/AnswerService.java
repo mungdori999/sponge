@@ -47,7 +47,7 @@ public class AnswerService {
     public List<AnswerListResponse> findAnswerList(Long postId) {
         List<Answer> answerList = answerRepository.findListByPostId(postId);
         List<Long> trainerIdList = answerList.stream().map((Answer::getTrainerId)).collect(Collectors.toList());
-        List<Trainer> trainerList = trainerRepository.findShortById(trainerIdList);
+        List<Trainer> trainerList = trainerRepository.findShortByIdList(trainerIdList);
         Optional<AdoptAnswer> adoptAnswer = adoptAnswerRepository.findByPostId(postId);
 
         Map<Long, Trainer> trainerMap = trainerList.stream()
@@ -58,7 +58,7 @@ public class AnswerService {
                     boolean adoptCheck = adoptAnswer.map(adoptAnswerPresent ->
                             Objects.equals(adoptAnswerPresent.getTrainerId(), trainer.getId())
                     ).orElse(false);
-                    return AnswerListResponse.from(AnswerResponse.from(answer), TrainerShortResponse.from(trainer),adoptCheck);
+                    return AnswerListResponse.from(AnswerResponse.from(answer), TrainerShortResponse.from(trainer), adoptCheck);
                 })
                 .collect(Collectors.toList());
 
@@ -104,32 +104,22 @@ public class AnswerService {
     /**
      * 훈련사 답변 삭제
      *
-     * @param answerId
      * @param loginId
+     * @param id
      */
     @Transactional
-    public void deleteAnswer(Long answerId, Long loginId) {
-//        Optional<AdoptAnswer> adoptAnswer = adoptAnswerRepository.findAdoptAnswer(answerId, loginId);
-//        AnswerEntity answerEntity = answerRepository.findAnswer(answerId).orElseThrow(
-//                NotFoundAnswer::new);
-//        /**
-//         * T: 객체 (answer)에게 메시지를 전달하는 방식을 사용해보는건 어떨까요?
-//         * get 메서드가 체이닝되어 있어 가독성이 떨어지고 응집도가 낮아보입니다.
-//         * 디미터의 법칙: https://mangkyu.tistory.com/147
-//         */
-//        if (!answerEntity.isWriteTrainer(loginId)) {
-//            throw new NotFoundTrainer();
-//        }
-//        /**
-//         * 답변과 관련하여 채택이 있다면 채택과 같이 답변삭제, 채택수 -1
-//         * 답변과 관련하여 채택이 없다면 채택만 삭제, 채택수는 그대로
-//         */
-//        if (adoptAnswer.isPresent()) {
-////            TrainerEntity trainerEntity = adoptAnswer.get().getTrainerEntity();
-////            trainerEntity.decreaseAdoptCount();
-////            answer.getPostEntity().decreaseAnswerCount();
-//        }
-//        answerRepository.deleteAnswer(answerId, loginId);
+    public void delete(Long loginId, Long id) {
+        Answer answer = answerRepository.findById(id).orElseThrow(
+                NotFoundAnswer::new);
+        answer.checkTrainer(loginId);
+        Optional<AdoptAnswer> adoptAnswer = adoptAnswerRepository.findByAnswerId(answer.getId());
+        if (adoptAnswer.isPresent()) {
+            Trainer trainer = trainerRepository.findShortById(adoptAnswer.get().getTrainerId()).orElseThrow(
+                    NotFoundTrainer::new);
+            trainer.decreaseAdoptCount();
+            trainerRepository.save(trainer);
+        }
+        answerRepository.delete(answer);
     }
 
     /**
@@ -189,7 +179,6 @@ public class AnswerService {
 //            answerRecommendRepository.save(answerRecommend);
 //        }
     }
-
 
 
 }
