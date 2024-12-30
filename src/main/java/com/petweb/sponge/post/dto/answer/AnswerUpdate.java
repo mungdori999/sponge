@@ -3,6 +3,6 @@ package com.petweb.sponge.post.dto.answer;
 import lombok.Getter;
 
 @Getter
-public class AnswerUpdateDTO {
+public class AnswerUpdate {
     private String content;
 }

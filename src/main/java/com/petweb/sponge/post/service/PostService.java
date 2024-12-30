@@ -7,12 +7,12 @@ import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.service.port.PetRepository;
 import com.petweb.sponge.post.controller.response.post.CheckResponse;
 import com.petweb.sponge.post.controller.response.post.PostDetailsResponse;
-import com.petweb.sponge.post.domain.Like;
+import com.petweb.sponge.post.domain.post.PostLike;
 import com.petweb.sponge.post.domain.post.Bookmark;
 import com.petweb.sponge.post.domain.post.Post;
 import com.petweb.sponge.post.dto.post.PostCreate;
 import com.petweb.sponge.post.dto.post.PostUpdate;
-import com.petweb.sponge.post.repository.LikeRepository;
+import com.petweb.sponge.post.repository.post.PostLikeRepository;
 import com.petweb.sponge.post.repository.post.*;
 import com.petweb.sponge.post.repository.ProblemTypeRepository;
 import com.petweb.sponge.user.domain.User;
@@ -32,7 +32,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final PetRepository petRepository;
     private final PostRepository postRepository;
-    private final LikeRepository likeRepository;
+    private final PostLikeRepository postLikeRepository;
     private final BookmarkRepository bookmarkRepository;
     private final ProblemTypeRepository problemTypeRepository;
     private final PostFileRepository postFileRepository;
@@ -170,7 +170,7 @@ public class PostService {
      */
     @Transactional(readOnly = true)
     public CheckResponse findCheck(Long loginId, Long postId) {
-        Optional<Like> like = likeRepository.findLike(postId, loginId);
+        Optional<PostLike> like = postLikeRepository.findLike(postId, loginId);
         Optional<Bookmark> bookmark = bookmarkRepository.findBookmark(postId, loginId);
         return CheckResponse.from(like,bookmark);
 
@@ -211,7 +211,7 @@ public class PostService {
      */
     @Transactional
     public void updateLike(Long loginId, Long postId) {
-        Optional<Like> like = likeRepository.findLike(postId, loginId);
+        Optional<PostLike> like = postLikeRepository.findLike(postId, loginId);
         Post post = postRepository.findById(postId).orElseThrow(
                 NotFoundPost::new);
         /**
@@ -220,12 +220,12 @@ public class PostService {
          */
         if (like.isPresent()) {
             post.decreaseLikeCount();
-            likeRepository.delete(like.get());
+            postLikeRepository.delete(like.get());
             postRepository.save(post);
         } else {
-            Like newLike = Like.from(postId, loginId);
+            PostLike newPostLike = PostLike.from(postId, loginId);
             post.increaseLikeCount();
-            likeRepository.save(newLike);
+            postLikeRepository.save(newPostLike);
             postRepository.save(post);
         }
     }

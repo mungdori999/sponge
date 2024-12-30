@@ -1,6 +1,6 @@
 package com.petweb.sponge.post.controller.response.post;
 
-import com.petweb.sponge.post.domain.Like;
+import com.petweb.sponge.post.domain.post.PostLike;
 import com.petweb.sponge.post.domain.post.Bookmark;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +14,7 @@ public class CheckResponse {
     private boolean likeCheck;
     private boolean bookmarkCheck;
 
-    public static CheckResponse from(Optional<Like> like, Optional<Bookmark> bookmark) {
+    public static CheckResponse from(Optional<PostLike> like, Optional<Bookmark> bookmark) {
         boolean likeFlag = false;
         boolean bookmarkFlag = false;
 

@@ -6,15 +6,18 @@ import com.petweb.sponge.post.controller.response.answer.AnswerResponse;
 import com.petweb.sponge.post.controller.response.answer.TrainerShortResponse;
 import com.petweb.sponge.post.domain.answer.AdoptAnswer;
 import com.petweb.sponge.post.domain.answer.Answer;
+import com.petweb.sponge.post.domain.answer.AnswerLike;
 import com.petweb.sponge.post.domain.post.Post;
 import com.petweb.sponge.post.dto.answer.AdoptAnswerDTO;
 import com.petweb.sponge.post.dto.answer.AnswerCreate;
-import com.petweb.sponge.post.dto.answer.AnswerUpdateDTO;
+import com.petweb.sponge.post.dto.answer.AnswerUpdate;
 import com.petweb.sponge.post.repository.answer.AdoptAnswerRepository;
+import com.petweb.sponge.post.repository.answer.AnswerLikeRepository;
 import com.petweb.sponge.post.repository.answer.AnswerRepository;
 import com.petweb.sponge.post.repository.post.PostRepository;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
+import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,7 +39,7 @@ public class AnswerService {
     private final PostRepository postRepository;
     private final AnswerRepository answerRepository;
     private final AdoptAnswerRepository adoptAnswerRepository;
-
+    private final AnswerLikeRepository answerLikeRepository;
     /**
      * 훈련사 답변 조회
      *
@@ -87,18 +90,17 @@ public class AnswerService {
     /**
      * 훈련사 답변내용 수정
      *
-     * @param answerId
-     * @param answerUpdateDTO
+     * @param id
+     * @param answerUpdate
      * @param loginId
      */
     @Transactional
-    public void updateAnswer(Long answerId, AnswerUpdateDTO answerUpdateDTO, Long loginId) {
-//        AnswerEntity answerEntity = answerRepository.findById(answerId).orElseThrow(
-//                NotFoundAnswer::new);
-//        if (!loginId.equals(answerEntity.getTrainerEntity().getId())) {
-//            throw new LoginIdError();
-//        }
-//        answerEntity.setContent(answerUpdateDTO.getContent());
+    public void update(Long id, AnswerUpdate answerUpdate, Long loginId) {
+        Answer answer = answerRepository.findById(id).orElseThrow(
+                NotFoundAnswer::new);
+        answer.checkTrainer(loginId);
+        answer = answer.update(answerUpdate);
+        answerRepository.save(answer);
     }
 
     /**
@@ -113,6 +115,14 @@ public class AnswerService {
                 NotFoundAnswer::new);
         answer.checkTrainer(loginId);
         Optional<AdoptAnswer> adoptAnswer = adoptAnswerRepository.findByAnswerId(answer.getId());
+        Post post = postRepository.findShortById(answer.getPostId()).orElseThrow(
+                NotFoundPost::new);
+
+        //게시글 훈련사 답변 감소
+        post.decreaseAnswerCount();
+        postRepository.save(post);
+
+        //채택되어있다면 카운트 감소
         if (adoptAnswer.isPresent()) {
             Trainer trainer = trainerRepository.findShortById(adoptAnswer.get().getTrainerId()).orElseThrow(
                     NotFoundTrainer::new);
@@ -156,28 +166,20 @@ public class AnswerService {
      * @param loginId
      */
     @Transactional
-    public void updateLikeCount(Long answerId, Long loginId) {
-//        Optional<AnswerRecommend> recommend = answerRecommendRepository.findRecommend(answerId, loginId);
-//        Answer answer = answerRepository.findAnswer(answerId).orElseThrow(
-//                NotFoundAnswer::new);
-//        UserEntity userEntity = userRepository.findById(loginId).orElseThrow(
-//                NotFoundUser::new);
-//
-//        /**
-//         * 추천이 이미 있다면 추천을 삭제 추천수 -1
-//         * 추천이 없다면 추천을 저장 추천수 +1
-//         */
-//        if (recommend.isPresent()) {
-//            answer.decreaseLikeCount();
-//            answerRecommendRepository.delete(recommend.get());
-//        } else {
-//            AnswerRecommend answerRecommend = AnswerRecommend.builder()
-//                    .answer(answer)
-//                    .userEntity(userEntity)
-//                    .build();
-//            answer.increaseLikeCount();
-//            answerRecommendRepository.save(answerRecommend);
-//        }
+    public void updateLike(Long loginId, Long answerId) {
+        Answer answer = answerRepository.findById(answerId).orElseThrow(NotFoundAnswer::new);
+        Optional<AnswerLike> answerLike = answerLikeRepository.findByAnswerId(answerId, loginId);
+
+
+        /**
+         * 추천이 이미 있다면 추천을 삭제 추천수 -1
+         * 추천이 없다면 추천을 저장 추천수 +1
+         */
+        if (answerLike.isPresent()) {
+            answer.decreaseLikeCount();
+            answerLikeRepository.delete(answerLike.get());
+            answerRepository.save(answer);
+        }
     }
 
 

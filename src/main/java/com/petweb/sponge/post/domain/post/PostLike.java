@@ -1,25 +1,25 @@
-package com.petweb.sponge.post.domain;
+package com.petweb.sponge.post.domain.post;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class Like {
+public class PostLike {
 
     private Long id;
     private Long postId;
     private Long userId;
 
     @Builder
-    public Like(Long id, Long postId, Long userId) {
+    public PostLike(Long id, Long postId, Long userId) {
         this.id = id;
         this.postId = postId;
         this.userId = userId;
     }
 
 
-    public static Like from(Long postId,Long userId) {
-        return Like.builder()
+    public static PostLike from(Long postId, Long userId) {
+        return PostLike.builder()
                 .postId(postId)
                 .userId(userId)
                 .build();

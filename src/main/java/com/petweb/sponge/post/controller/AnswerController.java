@@ -48,13 +48,13 @@ public class AnswerController {
     /**
      * 훈련사 답변 수정
      *
-     * @param answerId
-     * @param answerUpdateDTO
+     * @param id
+     * @param answerUpdate
      */
-    @PatchMapping("/{answerId}")
+    @PatchMapping("/{id}")
     @TrainerAuth
-    public void modifyAnswer(@PathVariable Long answerId, @RequestBody AnswerUpdateDTO answerUpdateDTO) {
-        answerService.updateAnswer(answerId, answerUpdateDTO, authorizationUtil.getLoginId());
+    public void update(@PathVariable Long id, @RequestBody AnswerUpdate answerUpdate) {
+        answerService.update(id, answerUpdate, authorizationUtil.getLoginId());
     }
 
     /**
@@ -81,13 +81,12 @@ public class AnswerController {
 
     /**
      * 훈련사 답변 추천
-     *
-     * @param answerRecommendDTO
+     * @param answerId
      */
     @PostMapping("/like")
     @UserAuth
-    public void updateLikeCount(@RequestBody AnswerRecommendDTO answerRecommendDTO) {
-        answerService.updateLikeCount(answerRecommendDTO.getAnswerId(), authorizationUtil.getLoginId());
+    public void updateLikeC(@RequestParam("answerId")Long answerId) {
+        answerService.updateLike(authorizationUtil.getLoginId(), answerId);
 
     }
 

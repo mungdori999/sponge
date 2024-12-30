@@ -2,6 +2,7 @@ package com.petweb.sponge.post.domain.answer;
 
 import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.post.dto.answer.AnswerCreate;
+import com.petweb.sponge.post.dto.answer.AnswerUpdate;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -41,5 +42,21 @@ public class Answer {
         if (!trainerId.equals(loginId)) {
             throw new LoginIdError();
         }
+    }
+
+    public Answer update(AnswerUpdate answerUpdate) {
+        return Answer.builder()
+                .id(id)
+                .content(answerUpdate.getContent())
+                .likeCount(likeCount)
+                .createdAt(createdAt)
+                .modifiedAt(modifiedAt)
+                .postId(postId)
+                .trainerId(trainerId)
+                .build();
+    }
+
+    public void decreaseLikeCount() {
+        likeCount--;
     }
 }
