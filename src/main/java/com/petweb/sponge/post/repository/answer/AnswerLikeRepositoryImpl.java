@@ -18,6 +18,11 @@ public class AnswerLikeRepositoryImpl implements AnswerLikeRepository{
     }
 
     @Override
+    public void save(AnswerLike answerLike) {
+        answerLikeJpaRepository.save(AnswerLikeEntity.from(answerLike));
+    }
+
+    @Override
     public void delete(AnswerLike answerLike) {
         answerLikeJpaRepository.delete(AnswerLikeEntity.from(answerLike));
     }

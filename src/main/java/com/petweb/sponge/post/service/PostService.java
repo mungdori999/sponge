@@ -141,7 +141,7 @@ public class PostService {
         Post post = postRepository.findById(id).orElseThrow(
                 NotFoundPost::new);
         post.checkUser(loginId);
-        postRepository.delete(post);
+        postRepository.delete(post,loginId);
     }
 
     /**

@@ -16,4 +16,11 @@ public class AnswerLike {
         this.answerId = answerId;
         this.userId = userId;
     }
+
+    public static AnswerLike from (Long answerId, Long loginId) {
+        return AnswerLike.builder()
+                .answerId(answerId)
+                .userId(loginId)
+                .build();
+    }
 }

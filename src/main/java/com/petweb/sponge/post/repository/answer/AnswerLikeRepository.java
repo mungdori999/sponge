@@ -8,5 +8,7 @@ public interface AnswerLikeRepository {
 
     Optional<AnswerLike> findByAnswerId(Long answerId, Long loginId);
 
+    void save(AnswerLike answerLike);
     void delete(AnswerLike answerLike);
+
 }

@@ -59,4 +59,8 @@ public class Answer {
     public void decreaseLikeCount() {
         likeCount--;
     }
+
+    public void increaseLikeCount() {
+        likeCount++;
+    }
 }

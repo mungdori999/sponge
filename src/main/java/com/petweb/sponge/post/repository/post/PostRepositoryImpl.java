@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepository {
     private final PostJpaRepository postJpaRepository;
+    private final BookmarkJpaRepository bookmarkJpaRepository;
 
     @Override
     public Optional<Post> findById(Long id) {
@@ -44,7 +45,8 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public void delete(Post post) {
+    public void delete(Post post, Long loginId) {
+        bookmarkJpaRepository.deleteBookmark(post.getId(),loginId);
         postJpaRepository.delete(PostEntity.from(post));
     }
 

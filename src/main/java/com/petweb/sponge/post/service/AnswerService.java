@@ -180,6 +180,12 @@ public class AnswerService {
             answerLikeRepository.delete(answerLike.get());
             answerRepository.save(answer);
         }
+        else{
+            AnswerLike newAnswerLike = AnswerLike.from(answerId, loginId);
+            answer.increaseLikeCount();
+            answerLikeRepository.save(newAnswerLike);
+            answerRepository.save(answer);
+        }
     }
 
 
