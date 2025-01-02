@@ -1,7 +1,7 @@
 package com.petweb.sponge.post.controller;
 
 import com.petweb.sponge.auth.UserAuth;
-import com.petweb.sponge.post.controller.response.post.CheckResponse;
+import com.petweb.sponge.post.controller.response.post.PostCheckResponse;
 import com.petweb.sponge.post.controller.response.post.PostDetailsResponse;
 import com.petweb.sponge.post.controller.response.post.PostListResponse;
 import com.petweb.sponge.post.domain.post.Post;
@@ -121,9 +121,9 @@ public class PostController {
      */
     @GetMapping("/check")
     @UserAuth
-    public ResponseEntity<CheckResponse> getMyCheck(@RequestParam("postId") Long postId) {
-        CheckResponse checkResponse = postService.findCheck(authorizationUtil.getLoginId(), postId);
-        return new ResponseEntity<>(checkResponse, HttpStatus.OK);
+    public ResponseEntity<PostCheckResponse> getMyCheck(@RequestParam("postId") Long postId) {
+        PostCheckResponse postCheckResponse = postService.findCheck(authorizationUtil.getLoginId(), postId);
+        return new ResponseEntity<>(postCheckResponse, HttpStatus.OK);
     }
 
     /**

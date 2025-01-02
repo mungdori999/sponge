@@ -34,8 +34,9 @@ public class AnswerEntity {
 
     public static AnswerEntity from(Answer answer) {
         AnswerEntity answerEntity = new AnswerEntity();
-        answerEntity.id= answer.getId();
-        answerEntity.content= answer.getContent();
+        answerEntity.id = answer.getId();
+        answerEntity.content = answer.getContent();
+        answerEntity.likeCount = answer.getLikeCount();
         answerEntity.createdAt = answer.getCreatedAt();
         answerEntity.modifiedAt = answer.getModifiedAt();
         answerEntity.postId = answer.getPostId();

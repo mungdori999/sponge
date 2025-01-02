@@ -5,7 +5,7 @@ import com.petweb.sponge.exception.error.NotFoundPost;
 import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.service.port.PetRepository;
-import com.petweb.sponge.post.controller.response.post.CheckResponse;
+import com.petweb.sponge.post.controller.response.post.PostCheckResponse;
 import com.petweb.sponge.post.controller.response.post.PostDetailsResponse;
 import com.petweb.sponge.post.domain.post.PostLike;
 import com.petweb.sponge.post.domain.post.Bookmark;
@@ -169,10 +169,10 @@ public class PostService {
      * @return
      */
     @Transactional(readOnly = true)
-    public CheckResponse findCheck(Long loginId, Long postId) {
+    public PostCheckResponse findCheck(Long loginId, Long postId) {
         Optional<PostLike> like = postLikeRepository.findLike(postId, loginId);
         Optional<Bookmark> bookmark = bookmarkRepository.findBookmark(postId, loginId);
-        return CheckResponse.from(like,bookmark);
+        return PostCheckResponse.from(like,bookmark);
 
     }
 

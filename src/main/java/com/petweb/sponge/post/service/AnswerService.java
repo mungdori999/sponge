@@ -1,6 +1,7 @@
 package com.petweb.sponge.post.service;
 
 import com.petweb.sponge.exception.error.*;
+import com.petweb.sponge.post.controller.response.answer.AnswerCheckResponse;
 import com.petweb.sponge.post.controller.response.answer.AnswerListResponse;
 import com.petweb.sponge.post.controller.response.answer.AnswerResponse;
 import com.petweb.sponge.post.controller.response.answer.TrainerShortResponse;
@@ -17,7 +18,6 @@ import com.petweb.sponge.post.repository.answer.AnswerRepository;
 import com.petweb.sponge.post.repository.post.PostRepository;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
-import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -160,6 +160,19 @@ public class AnswerService {
     }
 
     /**
+     * 훈련사 답변 추천 조회
+     *
+     * @param loginId
+     * @param answerId
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public AnswerCheckResponse findCheck(Long loginId, Long answerId) {
+        Optional<AnswerLike> answerLike = answerLikeRepository.findByAnswerId(answerId, loginId);
+        return AnswerCheckResponse.from(answerLike);
+    }
+
+    /**
      * 훈련사 답변 추천
      *
      * @param answerId
@@ -187,6 +200,7 @@ public class AnswerService {
             answerRepository.save(answer);
         }
     }
+
 
 
 }

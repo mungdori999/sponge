@@ -2,6 +2,7 @@ package com.petweb.sponge.post.controller;
 
 import com.petweb.sponge.auth.TrainerAuth;
 import com.petweb.sponge.auth.UserAuth;
+import com.petweb.sponge.post.controller.response.answer.AnswerCheckResponse;
 import com.petweb.sponge.post.controller.response.answer.AnswerListResponse;
 import com.petweb.sponge.post.dto.answer.*;
 import com.petweb.sponge.post.service.AnswerService;
@@ -80,14 +81,26 @@ public class AnswerController {
     }
 
     /**
-     * 훈련사 답변 추천
+     * 훈련사 답변 추천 조회
+     * @param answerId
+     * @return
+     */
+    @GetMapping("/check")
+    @UserAuth
+    public ResponseEntity<AnswerCheckResponse> getMyCheck(@RequestParam("answerId") Long answerId) {
+        AnswerCheckResponse answerCheckResponse = answerService.findCheck(authorizationUtil.getLoginId(), answerId);
+        return new ResponseEntity<>(answerCheckResponse, HttpStatus.OK);
+    }
+
+    /**
+     * 훈련사 답변 추천수 업데이트
+     *
      * @param answerId
      */
     @PostMapping("/like")
     @UserAuth
-    public void updateLikeC(@RequestParam("answerId")Long answerId) {
+    public void updateLikeC(@RequestParam("answerId") Long answerId) {
         answerService.updateLike(authorizationUtil.getLoginId(), answerId);
-
     }
 
 

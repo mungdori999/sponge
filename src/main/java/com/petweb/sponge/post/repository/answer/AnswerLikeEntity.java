@@ -34,7 +34,7 @@ public class AnswerLikeEntity {
     public static AnswerLikeEntity from(AnswerLike answerLike) {
         AnswerLikeEntity answerLikeEntity = new AnswerLikeEntity();
         answerLikeEntity.id = answerLike.getId();
-        answerLikeEntity.answerId = answerLike.getId();
+        answerLikeEntity.answerId = answerLike.getAnswerId();
         answerLikeEntity.userId = answerLike.getUserId();
         return answerLikeEntity;
     }
