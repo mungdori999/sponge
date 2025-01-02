@@ -26,4 +26,9 @@ public class PostPostLikeRepositoryImpl implements PostLikeRepository {
     public void delete(PostLike postLike) {
         postLikeJpaRepository.delete(PostLikeEntity.from(postLike));
     }
+
+    @Override
+    public void deleteLike(Long postId, Long loginId) {
+        postLikeJpaRepository.deleteLike(postId,loginId);
+    }
 }

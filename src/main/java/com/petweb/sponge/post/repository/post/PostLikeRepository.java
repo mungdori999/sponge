@@ -9,5 +9,6 @@ public interface PostLikeRepository {
 
     void save(PostLike newPostLike);
     void delete(PostLike postLike);
+    void deleteLike(Long postId, Long loginId);
 
 }
