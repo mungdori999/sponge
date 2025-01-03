@@ -6,7 +6,7 @@ import com.petweb.sponge.post.domain.answer.AdoptAnswer;
 import com.petweb.sponge.post.domain.answer.Answer;
 import com.petweb.sponge.post.domain.answer.AnswerLike;
 import com.petweb.sponge.post.domain.post.Post;
-import com.petweb.sponge.post.dto.answer.AdoptAnswerDTO;
+import com.petweb.sponge.post.dto.answer.AdoptAnswerCreate;
 import com.petweb.sponge.post.dto.answer.AnswerCreate;
 import com.petweb.sponge.post.dto.answer.AnswerUpdate;
 import com.petweb.sponge.post.repository.answer.AdoptAnswerRepository;
@@ -34,6 +34,7 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final AdoptAnswerRepository adoptAnswerRepository;
     private final AnswerLikeRepository answerLikeRepository;
+
     /**
      * 훈련사 답변 조회
      *
@@ -63,6 +64,7 @@ public class AnswerService {
 
     /**
      * 내가 쓴 답변 조회
+     *
      * @param loginId
      * @param page
      */
@@ -74,7 +76,7 @@ public class AnswerService {
                 .map(AdoptAnswer::getId)
                 .collect(Collectors.toSet());
 
-        return answerList.stream().map(answer ->{
+        return answerList.stream().map(answer -> {
             boolean isAdopted = adoptAnswerIds.contains(answer.getId());
             return AnswerBasicListResponse.from(AnswerResponse.from(answer), isAdopted);
         }).collect(Collectors.toList());
@@ -139,6 +141,7 @@ public class AnswerService {
         if (adoptAnswer.isPresent()) {
             Trainer trainer = trainerRepository.findShortById(adoptAnswer.get().getTrainerId()).orElseThrow(
                     NotFoundTrainer::new);
+            adoptAnswerRepository.delete(adoptAnswer.get());
             trainer.decreaseAdoptCount();
             trainerRepository.save(trainer);
         }
@@ -148,28 +151,19 @@ public class AnswerService {
     /**
      * 답변 채택 저장
      *
-     * @param adoptAnswerDTO
+     * @param adoptAnswerCreate
      * @param loginId
      */
     @Transactional
-    public void saveAdoptAnswer(AdoptAnswerDTO adoptAnswerDTO, Long loginId) {
-//        Answer answer = answerRepository.findAnswer(adoptAnswerDTO.getAnswerId()).orElseThrow(
-//                NotFoundAnswer::new);
-//        UserEntity userEntity = userRepository.findById(loginId).orElseThrow(
-//                NotFoundUser::new);
-//        // 문제행동 글을쓴 유저인지 아닌지 체크
-//        if (!answer.isPostWriteUser(userEntity.getId())) {
-//            throw new LoginIdError();
-//        }
-//
-//        AdoptAnswer adoptAnswer = AdoptAnswer.builder()
-//                .answer(answer)
-//                .trainer(answer.getTrainer())
-//                .userEntity(userEntity)
-//                .build();
-//        adoptAnswerRepository.save(adoptAnswer);
-//        // 답변채택수 증가
-//        answer.getTrainer().increaseAdoptCount();
+    public void createAdoptAnswer(Long loginId, AdoptAnswerCreate adoptAnswerCreate) {
+        AdoptAnswer adoptAnswer = AdoptAnswer.from(loginId, adoptAnswerCreate);
+        Trainer trainer = trainerRepository.findShortById(adoptAnswer.getTrainerId()).orElseThrow(NotFoundTrainer::new);
+        Post post = postRepository.findShortById(adoptAnswerCreate.getPostId()).orElseThrow(
+                NotFoundPost::new);
+        post.checkUser(loginId);
+        trainer.increaseAdoptCount();
+        trainerRepository.save(trainer);
+        adoptAnswerRepository.save(adoptAnswer);
     }
 
     /**
@@ -205,15 +199,13 @@ public class AnswerService {
             answer.decreaseLikeCount();
             answerLikeRepository.delete(answerLike.get());
             answerRepository.save(answer);
-        }
-        else{
+        } else {
             AnswerLike newAnswerLike = AnswerLike.from(answerId, loginId);
             answer.increaseLikeCount();
             answerLikeRepository.save(newAnswerLike);
             answerRepository.save(answer);
         }
     }
-
 
 
 }

@@ -84,12 +84,12 @@ public class AnswerController {
     /**
      * 훈련사 답변 채택
      *
-     * @param adoptAnswerDTO
+     * @param adoptAnswerCreate
      */
     @PostMapping("/adopt")
     @UserAuth
-    public void registerAdoptAnswer(@RequestBody AdoptAnswerDTO adoptAnswerDTO) {
-        answerService.saveAdoptAnswer(adoptAnswerDTO, authorizationUtil.getLoginId());
+    public void createAdoptAnswer(@RequestBody AdoptAnswerCreate adoptAnswerCreate) {
+        answerService.createAdoptAnswer(authorizationUtil.getLoginId(),adoptAnswerCreate );
     }
 
     /**

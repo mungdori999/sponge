@@ -28,4 +28,14 @@ public class AdoptAnswerRepositoryImpl implements AdoptAnswerRepository{
     public Optional<AdoptAnswer> findByPostId(Long postId) {
         return adoptAnswerJpaRepository.findById(postId).map(AdoptAnswerEntity::toModel);
     }
+
+    @Override
+    public void save(AdoptAnswer adoptAnswer) {
+        adoptAnswerJpaRepository.save(AdoptAnswerEntity.from(adoptAnswer));
+    }
+
+    @Override
+    public void delete(AdoptAnswer adoptAnswer) {
+        adoptAnswerJpaRepository.delete(AdoptAnswerEntity.from(adoptAnswer));
+    }
 }

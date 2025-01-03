@@ -11,5 +11,8 @@ public interface AdoptAnswerRepository  {
     Optional<AdoptAnswer> findByAnswerId(Long answerId);
     List<AdoptAnswer> findListByTrainerId(Long trainerId);
     Optional<AdoptAnswer> findByPostId(Long postId);
+    void save(AdoptAnswer adoptAnswer);
+
+    void delete(AdoptAnswer adoptAnswer);
 
 }

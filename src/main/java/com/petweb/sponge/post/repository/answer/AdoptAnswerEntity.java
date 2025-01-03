@@ -32,11 +32,20 @@ public class AdoptAnswerEntity {
         this.answerId = answerId;
     }
 
-     public AdoptAnswer toModel() {
+    public static AdoptAnswerEntity from(AdoptAnswer adoptAnswer) {
+        AdoptAnswerEntity adoptAnswerEntity = new AdoptAnswerEntity();
+        adoptAnswerEntity.id = adoptAnswer.getId();
+        adoptAnswerEntity.trainerId = adoptAnswer.getTrainerId();
+        adoptAnswerEntity.userId = adoptAnswer.getUserId();
+        adoptAnswerEntity.answerId = adoptAnswer.getAnswerId();
+        return adoptAnswerEntity;
+    }
+
+    public AdoptAnswer toModel() {
         return AdoptAnswer.builder()
                 .id(id)
                 .trainerId(trainerId)
                 .userId(userId)
                 .answerId(answerId).build();
-     }
+    }
 }
