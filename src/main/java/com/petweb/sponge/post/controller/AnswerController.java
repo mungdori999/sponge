@@ -3,7 +3,8 @@ package com.petweb.sponge.post.controller;
 import com.petweb.sponge.auth.TrainerAuth;
 import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.post.controller.response.answer.AnswerCheckResponse;
-import com.petweb.sponge.post.controller.response.answer.AnswerListResponse;
+import com.petweb.sponge.post.controller.response.answer.AnswerBasicListResponse;
+import com.petweb.sponge.post.controller.response.answer.AnswerDetailsListResponse;
 import com.petweb.sponge.post.dto.answer.*;
 import com.petweb.sponge.post.service.AnswerService;
 import com.petweb.sponge.utils.AuthorizationUtil;
@@ -30,9 +31,20 @@ public class AnswerController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<AnswerListResponse>> getAllAnswer(@RequestParam Long postId) {
-        List<AnswerListResponse> answerList = answerService.findAnswerList(postId);
+    public ResponseEntity<List<AnswerDetailsListResponse>> getAllAnswer(@RequestParam Long postId) {
+        List<AnswerDetailsListResponse> answerList = answerService.findAnswerList(postId);
         return new ResponseEntity<>(answerList, HttpStatus.OK);
+    }
+
+    /**
+     * 내가쓴 답변 조회
+     * @param page
+     */
+    @GetMapping("/my_info")
+    @TrainerAuth
+    public ResponseEntity<List<AnswerBasicListResponse>> getMyAnswer(@RequestParam("page") int page) {
+        List<AnswerBasicListResponse> answerList = answerService.findMyInfo(authorizationUtil.getLoginId(), page);
+        return new ResponseEntity<>(answerList,HttpStatus.OK);
     }
 
     /**
@@ -82,6 +94,7 @@ public class AnswerController {
 
     /**
      * 훈련사 답변 추천 조회
+     *
      * @param answerId
      * @return
      */

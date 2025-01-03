@@ -6,6 +6,8 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
+import static com.petweb.sponge.post.repository.answer.QAnswerEntity.*;
+
 public class AnswerQueryDslRepositoryImpl implements AnswerQueryDslRepository {
 
     private final JPAQueryFactory queryFactory;
@@ -14,35 +16,17 @@ public class AnswerQueryDslRepositoryImpl implements AnswerQueryDslRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-
+    private static final int PAGE_SIZE = 10;  // 페이지당 항목 수
     @Override
-    public List<AnswerEntity> findAllAnswerWithTrainer(Long problemPostId) {
-//        List<Answer> answerList = queryFactory
-//                .selectFrom(answer)
-//                .leftJoin(answer.problemPost,problemPost).fetchJoin()
-//                .leftJoin(answer.adoptAnswer, adoptAnswer).fetchJoin()
-//                .where(answer.problemPost.id.eq(problemPostId))
-//                .fetch();
-//        if (answerList.isEmpty()) {
-//            answerList = new ArrayList<>();
-//        }
-//        List<Long> trainerIds = answerList.stream().map(ans -> ans.getTrainer().getId()).collect(Collectors.toList());
-//
-//        List<Trainer> fetch = queryFactory.selectFrom(trainer)
-//                .where(trainer.id.in(trainerIds))
-//                .fetch();
-        return null;
+    public List<AnswerEntity> findListByTrainerId(Long loginId, int page) {
+        // 페이지 번호와 페이지 크기를 계산
+        int offset = page * PAGE_SIZE;
+         return queryFactory.select(answerEntity)
+                 .from(answerEntity)
+                 .where(answerEntity.trainerId.eq(loginId))
+                 .orderBy(answerEntity.createdAt.desc())
+                 .offset(offset)
+                 .limit(PAGE_SIZE)
+                 .fetch();
     }
-
-    @Override
-    public Optional<AnswerEntity> findAnswer(Long answerId) {
-//        return Optional.ofNullable(queryFactory
-//                .selectFrom(answer)
-//                .leftJoin(answer.problemPost, problemPost).fetchJoin()
-//                .where(answer.id.eq(answerId))
-//                .fetchOne());
-        return null;
-    }
-
-
 }

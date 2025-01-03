@@ -9,7 +9,9 @@ import java.util.Optional;
 public interface AnswerRepository {
     Optional<Answer> findById(Long id);
     List<Answer> findListByPostId(Long postId);
+    List<Answer> findListByTrainerId(Long loginId, int page);
     Answer save(Answer answer);
 
     void delete(Answer answer);
+
 }

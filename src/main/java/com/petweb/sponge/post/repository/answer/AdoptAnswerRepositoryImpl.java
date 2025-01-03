@@ -4,7 +4,9 @@ import com.petweb.sponge.post.domain.answer.AdoptAnswer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -15,6 +17,11 @@ public class AdoptAnswerRepositoryImpl implements AdoptAnswerRepository{
     @Override
     public Optional<AdoptAnswer> findByAnswerId(Long answerId) {
         return adoptAnswerJpaRepository.findById(answerId).map(AdoptAnswerEntity::toModel);
+    }
+
+    @Override
+    public List<AdoptAnswer> findListByTrainerId(Long trainerId) {
+        return adoptAnswerJpaRepository.findListByTrainerId(trainerId).stream().map(AdoptAnswerEntity::toModel).collect(Collectors.toList());
     }
 
     @Override

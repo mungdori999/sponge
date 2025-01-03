@@ -1,10 +1,7 @@
 package com.petweb.sponge.post.service;
 
 import com.petweb.sponge.exception.error.*;
-import com.petweb.sponge.post.controller.response.answer.AnswerCheckResponse;
-import com.petweb.sponge.post.controller.response.answer.AnswerListResponse;
-import com.petweb.sponge.post.controller.response.answer.AnswerResponse;
-import com.petweb.sponge.post.controller.response.answer.TrainerShortResponse;
+import com.petweb.sponge.post.controller.response.answer.*;
 import com.petweb.sponge.post.domain.answer.AdoptAnswer;
 import com.petweb.sponge.post.domain.answer.Answer;
 import com.petweb.sponge.post.domain.answer.AnswerLike;
@@ -23,10 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -47,7 +41,7 @@ public class AnswerService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<AnswerListResponse> findAnswerList(Long postId) {
+    public List<AnswerDetailsListResponse> findAnswerList(Long postId) {
         List<Answer> answerList = answerRepository.findListByPostId(postId);
         List<Long> trainerIdList = answerList.stream().map((Answer::getTrainerId)).collect(Collectors.toList());
         List<Trainer> trainerList = trainerRepository.findShortByIdList(trainerIdList);
@@ -61,10 +55,29 @@ public class AnswerService {
                     boolean adoptCheck = adoptAnswer.map(adoptAnswerPresent ->
                             Objects.equals(adoptAnswerPresent.getTrainerId(), trainer.getId())
                     ).orElse(false);
-                    return AnswerListResponse.from(AnswerResponse.from(answer), TrainerShortResponse.from(trainer), adoptCheck);
+                    return AnswerDetailsListResponse.from(AnswerResponse.from(answer), TrainerShortResponse.from(trainer), adoptCheck);
                 })
                 .collect(Collectors.toList());
 
+    }
+
+    /**
+     * 내가 쓴 답변 조회
+     * @param loginId
+     * @param page
+     */
+    @Transactional(readOnly = true)
+    public List<AnswerBasicListResponse> findMyInfo(Long loginId, int page) {
+        List<Answer> answerList = answerRepository.findListByTrainerId(loginId, page);
+        List<AdoptAnswer> adoptAnswerList = adoptAnswerRepository.findListByTrainerId(loginId);
+        Set<Long> adoptAnswerIds = adoptAnswerList.stream()
+                .map(AdoptAnswer::getId)
+                .collect(Collectors.toSet());
+
+        return answerList.stream().map(answer ->{
+            boolean isAdopted = adoptAnswerIds.contains(answer.getId());
+            return AnswerBasicListResponse.from(AnswerResponse.from(answer), isAdopted);
+        }).collect(Collectors.toList());
     }
 
 
