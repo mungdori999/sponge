@@ -46,16 +46,18 @@ public class AnswerService {
         List<Answer> answerList = answerRepository.findListByPostId(postId);
         List<Long> trainerIdList = answerList.stream().map((Answer::getTrainerId)).collect(Collectors.toList());
         List<Trainer> trainerList = trainerRepository.findShortByIdList(trainerIdList);
-        Optional<AdoptAnswer> adoptAnswer = adoptAnswerRepository.findByPostId(postId);
+        List<Long> answerIdList = answerList.stream().map(Answer::getId).collect(Collectors.toList());
+        List<AdoptAnswer> adoptAnswerList = adoptAnswerRepository.findListByAnswerIdList(answerIdList);
 
         Map<Long, Trainer> trainerMap = trainerList.stream()
                 .collect(Collectors.toMap(Trainer::getId, Function.identity()));
         return answerList.stream()
                 .map(answer -> {
                     Trainer trainer = trainerMap.get(answer.getTrainerId());
-                    boolean adoptCheck = adoptAnswer.map(adoptAnswerPresent ->
-                            Objects.equals(adoptAnswerPresent.getTrainerId(), trainer.getId())
-                    ).orElse(false);
+                    boolean adoptCheck = adoptAnswerList.stream()
+                            .anyMatch(adoptAnswerPresent ->
+                                    Objects.equals(adoptAnswerPresent.getTrainerId(), trainer.getId())
+                            );
                     return AnswerDetailsListResponse.from(AnswerResponse.from(answer), TrainerShortResponse.from(trainer), adoptCheck);
                 })
                 .collect(Collectors.toList());
@@ -73,7 +75,7 @@ public class AnswerService {
         List<Answer> answerList = answerRepository.findListByTrainerId(loginId, page);
         List<AdoptAnswer> adoptAnswerList = adoptAnswerRepository.findListByTrainerId(loginId);
         Set<Long> adoptAnswerIds = adoptAnswerList.stream()
-                .map(AdoptAnswer::getId)
+                .map(AdoptAnswer::getAnswerId)
                 .collect(Collectors.toSet());
 
         return answerList.stream().map(answer -> {

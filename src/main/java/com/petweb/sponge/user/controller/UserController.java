@@ -86,21 +86,5 @@ public class UserController {
         response.setStatus(200);
     }
 
-//    @GetMapping("/bookmark")
-//    @UserAuth
-//    public ResponseEntity<List<ProblemPostListDTO>> getBookmark() {
-//        List<ProblemPostListDTO> bookmarkList = userService.findBookmark(authorizationUtil.getLoginId());
-//        return new ResponseEntity<>(bookmarkList,HttpStatus.OK);
-//    }
-    /**
-     * 글 북마크 업데이트
-     *
-     * @param postIdDTO
-     */
-//    @PostMapping("/bookmark")
-//    @UserAuth
-//    public void updateBookmark(@RequestBody PostIdDTO postIdDTO) {
-//        userService.updateBookmark(postIdDTO, authorizationUtil.getLoginId());
-//    }
 
 }

@@ -75,42 +75,5 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    /**
-     * 북마크 조회
-     *
-     * @param loginId
-     * @return
-     */
-//    @Transactional(readOnly = true)
-//    public List<ProblemPostListDTO> findBookmark(Long loginId) {
-////        List<PostEntity> postEntityList = postRepository.findAllPostByBookmark(loginId);
-////        return toPostListDto(postEntityList);
-//        return null;
-//    }
-    /**
-     * 북마크 업데이트
-     *
-     * @param postIdDTO
-     * @param loginId
-     */
-//    public void updateBookmark(PostIdDTO postIdDTO, Long loginId) {
-//        Optional<Bookmark> bookmark = bookmarkRepository.findBookmark(postIdDTO.getProblemPostId(), loginId);
-//        PostEntity postEntity = postRepository.findPostWithUser(postIdDTO.getProblemPostId()).orElseThrow(
-//                NotFoundPost::new);;
-//
-//        // 이미 북마크 되어있다면 삭제 아니라면 저장
-//        if (bookmark.isPresent()) {
-//            bookmarkRepository.delete(bookmark.get());
-//        } else {
-//            Bookmark buildBookmark = Bookmark.builder()
-//                    .problemPost(postEntity)
-//                    .userEntity(postEntity.getUserEntity())
-//                    .build();
-//            bookmarkRepository.save(buildBookmark);
-//        }
-
-//    }
-
-
 
 }

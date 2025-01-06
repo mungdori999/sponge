@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public class AdoptAnswerRepositoryImpl implements AdoptAnswerRepository{
+public class AdoptAnswerRepositoryImpl implements AdoptAnswerRepository {
 
     private final AdoptAnswerJpaRepository adoptAnswerJpaRepository;
 
@@ -25,9 +25,10 @@ public class AdoptAnswerRepositoryImpl implements AdoptAnswerRepository{
     }
 
     @Override
-    public Optional<AdoptAnswer> findByPostId(Long postId) {
-        return adoptAnswerJpaRepository.findById(postId).map(AdoptAnswerEntity::toModel);
+    public List<AdoptAnswer> findListByAnswerIdList(List<Long> answerIdList) {
+        return adoptAnswerJpaRepository.findListByAnswerIdList(answerIdList).stream().map(AdoptAnswerEntity::toModel).collect(Collectors.toList());
     }
+
 
     @Override
     public void save(AdoptAnswer adoptAnswer) {

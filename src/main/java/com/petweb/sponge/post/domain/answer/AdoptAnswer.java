@@ -9,9 +9,7 @@ public class AdoptAnswer {
 
     private Long id;
     private Long trainerId;
-
     private Long userId;
-
     private Long answerId;
 
     @Builder

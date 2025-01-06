@@ -10,7 +10,7 @@ public interface AdoptAnswerRepository  {
 
     Optional<AdoptAnswer> findByAnswerId(Long answerId);
     List<AdoptAnswer> findListByTrainerId(Long trainerId);
-    Optional<AdoptAnswer> findByPostId(Long postId);
+    List<AdoptAnswer> findListByAnswerIdList(List<Long> answerIdList);
     void save(AdoptAnswer adoptAnswer);
 
     void delete(AdoptAnswer adoptAnswer);
