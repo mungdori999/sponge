@@ -1,7 +1,6 @@
 package com.petweb.sponge.trainer.controller;
 
 import com.petweb.sponge.auth.TrainerAuth;
-import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.jwt.JwtUtil;
 import com.petweb.sponge.jwt.RefreshRepository;
@@ -9,8 +8,6 @@ import com.petweb.sponge.jwt.Token;
 import com.petweb.sponge.oauth2.controller.response.TrainerOauth2Response;
 import com.petweb.sponge.trainer.controller.response.TrainerResponse;
 import com.petweb.sponge.trainer.domain.Trainer;
-import com.petweb.sponge.trainer.dto.ReviewDTO;
-import com.petweb.sponge.trainer.dto.ReviewDetailDTO;
 import com.petweb.sponge.trainer.dto.TrainerCreate;
 import com.petweb.sponge.trainer.dto.TrainerUpdate;
 import com.petweb.sponge.trainer.service.TrainerService;
@@ -110,29 +107,5 @@ public class TrainerController {
         cookie.setPath("/");
         response.addCookie(cookie);
         response.setStatus(200);
-    }
-
-    /**
-     * 해당하는 훈련사의 리뷰데이터 조회
-     *
-     * @param trainerId
-     * @return
-     */
-    @GetMapping("/review/{trainerId}")
-    public ResponseEntity<List<ReviewDetailDTO>> getReviews(@PathVariable("trainerId") Long trainerId) {
-        List<ReviewDetailDTO> reviewList = trainerService.findAllReview(trainerId);
-        return new ResponseEntity<>(reviewList, HttpStatus.OK);
-    }
-
-    /**
-     * 리뷰 쓰기
-     * TODO 훈련사 답변이달려야만 리뷰를 쓸 수 있음
-     *
-     * @param reviewDTO
-     */
-    @PostMapping("/review")
-    @UserAuth
-    public void writeReview(@RequestBody ReviewDTO reviewDTO) {
-        trainerService.saveReview(reviewDTO, authorizationUtil.getLoginId());
     }
 }

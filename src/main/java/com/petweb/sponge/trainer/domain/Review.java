@@ -1,46 +1,41 @@
 package com.petweb.sponge.trainer.domain;
 
-import com.petweb.sponge.trainer.repository.TrainerEntity;
-import com.petweb.sponge.user.repository.UserEntity;
-import jakarta.persistence.*;
-import lombok.AccessLevel;
+import com.petweb.sponge.trainer.dto.ReviewCreate;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.sql.Timestamp;
 
-@Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Table(name = "review")
-@EntityListeners(AuditingEntityListener.class)
 public class Review {
 
-    @Id
-    @GeneratedValue
     private Long id;
 
     private int score;
     private String content;
 
-    @CreatedDate
     private Timestamp createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trainer_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private TrainerEntity trainerEntity;
+    private Long trainerId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private UserEntity userEntity;
+    private Long userId;
+
     @Builder
-    public Review(int score, String content, TrainerEntity trainerEntity, UserEntity userEntity) {
+    public Review(Long id, int score, String content, Timestamp createdAt, Long trainerId, Long userId) {
+        this.id = id;
         this.score = score;
         this.content = content;
-        this.trainerEntity = trainerEntity;
-        this.userEntity = userEntity;
+        this.createdAt = createdAt;
+        this.trainerId = trainerId;
+        this.userId = userId;
+    }
+
+    public static Review from(Long userId, ReviewCreate reviewCreate) {
+        return Review.builder()
+                .score(reviewCreate.getScore())
+                .content(reviewCreate.getContent())
+                .trainerId(reviewCreate.getTrainerId())
+                .userId(userId)
+                .build();
     }
 }

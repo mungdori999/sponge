@@ -1,26 +1,18 @@
 package com.petweb.sponge.trainer.service;
 
 import com.petweb.sponge.exception.error.NotFoundTrainer;
-import com.petweb.sponge.trainer.domain.Review;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.dto.*;
-import com.petweb.sponge.trainer.repository.ReviewRepository;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
-import com.petweb.sponge.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class TrainerService {
 
     private final TrainerRepository trainerRepository;
-    private final UserRepository userRepository;
-    private final ReviewRepository reviewRepository;
 
 
     /**
@@ -99,45 +91,6 @@ public class TrainerService {
 //                NotFoundTrainer::new);
 //        trainerEntity.setProfileImgUrl(null);
     }
-
-    /**
-     * 리뷰 데이터 조회
-     *
-     * @param trainerId
-     * @return
-     */
-    @Transactional(readOnly = true)
-    public List<ReviewDetailDTO> findAllReview(Long trainerId) {
-        List<Review> reviewList = reviewRepository.findAllByTrainerId(trainerId);
-        return reviewList.stream().map(review -> ReviewDetailDTO.builder()
-                .userId(review.getUserEntity().getId())
-                .userName(review.getUserEntity().getName())
-                .score(review.getScore())
-                .content(review.getContent()).build()).collect(Collectors.toList());
-    }
-
-    /**
-     * 리뷰 데이터 저장
-     *
-     * @param reviewDTO
-     * @param loginId
-     */
-    @Transactional
-    public void saveReview(ReviewDTO reviewDTO, Long loginId) {
-//        UserEntity userEntity = userRepository.findById(loginId).orElseThrow(
-//                NotFoundUser::new);
-//        Trainer trainer = trainerRepository.findById(loginId).orElseThrow(
-//                NotFoundTrainer::new);
-//
-//        Review review = Review.builder()
-//                .score(reviewDTO.getScore())
-//                .content(reviewDTO.getContent())
-//                .userEntity(userEntity)
-//                .trainer(trainer)
-//                .build();
-//        reviewRepository.save(review);
-    }
-
 
 
 }
