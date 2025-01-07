@@ -5,8 +5,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface ReviewJpaRepository extends JpaRepository<ReviewEntity,Long> {
-    @Query("SELECT r FROM ReviewEntity r LEFT JOIN FETCH r.userId WHERE r.trainerId = :trainerId")
-    List<ReviewEntity> findAllByTrainerId(@Param("trainerId") Long trainerId);
+public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
+    @Query("SELECT r FROM ReviewEntity r WHERE r.userId = :userId AND r.trainerId=:trainerId")
+    Optional<ReviewEntity> findByUserId(@Param("loginId") Long loginId, @Param("trainerId") Long trainerId);
+
 }

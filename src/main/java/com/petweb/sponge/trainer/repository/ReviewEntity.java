@@ -24,7 +24,7 @@ public class ReviewEntity {
     @GeneratedValue
     private Long id;
 
-    private int score;
+    private float score;
     private String content;
 
     @CreatedDate
@@ -35,7 +35,7 @@ public class ReviewEntity {
     private Long userId;
 
     @Builder
-    public ReviewEntity(Long id, int score, String content, Timestamp createdAt, Long trainerId, Long userId) {
+    public ReviewEntity(Long id, float score, String content, Timestamp createdAt, Long trainerId, Long userId) {
         this.id = id;
         this.score = score;
         this.content = content;
@@ -43,7 +43,6 @@ public class ReviewEntity {
         this.trainerId = trainerId;
         this.userId = userId;
     }
-
     public static ReviewEntity from(Review review) {
         ReviewEntity reviewEntity = new ReviewEntity();
         reviewEntity.id = review.getId();
@@ -53,5 +52,15 @@ public class ReviewEntity {
         reviewEntity.trainerId = review.getTrainerId();
         reviewEntity.userId = review.getUserId();
         return reviewEntity;
+    }
+    public Review toModel() {
+        return Review.builder()
+                .id(id)
+                .score(score)
+                .content(content)
+                .createdAt(createdAt)
+                .trainerId(trainerId)
+                .userId(userId)
+                .build();
     }
 }

@@ -6,6 +6,6 @@ import lombok.Getter;
 public class ReviewCreate {
 
     private Long trainerId;
-    private int score;
+    private float score;
     private String content;
 }

@@ -11,7 +11,7 @@ public class Review {
 
     private Long id;
 
-    private int score;
+    private float score;
     private String content;
 
     private Timestamp createdAt;
@@ -21,7 +21,7 @@ public class Review {
     private Long userId;
 
     @Builder
-    public Review(Long id, int score, String content, Timestamp createdAt, Long trainerId, Long userId) {
+    public Review(Long id, float score, String content, Timestamp createdAt, Long trainerId, Long userId) {
         this.id = id;
         this.score = score;
         this.content = content;
