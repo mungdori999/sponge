@@ -51,14 +51,14 @@ public class PostQueryDslRepositoryImpl implements PostQueryDslRepository {
     }
 
     @Override
-    public List<PostEntity> findListByUserId(Long loginId, int page) {
+    public List<PostEntity> findListByUserId(Long userId, int page) {
         // 페이지 번호와 페이지 크기를 계산
         int offset = page * PAGE_SIZE;
         return queryFactory
                 .select(postEntity)
                 .from(postEntity)
                 .leftJoin(postEntity.postCategoryEntityList, postCategoryEntity).fetchJoin()
-                .where(postEntity.userId.eq(loginId))
+                .where(postEntity.userId.eq(userId))
                 .orderBy(postEntity.createdAt.desc()) //최신순 정렬
                 .offset(offset)
                 .limit(PAGE_SIZE)

@@ -18,12 +18,12 @@ public class AnswerQueryDslRepositoryImpl implements AnswerQueryDslRepository {
 
     private static final int PAGE_SIZE = 10;  // 페이지당 항목 수
     @Override
-    public List<AnswerEntity> findListByTrainerId(Long loginId, int page) {
+    public List<AnswerEntity> findListByTrainerId(Long trainerId, int page) {
         // 페이지 번호와 페이지 크기를 계산
         int offset = page * PAGE_SIZE;
          return queryFactory.select(answerEntity)
                  .from(answerEntity)
-                 .where(answerEntity.trainerId.eq(loginId))
+                 .where(answerEntity.trainerId.eq(trainerId))
                  .orderBy(answerEntity.createdAt.desc())
                  .offset(offset)
                  .limit(PAGE_SIZE)

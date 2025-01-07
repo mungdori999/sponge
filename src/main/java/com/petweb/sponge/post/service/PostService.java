@@ -55,13 +55,13 @@ public class PostService {
 
     /**
      * 유저 아이디 글 조회
-     * @param loginId
+     * @param userId
      * @param page
      * @return
      */
     @Transactional(readOnly = true)
-    public List<Post> findPostListInfo(Long loginId, int page) {
-        return postRepository.findListByUserId(loginId, page);
+    public List<Post> findPostListInfo(Long userId, int page) {
+        return postRepository.findListByUserId(userId, page);
 
     }
 

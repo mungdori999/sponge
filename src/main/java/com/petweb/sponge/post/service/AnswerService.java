@@ -65,15 +65,15 @@ public class AnswerService {
     }
 
     /**
-     * 내가 쓴 답변 조회
+     * 아이디로 답변 조회
      *
-     * @param loginId
+     * @param trainerId
      * @param page
      */
     @Transactional(readOnly = true)
-    public List<AnswerBasicListResponse> findMyInfo(Long loginId, int page) {
-        List<Answer> answerList = answerRepository.findListByTrainerId(loginId, page);
-        List<AdoptAnswer> adoptAnswerList = adoptAnswerRepository.findListByTrainerId(loginId);
+    public List<AnswerBasicListResponse> findAnswerListInfo(Long trainerId, int page) {
+        List<Answer> answerList = answerRepository.findListByTrainerId(trainerId, page);
+        List<AdoptAnswer> adoptAnswerList = adoptAnswerRepository.findListByTrainerId(trainerId);
         Set<Long> adoptAnswerIds = adoptAnswerList.stream()
                 .map(AdoptAnswer::getAnswerId)
                 .collect(Collectors.toSet());

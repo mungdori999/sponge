@@ -9,7 +9,7 @@ public interface PostRepository {
 
     Optional<Post> findById(Long id);
     Optional<Post> findShortById(Long id);
-    List<Post> findListByUserId(Long loginId, int page);
+    List<Post> findListByUserId(Long userId, int page);
 
     List<Post> findByKeyword(String keyword, int page);
 

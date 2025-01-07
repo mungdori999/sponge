@@ -25,8 +25,8 @@ public class AnswerRepositoryImpl implements AnswerRepository{
     }
 
     @Override
-    public List<Answer> findListByTrainerId(Long loginId, int page) {
-        return answerJpaRepository.findListByTrainerId(loginId,page).stream().map(AnswerEntity::toModel).collect(Collectors.toList());
+    public List<Answer> findListByTrainerId(Long trainerId, int page) {
+        return answerJpaRepository.findListByTrainerId(trainerId,page).stream().map(AnswerEntity::toModel).collect(Collectors.toList());
     }
 
     @Override

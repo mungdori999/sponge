@@ -39,13 +39,14 @@ public class PostController {
     }
 
     /**
-     * 조회 유저 글 조회
+     * 유저 글 조회
+     *
      * @param userId
      * @param page
      * @return
      */
     @GetMapping("/user")
-    public ResponseEntity<List<PostListResponse>> getListByUserId (@RequestParam("userId") Long userId,@RequestParam("page") int page) {
+    public ResponseEntity<List<PostListResponse>> getListByUserId(@RequestParam("userId") Long userId, @RequestParam("page") int page) {
         List<Post> postList = postService.findPostListInfo(userId, page);
         return new ResponseEntity<>(postList.stream().map(PostListResponse::from).collect(Collectors.toList()), HttpStatus.OK);
     }
@@ -140,6 +141,7 @@ public class PostController {
 
     /**
      * 내가 저장한 글 조회
+     *
      * @param page
      * @return
      */

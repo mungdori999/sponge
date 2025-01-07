@@ -7,5 +7,5 @@ import java.util.Optional;
 public interface AnswerQueryDslRepository {
 
 
-    List<AnswerEntity> findListByTrainerId(Long loginId, int page);
+    List<AnswerEntity> findListByTrainerId(Long trainerId, int page);
 }

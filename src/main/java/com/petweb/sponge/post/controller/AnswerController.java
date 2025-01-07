@@ -37,14 +37,27 @@ public class AnswerController {
     }
 
     /**
+     * 훈련사 답변 조회
+     * @param trainerId
+     * @param page
+     * @return
+     */
+    @GetMapping("/trainer")
+    public ResponseEntity<List<AnswerBasicListResponse>> getListByTrainerId(@RequestParam("trainerId") Long trainerId, @RequestParam("page") int page) {
+        List<AnswerBasicListResponse> answerList = answerService.findAnswerListInfo(trainerId, page);
+        return new ResponseEntity<>(answerList, HttpStatus.OK);
+    }
+
+    /**
      * 내가쓴 답변 조회
+     *
      * @param page
      */
     @GetMapping("/my_info")
     @TrainerAuth
     public ResponseEntity<List<AnswerBasicListResponse>> getMyAnswer(@RequestParam("page") int page) {
-        List<AnswerBasicListResponse> answerList = answerService.findMyInfo(authorizationUtil.getLoginId(), page);
-        return new ResponseEntity<>(answerList,HttpStatus.OK);
+        List<AnswerBasicListResponse> answerList = answerService.findAnswerListInfo(authorizationUtil.getLoginId(), page);
+        return new ResponseEntity<>(answerList, HttpStatus.OK);
     }
 
     /**
@@ -89,7 +102,7 @@ public class AnswerController {
     @PostMapping("/adopt")
     @UserAuth
     public void createAdoptAnswer(@RequestBody AdoptAnswerCreate adoptAnswerCreate) {
-        answerService.createAdoptAnswer(authorizationUtil.getLoginId(),adoptAnswerCreate );
+        answerService.createAdoptAnswer(authorizationUtil.getLoginId(), adoptAnswerCreate);
     }
 
     /**
