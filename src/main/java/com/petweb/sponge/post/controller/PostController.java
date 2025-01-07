@@ -39,6 +39,18 @@ public class PostController {
     }
 
     /**
+     * 조회 유저 글 조회
+     * @param userId
+     * @param page
+     * @return
+     */
+    @GetMapping("/user")
+    public ResponseEntity<List<PostListResponse>> getListByUserId (@RequestParam("userId") Long userId,@RequestParam("page") int page) {
+        List<Post> postList = postService.findPostListInfo(userId, page);
+        return new ResponseEntity<>(postList.stream().map(PostListResponse::from).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    /**
      * 내가쓴글 조회
      *
      * @return
@@ -46,7 +58,7 @@ public class PostController {
     @GetMapping("/my_info")
     @UserAuth
     public ResponseEntity<List<PostListResponse>> getMyPost(@RequestParam("page") int page) {
-        List<Post> postList = postService.findMyInfo(authorizationUtil.getLoginId(), page);
+        List<Post> postList = postService.findPostListInfo(authorizationUtil.getLoginId(), page);
         return new ResponseEntity<>(postList.stream().map(PostListResponse::from).collect(Collectors.toList()), HttpStatus.OK);
     }
 
