@@ -3,6 +3,7 @@ package com.petweb.sponge.trainer.service;
 import com.petweb.sponge.exception.error.NotFoundTrainer;
 import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.trainer.controller.response.ReviewCheckResponse;
+import com.petweb.sponge.trainer.controller.response.ReviewResponse;
 import com.petweb.sponge.trainer.domain.Review;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.dto.ReviewCreate;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,6 +39,11 @@ public class ReviewService {
         return ReviewCheckResponse.from(review);
     }
 
+    public List<ReviewResponse> getListByTrainerId(Long trainerId, int page) {
+        return reviewRepository.findListByTrainerId(trainerId,page);
+
+    }
+
     /**
      * 리뷰 데이터 생성
      *
@@ -55,6 +62,7 @@ public class ReviewService {
         reviewRepository.save(review);
         trainerRepository.save(trainer);
     }
+
 
 
 }

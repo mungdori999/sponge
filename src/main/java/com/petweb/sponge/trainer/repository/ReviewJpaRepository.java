@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
+public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long>, ReviewQueryDslRepository {
     @Query("SELECT r FROM ReviewEntity r WHERE r.userId = :loginId AND r.trainerId=:trainerId")
     Optional<ReviewEntity> findByUserId(@Param("loginId") Long loginId, @Param("trainerId") Long trainerId);
 

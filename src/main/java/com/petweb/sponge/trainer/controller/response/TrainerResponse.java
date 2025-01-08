@@ -20,6 +20,7 @@ public class TrainerResponse {
     private String content; //자기소개
     private int years; //연차
     private int adoptCount; // 채택 답변 수
+    private float score;
     private int chatCount; // 1대1 채팅 수
     private List<TrainerAddressResponse> trainerAddressList;
     private List<HistoryResponse> historyList;
@@ -35,6 +36,7 @@ public class TrainerResponse {
                 .content(trainer.getContent())
                 .years(trainer.getYears())
                 .adoptCount(trainer.getAdoptCount())
+                .score(trainer.getScore())
                 .chatCount(trainer.getChatCount())
                 .trainerAddressList(trainer.getTrainerAddressList().stream().map(TrainerAddressResponse::from).collect(Collectors.toList()))
                 .historyList(trainer.getHistoryList().stream().map(HistoryResponse::from).collect(Collectors.toList()))
