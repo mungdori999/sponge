@@ -21,6 +21,7 @@ public class Trainer {
     private String content; //자기소개
     private int years; //연차
     private int adoptCount; // 채택 답변 수
+    private float score;
     private int chatCount; // 1대1 채팅 수
     private Timestamp createdAt;
     private Timestamp modifiedAt;
@@ -28,7 +29,7 @@ public class Trainer {
     private List<History> historyList;
 
     @Builder
-    public Trainer(Long id, String email, String name, int gender, String phone, String profileImgUrl, String content, int years, int adoptCount, int chatCount, Timestamp createdAt, Timestamp modifiedAt, List<TrainerAddress> trainerAddressList, List<History> historyList) {
+    public Trainer(Long id, String email, String name, int gender, String phone, String profileImgUrl, String content, int years, int adoptCount, float score, int chatCount, Timestamp createdAt, Timestamp modifiedAt, List<TrainerAddress> trainerAddressList, List<History> historyList) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -38,6 +39,7 @@ public class Trainer {
         this.content = content;
         this.years = years;
         this.adoptCount = adoptCount;
+        this.score = score;
         this.chatCount = chatCount;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
@@ -64,29 +66,43 @@ public class Trainer {
     }
 
     public Trainer update(TrainerUpdate trainerUpdate) {
-            return Trainer.builder()
-                    .id(id)
-                    .email(email)
-                    .name(trainerUpdate.getName())
-                    .gender(trainerUpdate.getGender())
-                    .phone(trainerUpdate.getPhone())
-                    .profileImgUrl(trainerUpdate.getProfileImgUrl())
-                    .years(trainerUpdate.getYears())
-                    .content(trainerUpdate.getContent())
-                    .chatCount(chatCount)
-                    .adoptCount(adoptCount)
-                    .createdAt(createdAt)
-                    .trainerAddressList(trainerUpdate.getTrainerAddressList().stream()
-                            .map((trainerAddress) -> TrainerAddress.builder().city(trainerAddress.getCity()).town(trainerAddress.getTown()).build()).collect(Collectors.toList()))
-                    .historyList(trainerUpdate.getHistoryList().stream()
-                            .map((history) -> History.builder().title(history.getTitle()).startDt(history.getStartDt()).endDt(history.getEndDt())
-                                    .description(history.getDescription()).build()).collect(Collectors.toList()))
-                    .build();
+        return Trainer.builder()
+                .id(id)
+                .email(email)
+                .name(trainerUpdate.getName())
+                .gender(trainerUpdate.getGender())
+                .phone(trainerUpdate.getPhone())
+                .profileImgUrl(trainerUpdate.getProfileImgUrl())
+                .years(trainerUpdate.getYears())
+                .content(trainerUpdate.getContent())
+                .chatCount(chatCount)
+                .score(score)
+                .adoptCount(adoptCount)
+                .createdAt(createdAt)
+                .trainerAddressList(trainerUpdate.getTrainerAddressList().stream()
+                        .map((trainerAddress) -> TrainerAddress.builder().city(trainerAddress.getCity()).town(trainerAddress.getTown()).build()).collect(Collectors.toList()))
+                .historyList(trainerUpdate.getHistoryList().stream()
+                        .map((history) -> History.builder().title(history.getTitle()).startDt(history.getStartDt()).endDt(history.getEndDt())
+                                .description(history.getDescription()).build()).collect(Collectors.toList()))
+                .build();
     }
+
     public void increaseAdoptCount() {
         adoptCount++;
     }
+
     public void decreaseAdoptCount() {
         adoptCount--;
     }
+
+    public void calcReview(int newScore) {
+        if (this.score == 0) {
+            // 기존 점수가 없을 경우 새로운 점수 그대로 반영
+            this.score = newScore;
+        } else {
+            // 기존 점수가 있을 경우 평균 계산
+            this.score = (this.score + (float) newScore) / 2;
+        }
+    }
+
 }

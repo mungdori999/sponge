@@ -21,7 +21,8 @@ public class ReviewController {
     /**
      * 내가 이 훈련사에게 리뷰를 썼는지 체크
      */
-    @GetMapping
+    @GetMapping("/check")
+    @UserAuth
     public ResponseEntity<ReviewCheckResponse> findCheck(@RequestParam("trainerId")Long trainerId) {
         ReviewCheckResponse reviewCheckResponse = reviewService.findCheck(authorizationUtil.getLoginId(), trainerId);
         return new ResponseEntity<>(reviewCheckResponse, HttpStatus.OK);

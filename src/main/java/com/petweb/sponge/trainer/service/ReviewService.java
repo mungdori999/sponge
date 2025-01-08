@@ -1,10 +1,13 @@
 package com.petweb.sponge.trainer.service;
 
+import com.petweb.sponge.exception.error.NotFoundTrainer;
 import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.trainer.controller.response.ReviewCheckResponse;
 import com.petweb.sponge.trainer.domain.Review;
+import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.dto.ReviewCreate;
 import com.petweb.sponge.trainer.repository.ReviewRepository;
+import com.petweb.sponge.trainer.repository.TrainerRepository;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
+    private final TrainerRepository trainerRepository;
 
 
     /**
@@ -43,8 +47,13 @@ public class ReviewService {
     public void create(Long loginId, ReviewCreate reviewCreate) {
         User user = userRepository.findById(loginId).orElseThrow(
                 NotFoundUser::new);
+        Trainer trainer = trainerRepository.findShortById(reviewCreate.getTrainerId())
+                .orElseThrow(NotFoundTrainer::new);
         Review review = Review.from(user.getId(), reviewCreate);
+        // 리뷰 계산
+        trainer.calcReview(review.getScore());
         reviewRepository.save(review);
+        trainerRepository.save(trainer);
     }
 
 

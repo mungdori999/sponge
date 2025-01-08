@@ -24,7 +24,7 @@ public class ReviewEntity {
     @GeneratedValue
     private Long id;
 
-    private float score;
+    private int score;
     private String content;
 
     @CreatedDate
@@ -35,7 +35,7 @@ public class ReviewEntity {
     private Long userId;
 
     @Builder
-    public ReviewEntity(Long id, float score, String content, Timestamp createdAt, Long trainerId, Long userId) {
+    public ReviewEntity(Long id, int score, String content, Timestamp createdAt, Long trainerId, Long userId) {
         this.id = id;
         this.score = score;
         this.content = content;

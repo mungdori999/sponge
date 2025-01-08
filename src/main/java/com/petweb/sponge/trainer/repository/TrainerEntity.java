@@ -38,6 +38,7 @@ public class TrainerEntity {
     private int years; //연차
 
     private int adoptCount; // 채택 답변 수
+    private float score;
     private int chatCount; // 1대1 채팅 수
     @CreatedDate
     private Timestamp createdAt;
@@ -86,6 +87,7 @@ public class TrainerEntity {
                 .content(content)
                 .years(years)
                 .adoptCount(adoptCount)
+                .score(score)
                 .chatCount(chatCount)
                 .createdAt(createdAt)
                 .modifiedAt(modifiedAt)
@@ -106,6 +108,7 @@ public class TrainerEntity {
         trainerEntity.content = trainer.getContent();
         trainerEntity.years = trainer.getYears();
         trainerEntity.adoptCount = trainer.getAdoptCount();
+        trainerEntity.score = trainer.getScore();
         trainerEntity.chatCount = trainer.getChatCount();
         trainerEntity.createdAt = trainer.getCreatedAt();
         trainerEntity.modifiedAt = trainer.getModifiedAt();

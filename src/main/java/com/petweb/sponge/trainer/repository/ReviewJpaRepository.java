@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
-    @Query("SELECT r FROM ReviewEntity r WHERE r.userId = :userId AND r.trainerId=:trainerId")
+    @Query("SELECT r FROM ReviewEntity r WHERE r.userId = :loginId AND r.trainerId=:trainerId")
     Optional<ReviewEntity> findByUserId(@Param("loginId") Long loginId, @Param("trainerId") Long trainerId);
 
 }
