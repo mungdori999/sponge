@@ -1,5 +1,6 @@
 package com.petweb.sponge.trainer.controller;
 
+import com.petweb.sponge.auth.TrainerAuth;
 import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.trainer.controller.response.ReviewCheckResponse;
 import com.petweb.sponge.trainer.controller.response.ReviewResponse;
@@ -31,9 +32,23 @@ public class ReviewController {
         return new ResponseEntity<>(reviewCheckResponse, HttpStatus.OK);
     }
 
+    /**
+     * 훈련사에 달린 리뷰 조회
+     *
+     * @param trainerId
+     * @param page
+     * @return
+     */
     @GetMapping()
     public ResponseEntity<List<ReviewResponse>> getListByTrainerId(@RequestParam("trainerId") Long trainerId, @RequestParam("page") int page) {
         List<ReviewResponse> reviewList = reviewService.getListByTrainerId(trainerId, page);
+        return new ResponseEntity<>(reviewList, HttpStatus.OK);
+    }
+
+    @GetMapping("/my_info/trainer")
+    @TrainerAuth
+    public ResponseEntity<List<ReviewResponse>> getMyReviewByTrainerId(@RequestParam("page") int page) {
+        List<ReviewResponse> reviewList = reviewService.getListByTrainerId(authorizationUtil.getLoginId(), page);
         return new ResponseEntity<>(reviewList, HttpStatus.OK);
     }
 
