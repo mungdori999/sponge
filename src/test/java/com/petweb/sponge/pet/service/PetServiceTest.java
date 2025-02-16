@@ -13,7 +13,10 @@ import com.petweb.sponge.utils.Gender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.*;
+
 
 class PetServiceTest {
 
@@ -40,6 +43,13 @@ class PetServiceTest {
                 .age(5)
                 .userId(user.getId())
                 .build());
+        petRepository.save(Pet.builder()
+                .name("테스트 이름2")
+                .gender(Gender.MALE.getCode())
+                .breed("테스트 견종")
+                .age(3)
+                .userId(user.getId())
+                .build());
     }
 
     @Test
@@ -52,6 +62,23 @@ class PetServiceTest {
 
         // then
         assertThat(result.getName()).isEqualTo("테스트 이름");
+
+    }
+
+    @Test
+    public void getAllByUserId는_USERID에_속한_PET_전부조회한다() {
+        // given
+        Long userId =1L;
+
+        // when
+        List<Pet> petList = petService.getAllByUserId(userId);
+
+        // then
+        assertThat(petList)
+                .isNotNull()
+                .hasSize(2)
+                .extracting(Pet::getName)
+                .containsExactly("테스트 이름", "테스트 이름2");
 
     }
 
@@ -77,7 +104,7 @@ class PetServiceTest {
     }
 
     @Test
-    public void update는_유저의_정보를_수정한다() {
+    public void update는_펫의_정보를_수정한다() {
         // given
         Long loginId = 1L;
         Long id = 1L;
@@ -98,13 +125,13 @@ class PetServiceTest {
     }
 
     @Test
-    public void delete는_유저의_정보를_삭제한다() {
+    public void delete는_펫의_정보를_삭제한다() {
         // given
         Long loginId = 1L;
-        Long id =1L;
+        Long id = 1L;
 
         // when
-        petService.delete(loginId,id);
+        petService.delete(loginId, id);
 
         // then
         assertThatThrownBy(() -> petService.getById(id)).isInstanceOf(NotFoundPet.class);

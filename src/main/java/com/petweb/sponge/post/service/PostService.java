@@ -14,9 +14,9 @@ import com.petweb.sponge.post.dto.post.PostCreate;
 import com.petweb.sponge.post.dto.post.PostUpdate;
 import com.petweb.sponge.post.repository.post.PostLikeRepository;
 import com.petweb.sponge.post.repository.post.*;
-import com.petweb.sponge.post.repository.ProblemTypeRepository;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.service.port.UserRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +27,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Builder
 public class PostService {
 
     private final UserRepository userRepository;
@@ -34,8 +35,6 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostLikeRepository postLikeRepository;
     private final BookmarkRepository bookmarkRepository;
-    private final ProblemTypeRepository problemTypeRepository;
-    private final PostFileRepository postFileRepository;
 
 
     /**
