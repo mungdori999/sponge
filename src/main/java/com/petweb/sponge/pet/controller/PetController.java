@@ -60,6 +60,7 @@ public class PetController {
         return new ResponseEntity<>(petList.stream().map(PetResponse::from).collect(Collectors.toList()), HttpStatus.OK);
     }
 
+
     /**
      * 반려동물 등록
      *

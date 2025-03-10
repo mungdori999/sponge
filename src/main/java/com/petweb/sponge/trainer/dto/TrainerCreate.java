@@ -1,11 +1,13 @@
 package com.petweb.sponge.trainer.dto;
 
 import com.petweb.sponge.trainer.domain.TrainerAddress;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
 
 @Getter
+@Builder
 public class TrainerCreate {
 
     private String email; //로그인 아이디

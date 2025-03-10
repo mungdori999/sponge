@@ -17,7 +17,7 @@ public class MockUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return Optional.empty();
+        return data.stream().filter(item -> item.getEmail().equals(email)).findAny();
     }
 
     @Override

@@ -4,12 +4,14 @@ import com.petweb.sponge.exception.error.NotFoundTrainer;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.dto.*;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Builder
 public class TrainerService {
 
     private final TrainerRepository trainerRepository;

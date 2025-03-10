@@ -1,10 +1,12 @@
 package com.petweb.sponge.trainer.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
 
 @Getter
+@Builder
 public class TrainerUpdate {
 
     private String name; //이름
