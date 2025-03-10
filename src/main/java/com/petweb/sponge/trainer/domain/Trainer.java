@@ -92,7 +92,12 @@ public class Trainer {
     }
 
     public void decreaseAdoptCount() {
-        adoptCount--;
+        if (adoptCount <= 0) {
+            throw new IllegalStateException();
+        } else {
+
+            adoptCount--;
+        }
     }
 
     public void calcReview(int newScore) {

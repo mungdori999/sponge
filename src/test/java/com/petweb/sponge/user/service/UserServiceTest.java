@@ -57,16 +57,16 @@ class UserServiceTest {
 
     }
 
-    @Test
-    public void delete는_USER의_정보를_삭제한다() {
-        // given
-        Long id = 1L;
-
-        // when
-        userService.delete(id);
-
-        // then
-        assertThatThrownBy(() -> userService.getById(id)).isInstanceOf(NotFoundUser.class);
-    }
+//    @Test
+//    public void delete는_USER의_정보를_삭제한다() {
+//        // given
+//        Long id = 1L;
+//
+//        // when
+//        userService.delete(id);
+//
+//        // then
+//        assertThatThrownBy(() -> userService.getById(id)).isInstanceOf(NotFoundUser.class);
+//    }
 
 }

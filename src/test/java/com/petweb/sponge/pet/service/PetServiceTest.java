@@ -45,7 +45,7 @@ class PetServiceTest {
                 .build());
         petRepository.save(Pet.builder()
                 .name("테스트 이름2")
-                .gender(Gender.MALE.getCode())
+                .gender(Gender.NEUTERED_MALE.getCode())
                 .breed("테스트 견종")
                 .age(3)
                 .userId(user.getId())
@@ -62,13 +62,17 @@ class PetServiceTest {
 
         // then
         assertThat(result.getName()).isEqualTo("테스트 이름");
+        assertThat(result.getGender()).isEqualTo(Gender.MALE.getCode());
+        assertThat(result.getBreed()).isEqualTo("테스트 견종");
+        assertThat(result.getAge()).isEqualTo(5);
+        assertThat(result.getUserId()).isEqualTo(1L);
 
     }
 
     @Test
     public void getAllByUserId는_USERID에_속한_PET_전부조회한다() {
         // given
-        Long userId =1L;
+        Long userId = 1L;
 
         // when
         List<Pet> petList = petService.getAllByUserId(userId);
@@ -92,7 +96,7 @@ class PetServiceTest {
                 .gender(Gender.MALE.getCode())
                 .age(5)
                 .weight(10.5f)
-                .petImgUrl(null)
+                .petImgUrl("")
                 .build();
 
         // when
@@ -121,7 +125,10 @@ class PetServiceTest {
 
         // then
         assertThat(result.getName()).isEqualTo("수정 이름");
+        assertThat(result.getBreed()).isEqualTo("수정 견종");
         assertThat(result.getGender()).isEqualTo(Gender.NEUTERED_MALE.getCode());
+        assertThat(result.getAge()).isEqualTo(15);
+        assertThat(result.getWeight()).isEqualTo(20.4f);
     }
 
     @Test

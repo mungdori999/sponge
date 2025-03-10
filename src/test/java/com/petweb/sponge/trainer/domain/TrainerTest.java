@@ -6,6 +6,7 @@ import com.petweb.sponge.trainer.dto.TrainerCreate;
 import com.petweb.sponge.utils.Gender;
 import org.junit.jupiter.api.Test;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -85,6 +86,90 @@ public class TrainerTest {
         assertThat(trainer.getHistoryList().get(1).getEndDt()).isEqualTo("202312");
         assertThat(trainer.getHistoryList().get(1).getDescription()).isEqualTo("개인 PT 강사로 활동");
 
+    }
 
+
+    @Test
+    public void 채택답변_수를_증가시킨다() {
+        // given
+        Trainer trainer = Trainer.builder()
+                .email("test1@naver.com")
+                .name("test1")
+                .gender(Gender.MALE.getCode())
+                .profileImgUrl("")
+                .content("안녕")
+                .years(2)
+                .createdAt(new Timestamp(System.currentTimeMillis()))
+                .modifiedAt(new Timestamp(System.currentTimeMillis()))
+                .build();
+
+        // when
+        trainer.increaseAdoptCount();
+
+        // then
+        assertThat(trainer.getAdoptCount()).isEqualTo(1);
+    }
+
+    @Test
+    public void 채택답변_수를_감소시킨다() {
+        // given
+        Trainer trainer = Trainer.builder()
+                .email("test1@naver.com")
+                .name("test1")
+                .gender(Gender.MALE.getCode())
+                .profileImgUrl("")
+                .content("안녕")
+                .years(2)
+                .adoptCount(1)
+                .createdAt(new Timestamp(System.currentTimeMillis()))
+                .modifiedAt(new Timestamp(System.currentTimeMillis()))
+                .build();
+
+        // when
+        trainer.decreaseAdoptCount();
+
+        // then
+        assertThat(trainer.getAdoptCount()).isEqualTo(0);
+    }
+
+    @Test
+    public void 감소시킬_답변이_없으면_오류를_보낸다() {
+        // given
+        Trainer trainer = Trainer.builder()
+                .email("test1@naver.com")
+                .name("test1")
+                .gender(Gender.MALE.getCode())
+                .profileImgUrl("")
+                .content("안녕")
+                .years(2)
+                .createdAt(new Timestamp(System.currentTimeMillis()))
+                .modifiedAt(new Timestamp(System.currentTimeMillis()))
+                .build();
+
+        // when
+        // then
+        assertThatThrownBy(trainer::decreaseAdoptCount).isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    public void 리뷰평점을_계산한다() {
+        // given
+        Trainer trainer = Trainer.builder()
+                .email("test1@naver.com")
+                .name("test1")
+                .gender(Gender.MALE.getCode())
+                .profileImgUrl("")
+                .content("안녕")
+                .years(2)
+                .createdAt(new Timestamp(System.currentTimeMillis()))
+                .modifiedAt(new Timestamp(System.currentTimeMillis()))
+                .build();
+
+        // when
+        trainer.calcReview(3);
+        trainer.calcReview(5);
+
+        // then
+        assertThat(trainer.getScore()).isEqualTo(4);
     }
 }
