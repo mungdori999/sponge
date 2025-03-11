@@ -14,4 +14,9 @@ public class Tag {
         this.id = id;
         this.hashtag = hashtag;
     }
+
+    public static Tag from(String hashtag) {
+        return Tag.builder()
+                .hashtag(hashtag).build();
+    }
 }

@@ -14,4 +14,8 @@ public class PostFile {
         this.id = id;
         this.fileUrl = fileUrl;
     }
+
+    public static PostFile from(String fileUrl) {
+        return PostFile.builder().fileUrl(fileUrl).build();
+    }
 }

@@ -13,4 +13,9 @@ public class PostCategory {
         this.id = id;
         this.categoryCode = categoryCode;
     }
+
+    public static PostCategory from(Long categoryCode) {
+        return PostCategory.builder()
+                .categoryCode(categoryCode).build();
+    }
 }
