@@ -1,6 +1,5 @@
 package com.petweb.sponge.post.domain;
 
-import com.petweb.sponge.post.domain.post.PostCategory;
 import com.petweb.sponge.post.domain.post.PostFile;
 import org.junit.jupiter.api.Test;
 
