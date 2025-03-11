@@ -6,17 +6,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.sql.Timestamp;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "users")
-@EntityListeners(AuditingEntityListener.class)
 public class UserEntity {
 
     @Id
@@ -25,15 +19,13 @@ public class UserEntity {
     private String email; //로그인 아이디
     private String name; //이름
     private String address;
-    @CreatedDate
-    private Timestamp createdAt;
-    @LastModifiedDate
-    private Timestamp modifiedAt;
+    private Long createdAt;
 
     @Builder
-    public UserEntity(String email, String name) {
+    public UserEntity(String email, String name,long createdAt) {
         this.email = email;
         this.name = name;
+        this.createdAt=createdAt;
     }
 
     public User toModel() {
@@ -43,7 +35,6 @@ public class UserEntity {
                 .name(name)
                 .address(address)
                 .createdAt(createdAt)
-                .modifiedAt(modifiedAt)
                 .build();
     }
 

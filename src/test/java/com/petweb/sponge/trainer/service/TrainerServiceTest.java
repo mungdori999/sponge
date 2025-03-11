@@ -8,6 +8,7 @@ import com.petweb.sponge.trainer.dto.*;
 import com.petweb.sponge.trainer.mock.MockTrainerRepository;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
 import com.petweb.sponge.utils.Gender;
+import com.petweb.sponge.utils.TestClockHolder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +24,7 @@ public class TrainerServiceTest {
     @BeforeEach()
     void init() {
         TrainerRepository trainerRepository = new MockTrainerRepository();
-        trainerService = TrainerService.builder().trainerRepository(trainerRepository).build();
+        trainerService = TrainerService.builder().trainerRepository(trainerRepository).clockHolder(new TestClockHolder(12345L)).build();
         trainerRepository.save(Trainer.builder()
                 .email("test1@naver.com")
                 .name("test1")
@@ -31,8 +32,7 @@ public class TrainerServiceTest {
                 .profileImgUrl("")
                 .content("안녕")
                 .years(2)
-                .createdAt(new Timestamp(System.currentTimeMillis()))
-                .modifiedAt(new Timestamp(System.currentTimeMillis()))
+                .createdAt(0L)
                 .trainerAddressList(List.of(
                         TrainerAddress.builder()
                                 .city("서울")
@@ -133,6 +133,7 @@ public class TrainerServiceTest {
         assertThat(result).isNotNull();
         assertThat(result.getName()).isEqualTo("김철수");
         assertThat(result.getEmail()).isEqualTo("test@example.com");
+        assertThat(result.getCreatedAt()).isEqualTo(12345L);
         assertThat(result.getTrainerAddressList()).isNotNull();
         assertThat(result.getTrainerAddressList().size()).isEqualTo(2);
 

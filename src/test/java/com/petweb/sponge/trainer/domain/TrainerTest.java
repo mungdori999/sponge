@@ -4,9 +4,9 @@ import com.petweb.sponge.trainer.dto.HistoryCreate;
 import com.petweb.sponge.trainer.dto.TrainerAddressCreate;
 import com.petweb.sponge.trainer.dto.TrainerCreate;
 import com.petweb.sponge.utils.Gender;
+import com.petweb.sponge.utils.TestClockHolder;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -53,7 +53,7 @@ public class TrainerTest {
                 .build();
 
         // when
-        Trainer trainer = Trainer.from(trainerCreate);
+        Trainer trainer = Trainer.from(trainerCreate, new TestClockHolder(12345L));
 
         // then
         assertThat(trainer).isNotNull();
@@ -64,6 +64,7 @@ public class TrainerTest {
         assertThat(trainer.getProfileImgUrl()).isEqualTo("");
         assertThat(trainer.getContent()).isEqualTo("안녕하세요! 전문 트레이너입니다.");
         assertThat(trainer.getYears()).isEqualTo(5);
+        assertThat(trainer.getCreatedAt()).isEqualTo(12345L);
 
         // 주소 리스트 검증
         assertThat(trainer.getTrainerAddressList()).isNotNull();
@@ -99,8 +100,7 @@ public class TrainerTest {
                 .profileImgUrl("")
                 .content("안녕")
                 .years(2)
-                .createdAt(new Timestamp(System.currentTimeMillis()))
-                .modifiedAt(new Timestamp(System.currentTimeMillis()))
+                .createdAt(0L)
                 .build();
 
         // when
@@ -121,8 +121,7 @@ public class TrainerTest {
                 .content("안녕")
                 .years(2)
                 .adoptCount(1)
-                .createdAt(new Timestamp(System.currentTimeMillis()))
-                .modifiedAt(new Timestamp(System.currentTimeMillis()))
+                .createdAt(0L)
                 .build();
 
         // when
@@ -142,8 +141,7 @@ public class TrainerTest {
                 .profileImgUrl("")
                 .content("안녕")
                 .years(2)
-                .createdAt(new Timestamp(System.currentTimeMillis()))
-                .modifiedAt(new Timestamp(System.currentTimeMillis()))
+                .createdAt(0L)
                 .build();
 
         // when
@@ -161,8 +159,7 @@ public class TrainerTest {
                 .profileImgUrl("")
                 .content("안녕")
                 .years(2)
-                .createdAt(new Timestamp(System.currentTimeMillis()))
-                .modifiedAt(new Timestamp(System.currentTimeMillis()))
+                .createdAt(0L)
                 .build();
 
         // when

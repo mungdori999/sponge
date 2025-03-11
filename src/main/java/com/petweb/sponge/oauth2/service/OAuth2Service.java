@@ -4,6 +4,7 @@ import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.service.port.UserRepository;
+import com.petweb.sponge.utils.ClockHolder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ public class OAuth2Service {
 
     private final UserRepository userRepository;
     private final TrainerRepository trainerRepository;
+    private final ClockHolder clockHolder;
 
     public User loadUser(LoginOAuth2 loginOAuth2) {
 
@@ -22,6 +24,7 @@ public class OAuth2Service {
             User user = User.builder()
                     .email(loginOAuth2.getEmail())
                     .name(loginOAuth2.getName())
+                    .createdAt(clockHolder.clock())
                     .build();
             User savedUser = userRepository.register(user);
             return savedUser;

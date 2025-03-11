@@ -1,6 +1,5 @@
 package com.petweb.sponge.user.service;
 
-import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.dto.UserUpdate;
 import com.petweb.sponge.user.mock.MockUserRepository;
@@ -23,7 +22,8 @@ class UserServiceTest {
                 .build();
         userRepository.save(User.builder()
                 .email("abc@test.com")
-                .name("테스트").build());
+                .name("테스트")
+                .createdAt(0L).build());
 
     }
 
@@ -37,6 +37,7 @@ class UserServiceTest {
 
         // then
         assertThat(result.getEmail()).isEqualTo("abc@test.com");
+        assertThat(result.getCreatedAt()).isEqualTo(0L);
     }
 
     @Test

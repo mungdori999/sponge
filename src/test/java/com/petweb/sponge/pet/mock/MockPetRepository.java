@@ -35,6 +35,7 @@ public class MockPetRepository implements PetRepository {
                     .age(pet.getAge())
                     .weight(pet.getWeight())
                     .petImgUrl(pet.getPetImgUrl())
+                    .createdAt(pet.getCreatedAt())
                     .userId(pet.getUserId()).build();
             data.add(newPet);
             return newPet;

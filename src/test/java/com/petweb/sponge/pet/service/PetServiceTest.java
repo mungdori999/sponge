@@ -10,6 +10,7 @@ import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.mock.MockUserRepository;
 import com.petweb.sponge.user.service.port.UserRepository;
 import com.petweb.sponge.utils.Gender;
+import com.petweb.sponge.utils.TestClockHolder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +30,7 @@ class PetServiceTest {
         petService = PetService.builder()
                 .petRepository(petRepository)
                 .userRepository(userRepository)
+                .clockHolder(new TestClockHolder(12345L))
                 .build();
         User user = User.builder()
                 .id(1L)
@@ -42,6 +44,7 @@ class PetServiceTest {
                 .breed("테스트 견종")
                 .age(5)
                 .userId(user.getId())
+                        .createdAt(0L)
                 .build());
         petRepository.save(Pet.builder()
                 .name("테스트 이름2")
@@ -49,6 +52,7 @@ class PetServiceTest {
                 .breed("테스트 견종")
                 .age(3)
                 .userId(user.getId())
+                        .createdAt(0L)
                 .build());
     }
 
@@ -66,6 +70,7 @@ class PetServiceTest {
         assertThat(result.getBreed()).isEqualTo("테스트 견종");
         assertThat(result.getAge()).isEqualTo(5);
         assertThat(result.getUserId()).isEqualTo(1L);
+        assertThat(result.getCreatedAt()).isEqualTo(0L);
 
     }
 
@@ -105,6 +110,7 @@ class PetServiceTest {
         // then
         assertThat(result.getName()).isEqualTo("테스트 이름");
         assertThat(result.getBreed()).isEqualTo("테스트 견종");
+        assertThat(result.getCreatedAt()).isEqualTo(12345L);
     }
 
     @Test
@@ -129,6 +135,7 @@ class PetServiceTest {
         assertThat(result.getGender()).isEqualTo(Gender.NEUTERED_MALE.getCode());
         assertThat(result.getAge()).isEqualTo(15);
         assertThat(result.getWeight()).isEqualTo(20.4f);
+        assertThat(result.getCreatedAt()).isEqualTo(0L);
     }
 
     @Test

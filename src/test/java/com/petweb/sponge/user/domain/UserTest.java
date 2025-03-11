@@ -1,6 +1,7 @@
 package com.petweb.sponge.user.domain;
 
 import com.petweb.sponge.user.dto.UserUpdate;
+import com.petweb.sponge.utils.TestClockHolder;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
@@ -18,8 +19,7 @@ public class UserTest {
                 .email("test@naver.com")
                 .name("김철수")
                 .address("")
-                .createdAt(new Timestamp(System.currentTimeMillis()))
-                .modifiedAt(new Timestamp(System.currentTimeMillis()))
+                .createdAt(0L)
                 .build();
         UserUpdate userUpdate = UserUpdate.builder()
                 .name("김업데이트")

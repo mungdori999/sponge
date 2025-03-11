@@ -4,6 +4,7 @@ import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.pet.dto.PetCreate;
 import com.petweb.sponge.pet.dto.PetUpdate;
 import com.petweb.sponge.utils.Gender;
+import com.petweb.sponge.utils.TestClockHolder;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
@@ -24,7 +25,7 @@ public class PetTest {
                 .build();
 
         // when
-        Pet pet = Pet.from(1L, petCreate);
+        Pet pet = Pet.from(1L, petCreate,new TestClockHolder(12345L));
 
         // then
         assertThat(pet.getName()).isEqualTo("테스트 이름");
@@ -32,6 +33,7 @@ public class PetTest {
         assertThat(pet.getGender()).isEqualTo(Gender.MALE.getCode());
         assertThat(pet.getAge()).isEqualTo(5);
         assertThat(pet.getWeight()).isEqualTo(10.5f);
+        assertThat(pet.getCreatedAt()).isEqualTo(12345L);
 
     }
 

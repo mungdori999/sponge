@@ -9,6 +9,7 @@ import com.petweb.sponge.pet.dto.PetUpdate;
 import com.petweb.sponge.pet.service.port.PetRepository;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.service.port.UserRepository;
+import com.petweb.sponge.utils.ClockHolder;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.List;
 public class PetService {
     private final PetRepository petRepository;
     private final UserRepository userRepository;
+    private final ClockHolder clockHolder;
 
     /**
      * 펫 정보 단건 조회
@@ -58,7 +60,7 @@ public class PetService {
         //현재 로그인 유저 정보 가져오기
         User user = userRepository.findById(loginId).orElseThrow(
                 NotFoundUser::new);
-        Pet pet = Pet.from(user.getId(), petCreate);
+        Pet pet = Pet.from(user.getId(), petCreate, clockHolder);
         //반려견 저장
         return petRepository.save(pet);
     }

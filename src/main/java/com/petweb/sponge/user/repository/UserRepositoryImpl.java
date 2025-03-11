@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
@@ -31,7 +32,9 @@ public class UserRepositoryImpl implements UserRepository {
     public User register(User user) {
         UserEntity userEntity = UserEntity.builder()
                 .email(user.getEmail())
-                .name(user.getName()).build();
+                .name(user.getName())
+                .createdAt(user.getCreatedAt())
+                .build();
         return userJpaRepository.save(userEntity).toModel();
     }
 

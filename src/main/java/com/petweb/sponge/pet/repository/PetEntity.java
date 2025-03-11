@@ -1,22 +1,15 @@
 package com.petweb.sponge.pet.repository;
 
 import com.petweb.sponge.pet.domain.Pet;
-import com.petweb.sponge.user.repository.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.sql.Timestamp;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "pets")
-@EntityListeners(AuditingEntityListener.class)
 public class PetEntity {
 
     @Id
@@ -30,10 +23,7 @@ public class PetEntity {
     private float weight; // 몸무게
     private String petImgUrl; // 이미지링크
 
-    @CreatedDate
-    private Timestamp createdAt;
-    @LastModifiedDate
-    private Timestamp modifiedAt;
+    private Long createdAt;
 
     private Long userId;
 
@@ -61,7 +51,6 @@ public class PetEntity {
                 .petImgUrl(petImgUrl)
                 .userId(userId)
                 .createdAt(createdAt)
-                .modifiedAt(modifiedAt)
                 .build();
     }
 

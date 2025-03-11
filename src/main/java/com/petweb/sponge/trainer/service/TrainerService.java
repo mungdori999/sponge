@@ -4,6 +4,7 @@ import com.petweb.sponge.exception.error.NotFoundTrainer;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.dto.*;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
+import com.petweb.sponge.utils.ClockHolder;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TrainerService {
 
     private final TrainerRepository trainerRepository;
+    private final ClockHolder clockHolder;
 
 
     /**
@@ -49,7 +51,7 @@ public class TrainerService {
      */
     @Transactional
     public Trainer create(TrainerCreate trainerCreate) {
-        Trainer trainer = Trainer.from(trainerCreate);
+        Trainer trainer = Trainer.from(trainerCreate, clockHolder);
         return trainerRepository.save(trainer);
     }
 

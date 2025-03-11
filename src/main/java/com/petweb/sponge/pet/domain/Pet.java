@@ -4,10 +4,10 @@ package com.petweb.sponge.pet.domain;
 import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.pet.dto.PetCreate;
 import com.petweb.sponge.pet.dto.PetUpdate;
+import com.petweb.sponge.utils.ClockHolder;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.sql.Timestamp;
 
 @Getter
 public class Pet {
@@ -20,12 +20,10 @@ public class Pet {
     private float weight;
     private String petImgUrl;
     private Long userId;
-
-    private Timestamp createdAt;
-    private Timestamp modifiedAt;
+    private Long createdAt;
 
     @Builder
-    public Pet(Long id, String name, String breed, int gender, int age, float weight, String petImgUrl, Long userId, Timestamp createdAt, Timestamp modifiedAt) {
+    public Pet(Long id, String name, String breed, int gender, int age, float weight, String petImgUrl, Long userId, Long createdAt) {
         this.id = id;
         this.name = name;
         this.breed = breed;
@@ -35,19 +33,19 @@ public class Pet {
         this.petImgUrl = petImgUrl;
         this.userId = userId;
         this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
     }
 
-    public static Pet from(Long userId, PetCreate petCreate) {
-            return Pet.builder()
-                    .name(petCreate.getName())
-                    .breed(petCreate.getBreed())
-                    .gender(petCreate.getGender())
-                    .age(petCreate.getAge())
-                    .weight(petCreate.getWeight())
-                    .petImgUrl(petCreate.getPetImgUrl())
-                    .userId(userId)
-                    .build();
+    public static Pet from(Long userId, PetCreate petCreate, ClockHolder clockHolder) {
+        return Pet.builder()
+                .name(petCreate.getName())
+                .breed(petCreate.getBreed())
+                .gender(petCreate.getGender())
+                .age(petCreate.getAge())
+                .weight(petCreate.getWeight())
+                .petImgUrl(petCreate.getPetImgUrl())
+                .userId(userId)
+                .createdAt(clockHolder.clock())
+                .build();
     }
 
     public Pet update(PetUpdate petUpdate) {
@@ -64,6 +62,7 @@ public class Pet {
                 .createdAt(createdAt)
                 .build();
     }
+
     public void checkUser(Long loginId) {
         if (!userId.equals(loginId)) {
             throw new LoginIdError();

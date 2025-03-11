@@ -9,11 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +19,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "trainers")
-@EntityListeners(AuditingEntityListener.class)
 public class TrainerEntity {
 
     @Id
@@ -40,10 +35,8 @@ public class TrainerEntity {
     private int adoptCount; // 채택 답변 수
     private float score;
     private int chatCount; // 1대1 채팅 수
-    @CreatedDate
-    private Timestamp createdAt;
-    @LastModifiedDate
-    private Timestamp modifiedAt;
+    private Long createdAt;
+
     @OneToMany(mappedBy = "trainerEntity", cascade = CascadeType.ALL)
     private List<TrainerAddressEntity> trainerAddressEntityList = new ArrayList<>();
 
@@ -90,7 +83,6 @@ public class TrainerEntity {
                 .score(score)
                 .chatCount(chatCount)
                 .createdAt(createdAt)
-                .modifiedAt(modifiedAt)
                 .trainerAddressList(trainerAddressList)
                 .historyList(historyList)
                 .build();
@@ -111,7 +103,6 @@ public class TrainerEntity {
         trainerEntity.score = trainer.getScore();
         trainerEntity.chatCount = trainer.getChatCount();
         trainerEntity.createdAt = trainer.getCreatedAt();
-        trainerEntity.modifiedAt = trainer.getModifiedAt();
 
         trainerEntity.trainerAddressEntityList = trainer.getTrainerAddressList().stream()
                 .map(trainerAddress -> TrainerAddressEntity.builder()

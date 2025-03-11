@@ -2,10 +2,10 @@ package com.petweb.sponge.trainer.domain;
 
 import com.petweb.sponge.trainer.dto.TrainerCreate;
 import com.petweb.sponge.trainer.dto.TrainerUpdate;
+import com.petweb.sponge.utils.ClockHolder;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,13 +23,12 @@ public class Trainer {
     private int adoptCount; // 채택 답변 수
     private float score;
     private int chatCount; // 1대1 채팅 수
-    private Timestamp createdAt;
-    private Timestamp modifiedAt;
+    private Long createdAt;
     private List<TrainerAddress> trainerAddressList;
     private List<History> historyList;
 
     @Builder
-    public Trainer(Long id, String email, String name, int gender, String phone, String profileImgUrl, String content, int years, int adoptCount, float score, int chatCount, Timestamp createdAt, Timestamp modifiedAt, List<TrainerAddress> trainerAddressList, List<History> historyList) {
+    public Trainer(Long id, String email, String name, int gender, String phone, String profileImgUrl, String content, int years, int adoptCount, float score, int chatCount, Long createdAt,  List<TrainerAddress> trainerAddressList, List<History> historyList) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -42,12 +41,11 @@ public class Trainer {
         this.score = score;
         this.chatCount = chatCount;
         this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
         this.trainerAddressList = trainerAddressList;
         this.historyList = historyList;
     }
 
-    public static Trainer from(TrainerCreate trainerCreate) {
+    public static Trainer from(TrainerCreate trainerCreate, ClockHolder clockHolder) {
         return Trainer.builder()
                 .email(trainerCreate.getEmail())
                 .name(trainerCreate.getName())
@@ -56,6 +54,7 @@ public class Trainer {
                 .profileImgUrl(trainerCreate.getProfileImgUrl())
                 .years(trainerCreate.getYears())
                 .content(trainerCreate.getContent())
+                .createdAt(clockHolder.clock())
                 .trainerAddressList(trainerCreate.getTrainerAddressList().stream()
                         .map((trainerAddress) -> TrainerAddress.builder().city(trainerAddress.getCity()).town(trainerAddress.getTown()).build()).collect(Collectors.toList()))
                 .historyList(trainerCreate.getHistoryList().stream()
