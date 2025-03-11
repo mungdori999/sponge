@@ -28,7 +28,7 @@ public class Trainer {
     private List<History> historyList;
 
     @Builder
-    public Trainer(Long id, String email, String name, int gender, String phone, String profileImgUrl, String content, int years, int adoptCount, float score, int chatCount, Long createdAt,  List<TrainerAddress> trainerAddressList, List<History> historyList) {
+    public Trainer(Long id, String email, String name, int gender, String phone, String profileImgUrl, String content, int years, int adoptCount, float score, int chatCount, Long createdAt, List<TrainerAddress> trainerAddressList, List<History> historyList) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -56,10 +56,9 @@ public class Trainer {
                 .content(trainerCreate.getContent())
                 .createdAt(clockHolder.clock())
                 .trainerAddressList(trainerCreate.getTrainerAddressList().stream()
-                        .map((trainerAddress) -> TrainerAddress.builder().city(trainerAddress.getCity()).town(trainerAddress.getTown()).build()).collect(Collectors.toList()))
+                        .map(TrainerAddress::from).collect(Collectors.toList()))
                 .historyList(trainerCreate.getHistoryList().stream()
-                        .map((history) -> History.builder().title(history.getTitle()).startDt(history.getStartDt()).endDt(history.getEndDt())
-                                .description(history.getDescription()).build()).collect(Collectors.toList()))
+                        .map(History::from).collect(Collectors.toList()))
                 .build();
 
     }
