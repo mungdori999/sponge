@@ -3,7 +3,6 @@ package com.petweb.sponge.post.domain.post;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.sql.Timestamp;
 
 @Getter
 public class PostContent {
@@ -11,11 +10,11 @@ public class PostContent {
     private String title;
     private String content;
     private String duration;
-    private Timestamp createdAt;
-    private Timestamp modifiedAt;
+    private Long createdAt;
+    private Long modifiedAt;
 
     @Builder
-    public PostContent(String title, String content, String duration, Timestamp createdAt, Timestamp modifiedAt) {
+    public PostContent(String title, String content, String duration, Long createdAt,Long modifiedAt) {
         this.title = title;
         this.content = content;
         this.duration = duration;

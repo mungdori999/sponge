@@ -25,6 +25,7 @@ class UserServiceTest {
                 .name("테스트")
                 .createdAt(0L).build());
 
+
     }
 
     @Test

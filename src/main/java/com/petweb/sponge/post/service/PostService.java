@@ -16,6 +16,7 @@ import com.petweb.sponge.post.repository.post.PostLikeRepository;
 import com.petweb.sponge.post.repository.post.*;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.service.port.UserRepository;
+import com.petweb.sponge.utils.ClockHolder;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostLikeRepository postLikeRepository;
     private final BookmarkRepository bookmarkRepository;
+    private final ClockHolder clockHolder;
 
 
     /**
@@ -54,12 +56,13 @@ public class PostService {
 
     /**
      * 유저 아이디 글 조회
+     *
      * @param userId
      * @param page
      * @return
      */
     @Transactional(readOnly = true)
-    public List<Post> findPostListInfo(Long userId, int page) {
+    public List<Post> findPostListByUserId(Long userId, int page) {
         return postRepository.findListByUserId(userId, page);
 
     }
@@ -71,7 +74,7 @@ public class PostService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<Post> findPostList(Long categoryCode, int page) {
+    public List<Post> findPostListByCode(Long categoryCode, int page) {
         return postRepository.findListByCode(categoryCode, page);
     }
 
@@ -102,7 +105,7 @@ public class PostService {
         //선택한 반려동물 정보 가져오기
         Pet pet = petRepository.findById(postCreate.getPetId()).orElseThrow(
                 NotFoundPet::new);
-        Post post = Post.from(user.getId(), pet.getId(), postCreate);
+        Post post = Post.from(user.getId(), pet.getId(), postCreate, clockHolder);
         post = postRepository.save(post);
         return PostDetailsResponse.from(post, pet);
     }
@@ -123,7 +126,7 @@ public class PostService {
                 NotFoundPet::new);
         post.checkUser(loginId);
         postRepository.initPost(post.getId());
-        post = post.update(postUpdate);
+        post = post.update(postUpdate, clockHolder);
         post = postRepository.save(post);
         return PostDetailsResponse.from(post, pet);
     }
@@ -140,7 +143,7 @@ public class PostService {
         Post post = postRepository.findById(id).orElseThrow(
                 NotFoundPost::new);
         post.checkUser(loginId);
-        postRepository.delete(post,loginId);
+        postRepository.delete(post, loginId);
     }
 
     /**
@@ -171,23 +174,25 @@ public class PostService {
     public PostCheckResponse findCheck(Long loginId, Long postId) {
         Optional<PostLike> like = postLikeRepository.findLike(postId, loginId);
         Optional<Bookmark> bookmark = bookmarkRepository.findBookmark(postId, loginId);
-        return PostCheckResponse.from(like,bookmark);
+        return PostCheckResponse.from(like, bookmark);
 
     }
 
     /**
      * 북마크 저장되어있는 글 조회
+     *
      * @param loginId
      * @param page
      * @return
      */
     @Transactional(readOnly = true)
     public List<Post> findPostListByBookmark(Long loginId, int page) {
-        return postRepository.findByBookmark(loginId,page);
+        return postRepository.findByBookmark(loginId, page);
     }
 
     /**
      * 북마크 업데이트
+     *
      * @param loginId
      * @param postId
      */
@@ -196,12 +201,12 @@ public class PostService {
         Optional<Bookmark> bookmark = bookmarkRepository.findBookmark(postId, loginId);
         if (bookmark.isPresent()) {
             bookmarkRepository.delete(bookmark.get());
-        }
-        else {
+        } else {
             Bookmark newBookmark = Bookmark.from(postId, loginId);
             bookmarkRepository.save(newBookmark);
         }
     }
+
     /**
      * 추천수 업데이트
      *
@@ -228,7 +233,6 @@ public class PostService {
             postRepository.save(post);
         }
     }
-
 
 
 }

@@ -4,7 +4,6 @@ import com.petweb.sponge.trainer.domain.History;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.sql.Timestamp;
 
 @Getter
 @Builder
@@ -16,8 +15,6 @@ public class HistoryResponse {
     private String startDt;
     private String endDt;
     private String description;
-    private Timestamp createdAt;
-    private Timestamp modifiedAt;
     public static HistoryResponse from(History history) {
         return HistoryResponse.builder()
                 .id(history.getId())
@@ -25,8 +22,6 @@ public class HistoryResponse {
                 .startDt(history.getStartDt())
                 .endDt(history.getEndDt())
                 .description(history.getDescription())
-                .createdAt(history.getCreatedAt())
-                .modifiedAt(history.getModifiedAt())
                 .build();
     }
 }

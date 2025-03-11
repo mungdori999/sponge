@@ -47,7 +47,7 @@ public class PostController {
      */
     @GetMapping("/user")
     public ResponseEntity<List<PostListResponse>> getListByUserId(@RequestParam("userId") Long userId, @RequestParam("page") int page) {
-        List<Post> postList = postService.findPostListInfo(userId, page);
+        List<Post> postList = postService.findPostListByUserId(userId, page);
         return new ResponseEntity<>(postList.stream().map(PostListResponse::from).collect(Collectors.toList()), HttpStatus.OK);
     }
 
@@ -59,7 +59,7 @@ public class PostController {
     @GetMapping("/my_info")
     @UserAuth
     public ResponseEntity<List<PostListResponse>> getMyPost(@RequestParam("page") int page) {
-        List<Post> postList = postService.findPostListInfo(authorizationUtil.getLoginId(), page);
+        List<Post> postList = postService.findPostListByUserId(authorizationUtil.getLoginId(), page);
         return new ResponseEntity<>(postList.stream().map(PostListResponse::from).collect(Collectors.toList()), HttpStatus.OK);
     }
 
@@ -71,7 +71,7 @@ public class PostController {
      */
     @GetMapping()
     public ResponseEntity<List<PostListResponse>> getAllPost(@RequestParam("categoryCode") Long categoryCode, @RequestParam("page") int page) {
-        List<Post> postList = postService.findPostList(categoryCode, page);
+        List<Post> postList = postService.findPostListByCode(categoryCode, page);
         return new ResponseEntity<>(postList.stream().map(PostListResponse::from).collect(Collectors.toList()), HttpStatus.OK);
     }
 

@@ -4,6 +4,7 @@ package com.petweb.sponge.post.domain.post;
 import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.post.dto.post.PostCreate;
 import com.petweb.sponge.post.dto.post.PostUpdate;
+import com.petweb.sponge.utils.ClockHolder;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -35,11 +36,13 @@ public class Post {
         this.postCategoryList = postCategoryList;
     }
 
-    public static Post from(Long userId, Long petId, PostCreate postCreate) {
+    public static Post from(Long userId, Long petId, PostCreate postCreate, ClockHolder clockHolder) {
         return Post.builder()
                 .postContent(PostContent.builder().title(postCreate.getTitle())
                         .content(postCreate.getContent())
                         .duration(postCreate.getDuration())
+                        .createdAt(clockHolder.clock())
+                        .modifiedAt(0L)
                         .build())
                 .userId(userId)
                 .petId(petId)
@@ -49,11 +52,11 @@ public class Post {
                 .build();
     }
 
-    public Post update(PostUpdate postUpdate) {
+    public Post update(PostUpdate postUpdate, ClockHolder clockHolder) {
         return Post.builder()
                 .id(id)
                 .postContent(PostContent.builder().title(postUpdate.getTitle()).content(postUpdate.getContent())
-                        .duration(postUpdate.getDuration()).createdAt(postContent.getCreatedAt()).modifiedAt(postContent.getModifiedAt()).build())
+                        .duration(postUpdate.getDuration()).createdAt(postContent.getCreatedAt()).modifiedAt(clockHolder.clock()).build())
                 .userId(userId)
                 .petId(petId)
                 .likeCount(likeCount)
@@ -78,15 +81,25 @@ public class Post {
     public void increaseLikeCount() {
         likeCount++;
     }
+
     public void decreaseLikeCount() {
-        likeCount--;
+        if (likeCount <= 0) {
+            throw new IllegalStateException();
+        } else {
+            likeCount--;
+        }
     }
 
 
     public void increaseAnswerCount() {
         answerCount++;
     }
+
     public void decreaseAnswerCount() {
-        answerCount--;
+        if (answerCount <= 0) {
+            throw new IllegalStateException();
+        } else {
+            answerCount--;
+        }
     }
 }

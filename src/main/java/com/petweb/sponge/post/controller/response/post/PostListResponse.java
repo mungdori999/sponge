@@ -14,7 +14,7 @@ public class PostListResponse {
     private Long id;
     private String title;
     private String content;
-    private Timestamp createdAt;
+    private Long createdAt;
     private int likeCount;
     private int answerCount;
     private Long userId;

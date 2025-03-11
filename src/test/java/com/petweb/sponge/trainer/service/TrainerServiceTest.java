@@ -12,7 +12,6 @@ import com.petweb.sponge.utils.TestClockHolder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,24 +51,18 @@ public class TrainerServiceTest {
                                 .startDt("202401")
                                 .endDt("202406")
                                 .description("Spring Boot 기반 웹 애플리케이션 개발")
-                                .createdAt(new Timestamp(System.currentTimeMillis()))
-                                .modifiedAt(new Timestamp(System.currentTimeMillis()))
                                 .build(),
                         History.builder()
                                 .title("프로젝트 B")
                                 .startDt("202307")
                                 .endDt("202312")
                                 .description("Flutter 기반 모바일 앱 개발")
-                                .createdAt(new Timestamp(System.currentTimeMillis()))
-                                .modifiedAt(new Timestamp(System.currentTimeMillis()))
                                 .build(),
                         History.builder()
                                 .title("프로젝트 C")
                                 .startDt("202203")
                                 .endDt("202209")
                                 .description("AI 챗봇 서비스 개발")
-                                .createdAt(new Timestamp(System.currentTimeMillis()))
-                                .modifiedAt(new Timestamp(System.currentTimeMillis()))
                                 .build()))
                 .build());
 
@@ -206,6 +199,8 @@ public class TrainerServiceTest {
 
 
     }
+
+
 
 
 }

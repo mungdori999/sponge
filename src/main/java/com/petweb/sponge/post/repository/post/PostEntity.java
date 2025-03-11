@@ -6,11 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +16,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "post")
-@EntityListeners(AuditingEntityListener.class)
 public class PostEntity {
     @Id
     @GeneratedValue
@@ -30,10 +25,8 @@ public class PostEntity {
     private String duration; // 문제행동 지속기간
     private int likeCount; // 추천수
     private int answerCount; // 답변수
-    @CreatedDate
-    private Timestamp createdAt;
-    @LastModifiedDate
-    private Timestamp modifiedAt;
+    private Long createdAt;
+    private Long modifiedAt;
     private Long userId;
 
     private Long petId;

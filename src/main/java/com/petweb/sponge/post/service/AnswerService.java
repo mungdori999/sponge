@@ -15,7 +15,6 @@ import com.petweb.sponge.post.repository.answer.AnswerRepository;
 import com.petweb.sponge.post.repository.post.PostRepository;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
-import com.petweb.sponge.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +28,6 @@ import java.util.stream.Collectors;
 public class AnswerService {
 
     private final TrainerRepository trainerRepository;
-    private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final AnswerRepository answerRepository;
     private final AdoptAnswerRepository adoptAnswerRepository;

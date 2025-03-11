@@ -94,7 +94,6 @@ public class Trainer {
         if (adoptCount <= 0) {
             throw new IllegalStateException();
         } else {
-
             adoptCount--;
         }
     }

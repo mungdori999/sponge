@@ -90,9 +90,6 @@ public class PetTest {
         assertThatCode(() -> pet.checkUser(1L))
                 .doesNotThrowAnyException();
 
-
-
-
     }
 
 }

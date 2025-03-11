@@ -6,7 +6,6 @@ import com.petweb.sponge.post.domain.post.Post;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,8 +16,8 @@ public class PostDetailsResponse {
     private String title;
     private String content;
     private String duration;
-    private Timestamp createdAt;
-    private Timestamp modifiedAt;
+    private Long createdAt;
+    private Long modifiedAt;
     private int likeCount;
     private int answerCount;
     private Long userId;
