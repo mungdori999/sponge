@@ -14,7 +14,6 @@ public class Bookmark {
     private Timestamp createdAt;
 
     @Builder
-
     public Bookmark(Long id, Long postId, Long userId, Timestamp createdAt) {
         this.id = id;
         this.postId = postId;

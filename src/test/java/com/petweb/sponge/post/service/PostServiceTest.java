@@ -3,11 +3,16 @@ package com.petweb.sponge.post.service;
 import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.mock.MockPetRepository;
 import com.petweb.sponge.pet.service.port.PetRepository;
+import com.petweb.sponge.post.controller.response.post.PostCheckResponse;
 import com.petweb.sponge.post.controller.response.post.PostDetailsResponse;
 import com.petweb.sponge.post.domain.post.*;
 import com.petweb.sponge.post.dto.post.PostCreate;
 import com.petweb.sponge.post.dto.post.PostUpdate;
+import com.petweb.sponge.post.mock.MockBookmarkRepository;
+import com.petweb.sponge.post.mock.MockPostLikeRepository;
 import com.petweb.sponge.post.mock.MockPostRepository;
+import com.petweb.sponge.post.repository.post.BookmarkRepository;
+import com.petweb.sponge.post.repository.post.PostLikeRepository;
 import com.petweb.sponge.post.repository.post.PostRepository;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.mock.MockUserRepository;
@@ -30,10 +35,15 @@ class PostServiceTest {
         PetRepository petRepository = new MockPetRepository();
         UserRepository userRepository = new MockUserRepository();
         PostRepository postRepository = new MockPostRepository();
+        BookmarkRepository bookmarkRepository = new MockBookmarkRepository();
+        PostLikeRepository postLikeRepository = new MockPostLikeRepository();
+
         postService = PostService.builder()
                 .petRepository(petRepository)
                 .userRepository(userRepository)
                 .postRepository(postRepository)
+                .bookmarkRepository(bookmarkRepository)
+                .postLikeRepository(postLikeRepository)
                 .clockHolder(new TestClockHolder(12345L)).build();
 
         User user = userRepository.save(User.builder()
@@ -205,5 +215,65 @@ class PostServiceTest {
         assertThat(postList).hasSize(4);
     }
 
+    @Test
+    public void findCheck는_체크사항들을_조회한다() {
+        // given
+        Long userId = 1L;
+        Long postId = 1L;
+
+        // when
+        PostCheckResponse result = postService.findCheck(userId, postId);
+
+        // then
+        assertThat(result.isBookmarkCheck()).isFalse();
+        assertThat(result.isLikeCheck()).isFalse();
+    }
+    @Test
+    public void findPostListByBookmark는_북마크되어있는_글을조회한다() {
+        // given
+        Long userId = 1L;
+        Long postId = 1L;
+        int page = 0;
+        postService.updateBookmark(userId, postId);
+
+        // when
+        List<Post> result = postService.findPostListByBookmark(userId, page);
+
+        // then
+        assertThat(result).hasSize(1);
+
+
+    }
+
+    @Test
+    public void 북마크를안한상태에서_updateBookmark는_BOOKMARK를_추가한다() {
+        // given
+        Long userId = 1L;
+        Long postId = 1L;
+
+        // when
+        postService.updateBookmark(userId, postId);
+
+        // given
+        PostCheckResponse check = postService.findCheck(userId, postId);
+        assertThat(check.isBookmarkCheck()).isTrue();
+
+    }
+
+    @Test
+    public void 북마크를한상태에서_updateBookmark는_BOOKMARK를_추가한다() {
+        // given
+        Long userId = 1L;
+        Long postId = 1L;
+        postService.updateBookmark(userId, postId);
+
+        // when
+        postService.updateBookmark(userId, postId);
+
+        // given
+        PostCheckResponse check = postService.findCheck(userId, postId);
+        assertThat(check.isBookmarkCheck()).isFalse();
+
+    }
 
 }

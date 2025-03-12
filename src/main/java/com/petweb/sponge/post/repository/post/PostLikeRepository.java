@@ -7,8 +7,8 @@ import java.util.Optional;
 public interface PostLikeRepository {
     Optional<PostLike> findLike(Long postId, Long loginId);
 
-    void save(PostLike newPostLike);
+    void save(PostLike postLike);
     void delete(PostLike postLike);
-    void deleteLike(Long postId, Long loginId);
+    void deleteByPostId(Long postId, Long loginId);
 
 }

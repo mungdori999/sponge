@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -187,7 +188,8 @@ public class PostService {
      */
     @Transactional(readOnly = true)
     public List<Post> findPostListByBookmark(Long loginId, int page) {
-        return postRepository.findByBookmark(loginId, page);
+        List<Bookmark> bookmarkList = bookmarkRepository.findBookmarkList(loginId, page);
+        return postRepository.findListByPostListId(bookmarkList.stream().map(Bookmark::getPostId).collect(Collectors.toList()));
     }
 
     /**

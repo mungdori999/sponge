@@ -31,6 +31,11 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
+    public List<Post> findListByPostListId(List<Long> postIdList) {
+        return postJpaRepository.findListByPostListId(postIdList).stream().map(PostEntity::toModel).collect(Collectors.toList());
+    }
+
+    @Override
     public List<Post> findByKeyword(String keyword, int page) {
         return postJpaRepository.findListByKeyword(keyword, page).stream().map(PostEntity::toModel).collect(Collectors.toList());
     }
@@ -48,7 +53,7 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public void delete(Post post, Long loginId) {
         bookmarkJpaRepository.deleteBookmark(post.getId(),loginId);
-        postLikeRepository.deleteLike(post.getId(),loginId);
+        postLikeRepository.deleteByPostId(post.getId(),loginId);
         postJpaRepository.delete(PostEntity.from(post));
     }
 

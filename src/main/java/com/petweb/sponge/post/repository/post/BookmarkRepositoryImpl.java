@@ -4,6 +4,7 @@ import com.petweb.sponge.post.domain.post.Bookmark;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -11,6 +12,7 @@ import java.util.Optional;
 public class BookmarkRepositoryImpl implements BookmarkRepository {
 
     private final BookmarkJpaRepository bookmarkJpaRepository;
+    private static int PAGE_SIZE = 10;
 
     @Override
     public Optional<Bookmark> findBookmark(Long postId, Long loginId) {
@@ -18,12 +20,18 @@ public class BookmarkRepositoryImpl implements BookmarkRepository {
     }
 
     @Override
-    public void save(Bookmark newBookmark) {
-        bookmarkJpaRepository.save(BookmarkEntity.from(newBookmark));
+    public void save(Bookmark bookmark) {
+        bookmarkJpaRepository.save(BookmarkEntity.from(bookmark));
     }
 
     @Override
     public void delete(Bookmark bookmark) {
         bookmarkJpaRepository.delete(BookmarkEntity.from(bookmark));
+    }
+
+    @Override
+    public List<Bookmark> findBookmarkList(Long loginId, int page) {
+        int offset = page * PAGE_SIZE;
+        return bookmarkJpaRepository.findBookmarkList(loginId,PAGE_SIZE,offset).stream().map(BookmarkEntity::toModel).toList();
     }
 }
