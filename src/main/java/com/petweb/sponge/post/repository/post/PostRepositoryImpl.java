@@ -62,10 +62,5 @@ public class PostRepositoryImpl implements PostRepository {
         postJpaRepository.initPost(id);
     }
 
-    @Override
-    public List<Post> findByBookmark(Long loginId, int page) {
-        return postJpaRepository.findListByBookmark(loginId,page).stream().map(PostEntity::toModel).collect(Collectors.toList());
-    }
-
 
 }

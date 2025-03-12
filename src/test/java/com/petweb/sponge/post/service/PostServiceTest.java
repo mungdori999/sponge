@@ -59,7 +59,7 @@ class PostServiceTest {
                 .createdAt(0L)
                 .build());
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 15; i++) {
             postRepository.save(Post.builder()
                     .postContent(PostContent.builder()
                             .title("테스트 제목")
@@ -120,7 +120,7 @@ class PostServiceTest {
         List<Post> result = postService.findPostListByUserId(userId, page);
 
         // then
-        assertThat(result).hasSize(5);
+        assertThat(result).hasSize(15);
     }
 
     @Test
@@ -133,7 +133,7 @@ class PostServiceTest {
         List<Post> result = postService.findPostListByCode(categoryCode, page);
 
         // then
-        assertThat(result).hasSize(5);
+        assertThat(result).hasSize(15);
     }
 
     @Test
@@ -147,7 +147,7 @@ class PostServiceTest {
         List<Post> result = postService.search(keyword, page);
 
         // then
-        assertThat(result).hasSize(5);
+        assertThat(result).hasSize(15);
 
     }
 
@@ -172,7 +172,7 @@ class PostServiceTest {
         assertThat(post).isNotNull();
         assertThat(post.getTitle()).isEqualTo("산책 친구 구해요");
         assertThat(post.getContent()).isEqualTo("이번 주말에 같이 산책할 강아지를 찾습니다!");
-        assertThat(post.getId()).isEqualTo(6L);
+        assertThat(post.getId()).isEqualTo(16L);
     }
 
     @Test
@@ -212,7 +212,7 @@ class PostServiceTest {
 
         // then
         List<Post> postList = postService.findPostListByUserId(userId, page);
-        assertThat(postList).hasSize(4);
+        assertThat(postList).hasSize(14);
     }
 
     @Test
@@ -228,20 +228,22 @@ class PostServiceTest {
         assertThat(result.isBookmarkCheck()).isFalse();
         assertThat(result.isLikeCheck()).isFalse();
     }
+
     @Test
     public void findPostListByBookmark는_북마크되어있는_글을조회한다() {
         // given
         Long userId = 1L;
         Long postId = 1L;
         int page = 0;
-        postService.updateBookmark(userId, postId);
+        for (int i = 1; i <= 12; i++) {
+            postService.updateBookmark(userId, (long) i);
+        }
 
         // when
         List<Post> result = postService.findPostListByBookmark(userId, page);
 
         // then
-        assertThat(result).hasSize(1);
-
+        assertThat(result).hasSize(10);
 
     }
 

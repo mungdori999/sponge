@@ -11,9 +11,11 @@ import java.util.Optional;
 public interface BookmarkRepository {
 
     Optional<Bookmark> findBookmark(Long postId, Long loginId);
+
+    List<Bookmark> findBookmarkList(Long loginId, int page);
+
     void save(Bookmark bookmark);
 
     void delete(Bookmark bookmark);
 
-    List<Bookmark> findBookmarkList(Long loginId, int page);
 }
