@@ -5,17 +5,12 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.sql.Timestamp;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "answer")
-@EntityListeners(AuditingEntityListener.class)
 public class AnswerEntity {
 
     @Id
@@ -24,10 +19,8 @@ public class AnswerEntity {
 
     private String content; // 내용
     private int likeCount; // 추천수
-    @CreatedDate
-    private Timestamp createdAt;
-    @LastModifiedDate
-    private Timestamp modifiedAt;
+    private Long createdAt;
+    private Long modifiedAt;
     private Long postId;
 
     private Long trainerId;

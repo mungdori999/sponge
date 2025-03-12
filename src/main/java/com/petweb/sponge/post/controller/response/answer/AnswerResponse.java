@@ -4,7 +4,6 @@ import com.petweb.sponge.post.domain.answer.Answer;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.sql.Timestamp;
 
 @Getter
 @Builder
@@ -12,8 +11,8 @@ public class AnswerResponse {
     private Long id;
     private String content; // 내용
     private int likeCount; // 추천수
-    private Timestamp createdAt;
-    private Timestamp modifiedAt;
+    private Long createdAt;
+    private Long modifiedAt;
     private Long postId;
     private Long trainerId;
     public static AnswerResponse from(Answer answer) {

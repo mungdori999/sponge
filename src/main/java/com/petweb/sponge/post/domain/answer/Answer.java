@@ -3,10 +3,10 @@ package com.petweb.sponge.post.domain.answer;
 import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.post.dto.answer.AnswerCreate;
 import com.petweb.sponge.post.dto.answer.AnswerUpdate;
+import com.petweb.sponge.utils.ClockHolder;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.sql.Timestamp;
 
 @Getter
 public class Answer {
@@ -14,13 +14,13 @@ public class Answer {
     private Long id;
     private String content; // 내용
     private int likeCount; // 추천수
-    private Timestamp createdAt;
-    private Timestamp modifiedAt;
+    private Long createdAt;
+    private Long modifiedAt;
     private Long postId;
     private Long trainerId;
 
     @Builder
-    public Answer(Long id, String content, int likeCount, Timestamp createdAt, Timestamp modifiedAt, Long postId, Long trainerId) {
+    public Answer(Long id, String content, int likeCount, Long createdAt, Long modifiedAt, Long postId, Long trainerId) {
         this.id = id;
         this.content = content;
         this.likeCount = likeCount;
@@ -30,11 +30,13 @@ public class Answer {
         this.trainerId = trainerId;
     }
 
-    public static Answer from(Long trainerId, Long postId, AnswerCreate answerCreate) {
+    public static Answer from(Long trainerId, Long postId, AnswerCreate answerCreate, ClockHolder clockHolder) {
         return Answer.builder()
                 .content(answerCreate.getContent())
                 .postId(postId)
                 .trainerId(trainerId)
+                .createdAt(clockHolder.clock())
+                .modifiedAt(0L)
                 .build();
     }
 
@@ -44,7 +46,7 @@ public class Answer {
         }
     }
 
-    public Answer update(AnswerUpdate answerUpdate) {
+    public Answer update(AnswerUpdate answerUpdate,ClockHolder clockHolder) {
         return Answer.builder()
                 .id(id)
                 .content(answerUpdate.getContent())
@@ -53,6 +55,7 @@ public class Answer {
                 .modifiedAt(modifiedAt)
                 .postId(postId)
                 .trainerId(trainerId)
+                .modifiedAt(clockHolder.clock())
                 .build();
     }
 

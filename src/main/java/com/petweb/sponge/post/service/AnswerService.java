@@ -15,6 +15,7 @@ import com.petweb.sponge.post.repository.answer.AnswerRepository;
 import com.petweb.sponge.post.repository.post.PostRepository;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
+import com.petweb.sponge.utils.ClockHolder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,7 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final AdoptAnswerRepository adoptAnswerRepository;
     private final AnswerLikeRepository answerLikeRepository;
+    private final ClockHolder clockHolder;
 
     /**
      * 훈련사 답변 조회
@@ -95,7 +97,7 @@ public class AnswerService {
                 NotFoundPost::new);
         Trainer trainer = trainerRepository.findById(loginId).orElseThrow(
                 NotFoundTrainer::new);
-        Answer answer = Answer.from(trainer.getId(), post.getId(), answerCreate);
+        Answer answer = Answer.from(trainer.getId(), post.getId(), answerCreate,clockHolder);
         answer = answerRepository.save(answer);
 
         post.increaseAnswerCount();
@@ -114,7 +116,7 @@ public class AnswerService {
         Answer answer = answerRepository.findById(id).orElseThrow(
                 NotFoundAnswer::new);
         answer.checkTrainer(loginId);
-        answer = answer.update(answerUpdate);
+        answer = answer.update(answerUpdate,clockHolder);
         answerRepository.save(answer);
     }
 
