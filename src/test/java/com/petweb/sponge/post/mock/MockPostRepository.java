@@ -34,7 +34,7 @@ public class MockPostRepository implements PostRepository {
     }
 
     @Override
-    public List<Post> findListByPostListId(List<Long> postIdList) {
+    public List<Post> findListByPostIdList(List<Long> postIdList) {
         return postData.stream()
                 .filter(item -> postIdList.contains(item.getId())) // postIdList에 포함된 ID만 필터링
                 .collect(Collectors.toList()); // 결과를 리스트로 변환

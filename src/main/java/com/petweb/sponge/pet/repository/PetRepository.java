@@ -1,4 +1,4 @@
-package com.petweb.sponge.pet.service.port;
+package com.petweb.sponge.pet.repository;
 
 import com.petweb.sponge.pet.domain.Pet;
 

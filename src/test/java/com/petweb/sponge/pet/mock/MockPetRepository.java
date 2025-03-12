@@ -1,12 +1,11 @@
 package com.petweb.sponge.pet.mock;
 
 import com.petweb.sponge.pet.domain.Pet;
-import com.petweb.sponge.pet.service.port.PetRepository;
+import com.petweb.sponge.pet.repository.PetRepository;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class MockPetRepository implements PetRepository {

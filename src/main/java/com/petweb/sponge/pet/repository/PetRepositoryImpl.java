@@ -1,7 +1,6 @@
 package com.petweb.sponge.pet.repository;
 
 import com.petweb.sponge.pet.domain.Pet;
-import com.petweb.sponge.pet.service.port.PetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

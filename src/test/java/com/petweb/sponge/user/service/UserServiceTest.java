@@ -3,7 +3,7 @@ package com.petweb.sponge.user.service;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.dto.UserUpdate;
 import com.petweb.sponge.user.mock.MockUserRepository;
-import com.petweb.sponge.user.service.port.UserRepository;
+import com.petweb.sponge.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

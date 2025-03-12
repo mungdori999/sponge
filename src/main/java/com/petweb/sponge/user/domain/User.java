@@ -1,7 +1,6 @@
 package com.petweb.sponge.user.domain;
 
 import com.petweb.sponge.user.dto.UserUpdate;
-import com.petweb.sponge.utils.ClockHolder;
 import lombok.Builder;
 import lombok.Getter;
 

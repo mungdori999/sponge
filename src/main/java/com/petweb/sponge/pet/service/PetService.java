@@ -1,14 +1,13 @@
 package com.petweb.sponge.pet.service;
 
-import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.exception.error.NotFoundPet;
 import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.dto.PetCreate;
 import com.petweb.sponge.pet.dto.PetUpdate;
-import com.petweb.sponge.pet.service.port.PetRepository;
+import com.petweb.sponge.pet.repository.PetRepository;
 import com.petweb.sponge.user.domain.User;
-import com.petweb.sponge.user.service.port.UserRepository;
+import com.petweb.sponge.user.repository.UserRepository;
 import com.petweb.sponge.utils.ClockHolder;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;

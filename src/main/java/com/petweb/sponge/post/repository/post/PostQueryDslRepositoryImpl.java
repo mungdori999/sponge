@@ -150,17 +150,7 @@ public class PostQueryDslRepositoryImpl implements PostQueryDslRepository {
     }
 
     @Override
-    public List<PostEntity> findListByBookmark(Long loginId, int page) {
-        // 페이지 번호와 페이지 크기를 계산
-        int offset = page * PAGE_SIZE;
-        List<Long> postIdList = queryFactory
-                .select(bookmarkEntity.postId)
-                .where(bookmarkEntity.userId.eq(loginId))
-                .from(bookmarkEntity)
-                .offset(offset)
-                .limit(PAGE_SIZE)
-                .fetch();
-
+    public List<PostEntity> findListByPostListId(List<Long> postIdList) {
         if (postIdList.isEmpty()) {
             return new ArrayList<>();  // 결과가 없으면 빈 리스트 반환
         }

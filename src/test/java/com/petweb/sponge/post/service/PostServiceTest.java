@@ -2,7 +2,7 @@ package com.petweb.sponge.post.service;
 
 import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.mock.MockPetRepository;
-import com.petweb.sponge.pet.service.port.PetRepository;
+import com.petweb.sponge.pet.repository.PetRepository;
 import com.petweb.sponge.post.controller.response.post.PostCheckResponse;
 import com.petweb.sponge.post.controller.response.post.PostDetailsResponse;
 import com.petweb.sponge.post.domain.post.*;
@@ -16,7 +16,7 @@ import com.petweb.sponge.post.repository.post.PostLikeRepository;
 import com.petweb.sponge.post.repository.post.PostRepository;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.mock.MockUserRepository;
-import com.petweb.sponge.user.service.port.UserRepository;
+import com.petweb.sponge.user.repository.UserRepository;
 import com.petweb.sponge.utils.Gender;
 import com.petweb.sponge.utils.TestClockHolder;
 import org.junit.jupiter.api.BeforeEach;
@@ -240,10 +240,11 @@ class PostServiceTest {
         }
 
         // when
-        List<Post> result = postService.findPostListByBookmark(userId, page);
+        List<Post> result = postService.findPostListByBookmark(userId, 0);
 
         // then
         assertThat(result).hasSize(10);
+
 
     }
 

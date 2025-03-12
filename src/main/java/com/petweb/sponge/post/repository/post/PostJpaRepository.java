@@ -8,6 +8,5 @@ import java.util.List;
 public interface PostJpaRepository extends JpaRepository<PostEntity,Long>, PostQueryDslRepository {
 
 
-    @Query("SELECT p FROM PostEntity p WHERE p.id IN :postIdList")
-    List<PostEntity> findListByPostListId(List<Long> postIdList);
+
 }

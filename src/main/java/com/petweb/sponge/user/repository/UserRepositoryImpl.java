@@ -1,11 +1,12 @@
 package com.petweb.sponge.user.repository;
 
 import com.petweb.sponge.user.domain.User;
-import com.petweb.sponge.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,6 +22,11 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<User> findByEmail(String email) {
         return userJpaRepository.findByEmail(email).map(UserEntity::toModel);
+    }
+
+    @Override
+    public List<User> findByUserIdList(List<Long> userIdList) {
+        return userJpaRepository.findByUserIdList(userIdList).stream().map(UserEntity::toModel).collect(Collectors.toList());
     }
 
     @Override

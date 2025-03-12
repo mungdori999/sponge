@@ -18,6 +18,6 @@ public interface BookmarkJpaRepository extends JpaRepository<BookmarkEntity, Lon
     @Modifying
     void deleteBookmark(@Param("postId") Long postId, @Param("loginId") Long loginId);
 
-    @Query(value = "SELECT be FROM BookmarkEntity be WHERE be.userId = :userId ORDER BY be.createdAt DESC LIMIT :limit OFFSET :offset", nativeQuery = true)
+    @Query(value = "SELECT * FROM BOOKMARK be WHERE be.user_id = :userId ORDER BY be.created_at DESC LIMIT :limit OFFSET :offset", nativeQuery = true)
     List<BookmarkEntity> findBookmarkList(@Param("userId") Long loginId, @Param("limit") int limit, @Param("offset") int offset);
 }

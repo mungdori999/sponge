@@ -5,7 +5,7 @@ import com.petweb.sponge.post.repository.post.BookmarkRepository;
 import com.petweb.sponge.post.repository.post.PostRepository;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.dto.UserUpdate;
-import com.petweb.sponge.user.service.port.UserRepository;
+import com.petweb.sponge.user.repository.UserRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

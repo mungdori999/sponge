@@ -1,12 +1,12 @@
 package com.petweb.sponge.trainer.repository;
 
-import com.petweb.sponge.trainer.controller.response.ReviewResponse;
 import com.petweb.sponge.trainer.domain.Review;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -19,8 +19,8 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
-    public List<ReviewResponse> findListByTrainerId(Long trainerId, int page) {
-        return reviewJpaRepository.findByTrainerId(trainerId,page);
+    public List<Review> findListByTrainerId(Long trainerId, int page) {
+        return reviewJpaRepository.findByTrainerId(trainerId,page).stream().map(ReviewEntity::toModel).collect(Collectors.toList());
     }
 
     @Override

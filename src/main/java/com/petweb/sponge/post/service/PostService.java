@@ -4,7 +4,7 @@ import com.petweb.sponge.exception.error.NotFoundPet;
 import com.petweb.sponge.exception.error.NotFoundPost;
 import com.petweb.sponge.exception.error.NotFoundUser;
 import com.petweb.sponge.pet.domain.Pet;
-import com.petweb.sponge.pet.service.port.PetRepository;
+import com.petweb.sponge.pet.repository.PetRepository;
 import com.petweb.sponge.post.controller.response.post.PostCheckResponse;
 import com.petweb.sponge.post.controller.response.post.PostDetailsResponse;
 import com.petweb.sponge.post.domain.post.PostLike;
@@ -15,7 +15,7 @@ import com.petweb.sponge.post.dto.post.PostUpdate;
 import com.petweb.sponge.post.repository.post.PostLikeRepository;
 import com.petweb.sponge.post.repository.post.*;
 import com.petweb.sponge.user.domain.User;
-import com.petweb.sponge.user.service.port.UserRepository;
+import com.petweb.sponge.user.repository.UserRepository;
 import com.petweb.sponge.utils.ClockHolder;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -189,7 +189,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public List<Post> findPostListByBookmark(Long loginId, int page) {
         List<Bookmark> bookmarkList = bookmarkRepository.findBookmarkList(loginId, page);
-        return postRepository.findListByPostListId(bookmarkList.stream().map(Bookmark::getPostId).collect(Collectors.toList()));
+        return postRepository.findListByPostIdList(bookmarkList.stream().map(Bookmark::getPostId).collect(Collectors.toList()));
     }
 
     /**

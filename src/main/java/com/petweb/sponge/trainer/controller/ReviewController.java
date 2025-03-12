@@ -45,6 +45,11 @@ public class ReviewController {
         return new ResponseEntity<>(reviewList, HttpStatus.OK);
     }
 
+    /**
+     * 내가 쓴 리뷰 조회
+     * @param page
+     * @return
+     */
     @GetMapping("/my_info/trainer")
     @TrainerAuth
     public ResponseEntity<List<ReviewResponse>> getMyReviewByTrainerId(@RequestParam("page") int page) {

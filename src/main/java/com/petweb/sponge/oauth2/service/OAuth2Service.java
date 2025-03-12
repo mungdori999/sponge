@@ -3,7 +3,7 @@ package com.petweb.sponge.oauth2.service;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
 import com.petweb.sponge.user.domain.User;
-import com.petweb.sponge.user.service.port.UserRepository;
+import com.petweb.sponge.user.repository.UserRepository;
 import com.petweb.sponge.utils.ClockHolder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
