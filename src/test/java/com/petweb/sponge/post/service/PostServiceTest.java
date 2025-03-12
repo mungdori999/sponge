@@ -233,14 +233,13 @@ class PostServiceTest {
     public void findPostListByBookmark는_북마크되어있는_글을조회한다() {
         // given
         Long userId = 1L;
-        Long postId = 1L;
         int page = 0;
         for (int i = 1; i <= 12; i++) {
             postService.updateBookmark(userId, (long) i);
         }
 
         // when
-        List<Post> result = postService.findPostListByBookmark(userId, 0);
+        List<Post> result = postService.findPostListByBookmark(userId, page);
 
         // then
         assertThat(result).hasSize(10);

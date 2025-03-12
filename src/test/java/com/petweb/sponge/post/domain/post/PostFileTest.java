@@ -1,4 +1,4 @@
-package com.petweb.sponge.post.domain;
+package com.petweb.sponge.post.domain.post;
 
 import com.petweb.sponge.post.domain.post.PostFile;
 import org.junit.jupiter.api.Test;
