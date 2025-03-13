@@ -16,6 +16,7 @@ import com.petweb.sponge.post.repository.post.PostRepository;
 import com.petweb.sponge.trainer.domain.Trainer;
 import com.petweb.sponge.trainer.repository.TrainerRepository;
 import com.petweb.sponge.utils.ClockHolder;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Builder
 public class AnswerService {
 
     private final TrainerRepository trainerRepository;
@@ -97,7 +99,7 @@ public class AnswerService {
                 NotFoundPost::new);
         Trainer trainer = trainerRepository.findById(loginId).orElseThrow(
                 NotFoundTrainer::new);
-        Answer answer = Answer.from(trainer.getId(), post.getId(), answerCreate,clockHolder);
+        Answer answer = Answer.from(trainer.getId(), post.getId(), answerCreate, clockHolder);
         answer = answerRepository.save(answer);
 
         post.increaseAnswerCount();
@@ -116,7 +118,7 @@ public class AnswerService {
         Answer answer = answerRepository.findById(id).orElseThrow(
                 NotFoundAnswer::new);
         answer.checkTrainer(loginId);
-        answer = answer.update(answerUpdate,clockHolder);
+        answer = answer.update(answerUpdate, clockHolder);
         answerRepository.save(answer);
     }
 

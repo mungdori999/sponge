@@ -1,4 +1,4 @@
-package com.petweb.sponge.post.mock;
+package com.petweb.sponge.post.mock.post;
 
 import com.petweb.sponge.post.domain.post.Bookmark;
 import com.petweb.sponge.post.repository.post.BookmarkRepository;
