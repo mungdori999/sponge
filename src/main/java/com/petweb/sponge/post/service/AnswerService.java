@@ -99,7 +99,7 @@ public class AnswerService {
                 NotFoundPost::new);
         Trainer trainer = trainerRepository.findById(loginId).orElseThrow(
                 NotFoundTrainer::new);
-        Answer answer = Answer.from(trainer.getId(), post.getId(), answerCreate, clockHolder);
+        Answer answer = Answer.from(trainer.getId(),answerCreate, clockHolder);
         answer = answerRepository.save(answer);
 
         post.increaseAnswerCount();

@@ -6,6 +6,7 @@ import com.petweb.sponge.post.dto.answer.AnswerUpdate;
 import com.petweb.sponge.utils.ClockHolder;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.security.core.parameters.P;
 
 
 @Getter
@@ -30,23 +31,17 @@ public class Answer {
         this.trainerId = trainerId;
     }
 
-    public static Answer from(Long trainerId, Long postId, AnswerCreate answerCreate, ClockHolder clockHolder) {
+    public static Answer from(Long trainerId, AnswerCreate answerCreate, ClockHolder clockHolder) {
         return Answer.builder()
                 .content(answerCreate.getContent())
-                .postId(postId)
+                .postId(answerCreate.getPostId())
                 .trainerId(trainerId)
                 .createdAt(clockHolder.clock())
                 .modifiedAt(0L)
                 .build();
     }
 
-    public void checkTrainer(Long loginId) {
-        if (!trainerId.equals(loginId)) {
-            throw new LoginIdError();
-        }
-    }
-
-    public Answer update(AnswerUpdate answerUpdate,ClockHolder clockHolder) {
+    public Answer update(AnswerUpdate answerUpdate, ClockHolder clockHolder) {
         return Answer.builder()
                 .id(id)
                 .content(answerUpdate.getContent())
@@ -59,8 +54,18 @@ public class Answer {
                 .build();
     }
 
+    public void checkTrainer(Long loginId) {
+        if (!trainerId.equals(loginId)) {
+            throw new LoginIdError();
+        }
+    }
+
     public void decreaseLikeCount() {
-        likeCount--;
+        if (likeCount <= 0) {
+            throw new IllegalStateException();
+        } else {
+            likeCount--;
+        }
     }
 
     public void increaseLikeCount() {
