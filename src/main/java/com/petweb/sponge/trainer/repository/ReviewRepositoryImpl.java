@@ -24,7 +24,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
-    public void save(Review review) {
-        reviewJpaRepository.save(ReviewEntity.from(review));
+    public Review save(Review review) {
+        return reviewJpaRepository.save(ReviewEntity.from(review)).toModel();
     }
 }

@@ -31,8 +31,8 @@ public class AdoptAnswerRepositoryImpl implements AdoptAnswerRepository {
 
 
     @Override
-    public void save(AdoptAnswer adoptAnswer) {
-        adoptAnswerJpaRepository.save(AdoptAnswerEntity.from(adoptAnswer));
+    public AdoptAnswer save(AdoptAnswer adoptAnswer) {
+        return adoptAnswerJpaRepository.save(AdoptAnswerEntity.from(adoptAnswer)).toModel();
     }
 
     @Override

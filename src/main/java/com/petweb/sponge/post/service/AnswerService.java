@@ -94,16 +94,17 @@ public class AnswerService {
      * @param answerCreate
      */
     @Transactional
-    public void create(Long loginId, AnswerCreate answerCreate) {
+    public Answer create(Long loginId, AnswerCreate answerCreate) {
         Post post = postRepository.findById(answerCreate.getPostId()).orElseThrow(
                 NotFoundPost::new);
         Trainer trainer = trainerRepository.findById(loginId).orElseThrow(
                 NotFoundTrainer::new);
-        Answer answer = Answer.from(trainer.getId(),answerCreate, clockHolder);
+        Answer answer = Answer.from(trainer.getId(), answerCreate, clockHolder);
         answer = answerRepository.save(answer);
 
         post.increaseAnswerCount();
         postRepository.save(post);
+        return answer;
     }
 
     /**
@@ -159,7 +160,7 @@ public class AnswerService {
      * @param loginId
      */
     @Transactional
-    public void createAdoptAnswer(Long loginId, AdoptAnswerCreate adoptAnswerCreate) {
+    public AdoptAnswer createAdoptAnswer(Long loginId, AdoptAnswerCreate adoptAnswerCreate) {
         AdoptAnswer adoptAnswer = AdoptAnswer.from(loginId, adoptAnswerCreate);
         Trainer trainer = trainerRepository.findShortById(adoptAnswer.getTrainerId()).orElseThrow(NotFoundTrainer::new);
         Post post = postRepository.findShortById(adoptAnswerCreate.getPostId()).orElseThrow(
@@ -167,7 +168,7 @@ public class AnswerService {
         post.checkUser(loginId);
         trainer.increaseAdoptCount();
         trainerRepository.save(trainer);
-        adoptAnswerRepository.save(adoptAnswer);
+        return adoptAnswerRepository.save(adoptAnswer);
     }
 
     /**

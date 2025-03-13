@@ -8,6 +8,6 @@ import java.util.Optional;
 public interface ReviewRepository {
     Optional<Review> findByUserId(Long loginId, Long trainerId);
     List<Review> findListByTrainerId(Long trainerId, int page);
-    void save(Review review);
+    Review save(Review review);
 
 }

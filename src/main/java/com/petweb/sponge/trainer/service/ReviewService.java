@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -68,9 +67,10 @@ public class ReviewService {
      *
      * @param loginId
      * @param reviewCreate
+     * @return
      */
     @Transactional
-    public void create(Long loginId, ReviewCreate reviewCreate) {
+    public Review create(Long loginId, ReviewCreate reviewCreate) {
         User user = userRepository.findById(loginId).orElseThrow(
                 NotFoundUser::new);
         Trainer trainer = trainerRepository.findShortById(reviewCreate.getTrainerId())
@@ -78,8 +78,8 @@ public class ReviewService {
         Review review = Review.from(user.getId(), reviewCreate, clockHolder);
         // 리뷰 계산
         trainer.calcReview(review.getScore());
-        reviewRepository.save(review);
         trainerRepository.save(trainer);
+        return reviewRepository.save(review);
     }
 
 

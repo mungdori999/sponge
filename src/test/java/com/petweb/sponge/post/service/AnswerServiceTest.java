@@ -211,11 +211,12 @@ public class AnswerServiceTest {
                 .build();
 
         // when
-        answerService.create(trainerId, answerCreate);
+        Answer result = answerService.create(trainerId, answerCreate);
 
         // then
-        List<AnswerDetailsListResponse> answerList = answerService.findAnswerList(15L);
-        assertThat(answerList.get(0).getAnswerResponse().getContent()).isEqualTo("새로운 내용입니다");
+        assertThat(result.getId()).isEqualTo(27L);
+        assertThat(result.getPostId()).isEqualTo(15L);
+        assertThat(result.getContent()).isEqualTo("새로운 내용입니다");
     }
 
     @Test
@@ -261,11 +262,12 @@ public class AnswerServiceTest {
 
 
         // when
-        answerService.createAdoptAnswer(userId, answerCreate);
+        AdoptAnswer result = answerService.createAdoptAnswer(userId, answerCreate);
 
         // then
-        List<AnswerDetailsListResponse> answerList = answerService.findAnswerList(1L);
-        assertThat(answerList.get(0).isCheckAdopt()).isTrue();
+        assertThat(result.getAnswerId()).isEqualTo(1L);
+        assertThat(result.getUserId()).isEqualTo(1L);
+        assertThat(result.getTrainerId()).isEqualTo(1L);
     }
 
     @Test

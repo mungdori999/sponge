@@ -117,9 +117,11 @@ public class ReviewServiceTest {
                 .content("별로에요").build();
 
         // when
-        reviewService.create(userId, reviewCreate);
+        Review result = reviewService.create(userId, reviewCreate);
 
         // then
+        assertThat(result.getTrainerId()).isEqualTo(1L);
+        assertThat(result.getContent()).isEqualTo("별로에요");
 
     }
 }
