@@ -26,7 +26,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> findByUserIdList(List<Long> userIdList) {
-        return userJpaRepository.findByUserIdList(userIdList).stream().map(UserEntity::toModel).collect(Collectors.toList());
+        return userJpaRepository.findByIdList(userIdList).stream().map(UserEntity::toModel).collect(Collectors.toList());
     }
 
     @Override

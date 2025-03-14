@@ -1,7 +1,5 @@
 package com.petweb.sponge.trainer.repository;
 
-import com.petweb.sponge.trainer.domain.Trainer;
-import io.micrometer.observation.ObservationFilter;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,5 +13,5 @@ public interface TrainerJpaRepository extends JpaRepository<TrainerEntity,Long>,
     Optional<TrainerEntity> findByEmail(@Param("email") String email);
 
     @Query("SELECT trainer FROM TrainerEntity trainer WHERE trainer.id IN :trainerIdList")
-    List<TrainerEntity> findShortById(@Param("trainerIdList") List<Long> trainerIdList);
+    List<TrainerEntity> findShortByIdList(@Param("trainerIdList") List<Long> trainerIdList);
 }

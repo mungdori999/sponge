@@ -67,7 +67,7 @@ public class TrainerService {
                 NotFoundTrainer::new);
         trainerRepository.initTrainer(id);
         trainer = trainer.update(trainerUpdate);
-        trainer = trainerRepository.save(trainer);
+        trainerRepository.save(trainer);
     }
 
     /**
