@@ -48,6 +48,8 @@ public class UserJpaRepositoryTest {
 
         // then
         assertThat(result).hasSize(2);
+        assertThat(result.get(0).getEmail()).isEqualTo("user1@test.com");
+        assertThat(result.get(1).getEmail()).isEqualTo("user2@test.com");
 
     }
 

@@ -46,6 +46,8 @@ public class TrainerJpaRepositoryTest {
 
         // then
         assertThat(result).hasSize(2);
+        assertThat(result.get(0).getEmail()).isEqualTo("trainer1@test.com");
+        assertThat(result.get(1).getEmail()).isEqualTo("trainer2@test.com");
     }
 
 
