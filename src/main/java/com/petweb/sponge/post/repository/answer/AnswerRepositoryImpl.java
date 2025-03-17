@@ -10,9 +10,10 @@ import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public class AnswerRepositoryImpl implements AnswerRepository{
+public class AnswerRepositoryImpl implements AnswerRepository {
 
     private final AnswerJpaRepository answerJpaRepository;
+    private static final int PAGE_SIZE = 10;  // 페이지당 항목 수
 
     @Override
     public Optional<Answer> findById(Long id) {
@@ -26,7 +27,8 @@ public class AnswerRepositoryImpl implements AnswerRepository{
 
     @Override
     public List<Answer> findListByTrainerId(Long trainerId, int page) {
-        return answerJpaRepository.findListByTrainerId(trainerId,page).stream().map(AnswerEntity::toModel).collect(Collectors.toList());
+        int offset = page * PAGE_SIZE;
+        return answerJpaRepository.findListByTrainerId(trainerId,PAGE_SIZE ,offset).stream().map(AnswerEntity::toModel).collect(Collectors.toList());
     }
 
     @Override
