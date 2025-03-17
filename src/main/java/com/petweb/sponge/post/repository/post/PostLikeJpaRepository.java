@@ -14,5 +14,5 @@ public interface PostLikeJpaRepository extends JpaRepository<PostLikeEntity,Long
     Optional<PostLikeEntity> findLike(@Param("postId") Long postId, @Param("loginId") Long loginId);
     @Query("DELETE PostLikeEntity pe where pe.postId= :postId")
     @Modifying
-    void deleteLike(@Param("postId") Long postId);
+    void deleteByPostId(@Param("postId") Long postId);
 }
