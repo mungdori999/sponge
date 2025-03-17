@@ -99,7 +99,7 @@ public class MockPostRepository implements PostRepository {
     }
 
     @Override
-    public void delete(Post post, Long loginId) {
+    public void delete(Post post) {
         postData.removeIf(item->item.getId().equals(post.getId()));
     }
 

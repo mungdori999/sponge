@@ -25,6 +25,11 @@ public class BookmarkRepositoryImpl implements BookmarkRepository {
     }
 
     @Override
+    public void deleteByPostId(Long postId) {
+        bookmarkJpaRepository.deleteByPostId(postId);
+    }
+
+    @Override
     public void delete(Bookmark bookmark) {
         bookmarkJpaRepository.delete(BookmarkEntity.from(bookmark));
     }

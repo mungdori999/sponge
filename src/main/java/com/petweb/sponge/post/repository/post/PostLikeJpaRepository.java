@@ -12,7 +12,7 @@ public interface PostLikeJpaRepository extends JpaRepository<PostLikeEntity,Long
 
     @Query("SELECT l FROM PostLikeEntity l WHERE l.postId = :postId AND l.userId = :loginId")
     Optional<PostLikeEntity> findLike(@Param("postId") Long postId, @Param("loginId") Long loginId);
-    @Query("DELETE PostLikeEntity pe where pe.postId= :postId AND pe.userId = :loginId")
+    @Query("DELETE PostLikeEntity pe where pe.postId= :postId")
     @Modifying
-    void deleteLike(@Param("postId") Long postId,@Param("loginId") Long loginId);
+    void deleteLike(@Param("postId") Long postId);
 }

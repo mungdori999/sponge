@@ -134,6 +134,20 @@ public class PostQueryDslRepositoryImpl implements PostQueryDslRepository {
     }
 
     @Override
+    public List<PostEntity> findListByIdList(List<Long> postIdList) {
+        if (postIdList.isEmpty()) {
+            return new ArrayList<>();  // 결과가 없으면 빈 리스트 반환
+        }
+        return queryFactory
+                .selectDistinct(postEntity)
+                .from(postEntity)
+                .leftJoin(postEntity.postCategoryEntityList, postCategoryEntity).fetchJoin()
+                .orderBy(postEntity.createdAt.desc()) //최신순 정렬
+                .where(postEntity.id.in(postIdList))  // IN 절 사용
+                .fetch();
+    }
+
+    @Override
     public void initPost(Long id) {
         queryFactory
                 .delete(postCategoryEntity)
@@ -147,19 +161,5 @@ public class PostQueryDslRepositoryImpl implements PostQueryDslRepository {
                 .delete(tagEntity)
                 .where(tagEntity.postEntity.id.eq(id))
                 .execute();
-    }
-
-    @Override
-    public List<PostEntity> findListByPostListId(List<Long> postIdList) {
-        if (postIdList.isEmpty()) {
-            return new ArrayList<>();  // 결과가 없으면 빈 리스트 반환
-        }
-        return queryFactory
-                .selectDistinct(postEntity)
-                .from(postEntity)
-                .leftJoin(postEntity.postCategoryEntityList, postCategoryEntity).fetchJoin()
-                .orderBy(postEntity.createdAt.desc()) //최신순 정렬
-                .where(postEntity.id.in(postIdList))  // IN 절 사용
-                .fetch();
     }
 }

@@ -18,7 +18,7 @@ public interface PostRepository {
 
     Post save(Post post);
 
-    void delete(Post post, Long loginId);
+    void delete(Post post);
 
     void initPost(Long id);
 

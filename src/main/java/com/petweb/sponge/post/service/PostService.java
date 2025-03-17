@@ -144,7 +144,9 @@ public class PostService {
         Post post = postRepository.findById(id).orElseThrow(
                 NotFoundPost::new);
         post.checkUser(loginId);
-        postRepository.delete(post, loginId);
+        bookmarkRepository.deleteByPostId(post.getId());
+        postLikeRepository.deleteByPostId(post.getId());
+        postRepository.delete(post);
     }
 
     /**
@@ -204,7 +206,7 @@ public class PostService {
         if (bookmark.isPresent()) {
             bookmarkRepository.delete(bookmark.get());
         } else {
-            Bookmark newBookmark = Bookmark.from(postId, loginId);
+            Bookmark newBookmark = Bookmark.from(postId, loginId,clockHolder);
             bookmarkRepository.save(newBookmark);
         }
     }

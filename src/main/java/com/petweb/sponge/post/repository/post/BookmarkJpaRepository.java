@@ -14,10 +14,10 @@ public interface BookmarkJpaRepository extends JpaRepository<BookmarkEntity, Lon
     @Query("SELECT be FROM BookmarkEntity be WHERE be.postId = :postId AND be.userId = :loginId")
     Optional<BookmarkEntity> findBookmark(@Param("postId") Long postId, @Param("loginId") Long loginId);
 
-    @Query("DELETE BookmarkEntity be where be.postId= :postId AND be.userId = :loginId")
-    @Modifying
-    void deleteBookmark(@Param("postId") Long postId, @Param("loginId") Long loginId);
-
     @Query(value = "SELECT * FROM BOOKMARK be WHERE be.user_id = :userId ORDER BY be.created_at DESC LIMIT :limit OFFSET :offset", nativeQuery = true)
     List<BookmarkEntity> findBookmarkList(@Param("userId") Long loginId, @Param("limit") int limit, @Param("offset") int offset);
+
+    @Query("DELETE BookmarkEntity be where be.postId= :postId")
+    @Modifying
+    void deleteByPostId(@Param("postId") Long postId);
 }

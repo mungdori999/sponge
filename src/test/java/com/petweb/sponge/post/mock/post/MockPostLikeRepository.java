@@ -35,8 +35,8 @@ public class MockPostLikeRepository implements PostLikeRepository {
     }
 
     @Override
-    public void deleteByPostId(Long postId, Long loginId) {
-        data.removeIf(bookmark -> bookmark.getPostId().equals(postId) && bookmark.getUserId().equals(loginId));
+    public void deleteByPostId(Long postId) {
+        data.removeIf(bookmark -> bookmark.getPostId().equals(postId));
     }
 
 }

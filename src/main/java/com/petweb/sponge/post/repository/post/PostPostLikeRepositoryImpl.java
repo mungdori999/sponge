@@ -28,7 +28,7 @@ public class PostPostLikeRepositoryImpl implements PostLikeRepository {
     }
 
     @Override
-    public void deleteByPostId(Long postId, Long loginId) {
-        postLikeJpaRepository.deleteLike(postId,loginId);
+    public void deleteByPostId(Long postId) {
+        postLikeJpaRepository.deleteLike(postId);
     }
 }

@@ -1,31 +1,24 @@
 package com.petweb.sponge.post.repository.post;
 
 import com.petweb.sponge.post.domain.post.Bookmark;
-import com.petweb.sponge.post.repository.post.PostEntity;
-import com.petweb.sponge.user.repository.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.sql.Timestamp;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "bookmark")
-@EntityListeners(AuditingEntityListener.class)
 public class BookmarkEntity {
     @Id
     @GeneratedValue
     private Long id;
     private Long postId;
     private Long userId;
-    @CreatedDate
-    private Timestamp createdAt;
+    private Long createdAt;
     @Builder
     public BookmarkEntity(Long id, Long postId, Long userId) {
         this.id = id;

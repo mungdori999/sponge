@@ -16,7 +16,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
-@DataJpaTest(showSql = true)
+@DataJpaTest(showSql = false)
 @Sql("/sql/trainer-repository-test-data.sql")
 public class TrainerJpaRepositoryTest {
 
@@ -34,6 +34,9 @@ public class TrainerJpaRepositoryTest {
         // then
         assertThat(result).isPresent(); // 값이 존재하는지 검증
         assertThat(result.get().getEmail()).isEqualTo(email);
+        assertThat(result.get().getHistoryEntityList()).hasSize(3);
+        assertThat(result.get().getTrainerAddressEntityList()).hasSize(3);
+
     }
 
     @Test

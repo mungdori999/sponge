@@ -14,7 +14,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-@DataJpaTest(showSql = true)
+@DataJpaTest(showSql = false)
 @Sql("/sql/pet-repository-test-data.sql")
 public class PetJpaRepositoryTest {
 

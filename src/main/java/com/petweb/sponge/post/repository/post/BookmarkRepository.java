@@ -15,6 +15,7 @@ public interface BookmarkRepository {
     List<Bookmark> findBookmarkList(Long loginId, int page);
 
     void save(Bookmark bookmark);
+    void deleteByPostId(Long postId);
 
     void delete(Bookmark bookmark);
 
