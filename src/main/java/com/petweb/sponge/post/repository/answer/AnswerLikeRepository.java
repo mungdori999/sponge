@@ -11,4 +11,5 @@ public interface AnswerLikeRepository {
     void save(AnswerLike answerLike);
     void delete(AnswerLike answerLike);
 
+    void deleteByAnswerId(Long answerId);
 }

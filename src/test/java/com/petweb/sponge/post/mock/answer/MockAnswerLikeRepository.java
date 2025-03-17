@@ -40,4 +40,9 @@ public class MockAnswerLikeRepository implements AnswerLikeRepository {
     public void delete(AnswerLike answerLike) {
         data.remove(answerLike);
     }
+
+    @Override
+    public void deleteByAnswerId(Long answerId) {
+        data.removeIf(answerLike -> answerLike.getAnswerId().equals(answerId));
+    }
 }

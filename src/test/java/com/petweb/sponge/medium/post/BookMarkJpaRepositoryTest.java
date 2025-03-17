@@ -33,11 +33,11 @@ public class BookMarkJpaRepositoryTest {
         Long userId = 1L;
 
         // when
-        Optional<BookmarkEntity> bookmark = bookmarkJpaRepository.findBookmark(postId, userId);
+        Optional<BookmarkEntity> result = bookmarkJpaRepository.findBookmark(postId, userId);
 
         // then
-        assertThat(bookmark).isPresent(); // Optional이 비어있지 않은지 확인
-        bookmark.ifPresent(b -> {
+        assertThat(result).isPresent(); // Optional이 비어있지 않은지 확인
+        result.ifPresent(b -> {
             assertThat(b.getPostId()).isEqualTo(postId);
             assertThat(b.getUserId()).isEqualTo(userId);
         });
@@ -51,13 +51,13 @@ public class BookMarkJpaRepositoryTest {
         int offset = page * PAGE_SIZE;
 
         // when
-        List<BookmarkEntity> bookmarkList = bookmarkJpaRepository.findBookmarkList(userId, PAGE_SIZE, offset);
+        List<BookmarkEntity> result = bookmarkJpaRepository.findBookmarkList(userId, PAGE_SIZE, offset);
 
         // then
-        assertThat(bookmarkList).isNotNull();
-        assertThat(bookmarkList).isNotEmpty();
-        assertThat(bookmarkList).hasSizeLessThanOrEqualTo(PAGE_SIZE);
-        assertThat(bookmarkList).allMatch(bookmark -> bookmark.getUserId().equals(userId));
+        assertThat(result).isNotNull();
+        assertThat(result).isNotEmpty();
+        assertThat(result).hasSizeLessThanOrEqualTo(PAGE_SIZE);
+        assertThat(result).allMatch(bookmark -> bookmark.getUserId().equals(userId));
 
     }
 

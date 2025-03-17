@@ -32,11 +32,11 @@ public class PostLikeJpaRepositoryTest {
         Long userId = 1L;
 
         // when
-        Optional<PostLikeEntity> postLike = postLikeJpaRepository.findLike(postId, userId);
+        Optional<PostLikeEntity> result = postLikeJpaRepository.findLike(postId, userId);
 
         // then
-        assertThat(postLike).isPresent();
-        postLike.ifPresent(like -> {
+        assertThat(result).isPresent();
+        result.ifPresent(like -> {
             assertThat(like.getPostId()).isEqualTo(postId); // postId가 일치하는지 검증
             assertThat(like.getUserId()).isEqualTo(userId); // userId가 일치하는지 검증
         });

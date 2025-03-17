@@ -30,12 +30,12 @@ public class AnswerJpaRepositoryTest {
         Long postId = 1L;
 
         // when
-        List<AnswerEntity> answerList = answerJpaRepository.findListByPostId(postId);
+        List<AnswerEntity> result = answerJpaRepository.findListByPostId(postId);
 
         // then
-        assertThat(answerList).isNotNull();
-        assertThat(answerList).isNotEmpty();
-        assertThat(answerList).allMatch(answer -> answer.getPostId().equals(postId));
+        assertThat(result).isNotNull();
+        assertThat(result).isNotEmpty();
+        assertThat(result).allMatch(answer -> answer.getPostId().equals(postId));
     }
 
     @Test
@@ -47,13 +47,13 @@ public class AnswerJpaRepositoryTest {
         int offset = page * PAGE_SIZE;
 
         // when
-        List<AnswerEntity> answerList = answerJpaRepository.findListByTrainerId(trainerId, PAGE_SIZE, offset);
+        List<AnswerEntity> result = answerJpaRepository.findListByTrainerId(trainerId, PAGE_SIZE, offset);
 
         // then
-        assertThat(answerList).isNotNull();
-        assertThat(answerList).isNotEmpty();
-        assertThat(answerList).hasSizeLessThanOrEqualTo(PAGE_SIZE);
-        assertThat(answerList).allMatch(answer -> answer.getTrainerId().equals(trainerId));
+        assertThat(result).isNotNull();
+        assertThat(result).isNotEmpty();
+        assertThat(result).hasSizeLessThanOrEqualTo(PAGE_SIZE);
+        assertThat(result).allMatch(answer -> answer.getTrainerId().equals(trainerId));
     }
 
 

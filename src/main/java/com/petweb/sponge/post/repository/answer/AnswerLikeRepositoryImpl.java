@@ -26,4 +26,9 @@ public class AnswerLikeRepositoryImpl implements AnswerLikeRepository{
     public void delete(AnswerLike answerLike) {
         answerLikeJpaRepository.delete(AnswerLikeEntity.from(answerLike));
     }
+
+    @Override
+    public void deleteByAnswerId(Long answerId) {
+        answerLikeJpaRepository.deleteByAnswerId(answerId);
+    }
 }

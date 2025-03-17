@@ -107,10 +107,10 @@ public class PostJpaRepositoryTest {
         postJpaRepository.initPost(postId);
 
         // then
-        Optional<PostEntity> postEntity = postJpaRepository.findById(postId);
+        Optional<PostEntity> result = postJpaRepository.findById(postId);
 
-        assertThat(postEntity).isPresent();
-        assertThat(postEntity.get().getPostCategoryEntityList()).isEmpty();
+        assertThat(result).isPresent();
+        assertThat(result.get().getPostCategoryEntityList()).isEmpty();
 
     }
 }

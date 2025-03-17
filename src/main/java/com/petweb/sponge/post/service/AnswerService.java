@@ -150,6 +150,8 @@ public class AnswerService {
             trainer.decreaseAdoptCount();
             trainerRepository.save(trainer);
         }
+        // 좋아요 전체 삭제
+        answerLikeRepository.deleteByAnswerId(answer.getId());
         answerRepository.delete(answer);
     }
 
