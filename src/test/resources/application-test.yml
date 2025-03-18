@@ -1,10 +1,7 @@
 spring:
-  config:
-    activate:
-      on-profile: test
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
@@ -19,7 +16,7 @@ spring:
 
   # jwt
   jwt:
-    secret: reandomreandom
+    secret: aaaaasssddddqqqqfqwqqqqweerrrrqqqsdqdqdqwwrr
     accessToken-expire-length: 1800000   # 30분
     refresh-expire-length: 2592000000   # 1달 (30일)
 

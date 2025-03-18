@@ -2,11 +2,15 @@ package com.petweb.sponge.user.controller;
 
 import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.exception.error.LoginIdError;
+import com.petweb.sponge.jwt.JwtUtil;
+import com.petweb.sponge.jwt.RefreshToken;
+import com.petweb.sponge.jwt.Token;
 import com.petweb.sponge.user.controller.response.UserResponse;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.dto.UserUpdate;
 import com.petweb.sponge.user.service.UserService;
 import com.petweb.sponge.utils.AuthorizationUtil;
+import com.petweb.sponge.utils.LoginType;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,6 +25,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final AuthorizationUtil authorizationUtil;
+    private final JwtUtil jwtUtil;
 
     /**
      * 유저 단건조회
@@ -56,10 +60,12 @@ public class UserController {
      */
     @PatchMapping("/{id}")
     @UserAuth
-    public ResponseEntity<UserResponse> update(@PathVariable("id") Long id, @RequestBody UserUpdate userUpdate) {
+    public ResponseEntity<RefreshToken> update(@PathVariable("id") Long id, @RequestBody UserUpdate userUpdate) {
         if (authorizationUtil.getLoginId().equals(id)) {
             User user = userService.update(id, userUpdate);
-            return new ResponseEntity<>(UserResponse.from(user),HttpStatus.OK);
+            Token token = jwtUtil.createToken(user.getId(), user.getName(), LoginType.USER.getLoginType());
+            return ResponseEntity.ok().header("Authorization", token.getAccessToken())
+                    .body(new RefreshToken(token.getRefreshToken()));
         } else {
             throw new LoginIdError();
         }

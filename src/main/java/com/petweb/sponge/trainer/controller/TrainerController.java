@@ -83,7 +83,7 @@ public class TrainerController {
             trainerService.update(id,trainerUpdate);
         }
         else {
-
+            throw new LoginIdError();
         }
     }
 
