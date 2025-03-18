@@ -1,11 +1,7 @@
 spring:
-  profiles:
-    include: aws
-  datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-    driver-class-name: org.h2.Driver
+  config:
+    activate:
+      on-profile: test
   jpa:
     hibernate:
       ddl-auto: update
@@ -19,13 +15,23 @@ spring:
       max-request-size: 10MB
 
   server:
-    url: ${SERVER_URL}
+    url: api
 
   # jwt
   jwt:
-    secret: ${JWT_SECRET}
+    secret: reandomreandom
     accessToken-expire-length: 1800000   # 30분
     refresh-expire-length: 2592000000   # 1달 (30일)
 
 logging.level:
   org.hibernate.SQL: debug
+
+
+cloud:
+  aws:
+    s3.bucket: mungdori-bucket-domain
+    stack.auto: false
+    region.static: ap-northeast-2
+    credentials:
+      accessKey: accessKey
+      secretKey: secretKey
