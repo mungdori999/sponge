@@ -1,6 +1,5 @@
 package com.petweb.sponge.medium.trainer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.petweb.sponge.jwt.JwtUtil;
