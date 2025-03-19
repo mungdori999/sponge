@@ -6,6 +6,7 @@ import com.petweb.sponge.exception.error.LoginTypeError;
 import com.petweb.sponge.jwt.JwtUtil;
 import com.petweb.sponge.jwt.Token;
 import com.petweb.sponge.user.dto.UserUpdate;
+import com.petweb.sponge.utils.LoginType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureTestDatabase
 @ActiveProfiles("test")
 @SqlGroup({
-        @Sql(value = "/sql/user-controller-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+        @Sql(value = "/sql/controller/user-controller-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "/sql/delete-all-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 })
 public class UserControllerTest {
@@ -54,7 +55,7 @@ public class UserControllerTest {
     @Test
     public void 유저가_내정보를_조회한다() throws Exception {
         // given
-        Token token = jwtUtil.createToken(1L, "김칠칠", "user");
+        Token token = jwtUtil.createToken(1L, "김칠칠", LoginType.USER.getLoginType());
         String accessToken = token.getAccessToken();
         // when
         // then
@@ -67,7 +68,7 @@ public class UserControllerTest {
     @Test
     public void 유저가_정보를_업데이트한다() throws Exception {
         // given
-        Token token = jwtUtil.createToken(1L, "김칠칠", "user");
+        Token token = jwtUtil.createToken(1L, "김칠칠", LoginType.USER.getLoginType());
         String accessToken = token.getAccessToken();
         UserUpdate userUpdate = UserUpdate.builder()
                 .name("김수정")
@@ -92,7 +93,7 @@ public class UserControllerTest {
     @Test
     public void 훈련사가_유저의메소드를_잘못_호출한다() throws Exception {
         // given
-        Token token = jwtUtil.createToken(1L, "김칠칠", "trainer");
+        Token token = jwtUtil.createToken(1L, "김칠칠", LoginType.TRAINER.getLoginType());
         String accessToken = token.getAccessToken();
         // when
         // then

@@ -2,7 +2,6 @@ package com.petweb.sponge.medium.answer;
 
 import com.petweb.sponge.post.repository.answer.AnswerLikeEntity;
 import com.petweb.sponge.post.repository.answer.AnswerLikeJpaRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest(showSql = false)
-@Sql("/sql/answerlike-repository-test-data.sql")
+@Sql("/sql/repository/answerlike-repository-test-data.sql")
 public class AnswerLikeJpaRepositoryTest {
 
 

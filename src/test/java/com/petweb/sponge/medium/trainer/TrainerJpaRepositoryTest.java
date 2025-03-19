@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest(showSql = false)
-@Sql("/sql/trainer-repository-test-data.sql")
+@Sql("/sql/repository/trainer-repository-test-data.sql")
 public class TrainerJpaRepositoryTest {
 
     @Autowired

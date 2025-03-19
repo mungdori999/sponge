@@ -16,8 +16,8 @@ import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest(showSql = false)
-@Sql("/sql/post-repository-test-data.sql")
-@Sql("/sql/bookmark-repository-test-data.sql")
+@Sql("/sql/repository/post-repository-test-data.sql")
+@Sql("/sql/repository/bookmark-repository-test-data.sql")
 public class BookMarkJpaRepositoryTest {
 
 

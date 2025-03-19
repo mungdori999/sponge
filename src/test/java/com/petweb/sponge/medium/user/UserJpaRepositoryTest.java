@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest(showSql = false)
-@Sql("/sql/user-repository-test-data.sql")
+@Sql("/sql/repository/user-repository-test-data.sql")
 public class UserJpaRepositoryTest {
 
     @Autowired

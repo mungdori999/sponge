@@ -16,8 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest(showSql = false)
-@Sql("/sql/post-repository-test-data.sql")
-@Sql("/sql/postlike-repository-test-data.sql")
+@Sql("/sql/repository/post-repository-test-data.sql")
+@Sql("/sql/repository/postlike-repository-test-data.sql")
 public class PostLikeJpaRepositoryTest {
 
     @Autowired
