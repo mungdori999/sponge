@@ -62,12 +62,12 @@ public class TrainerService {
      * @param trainerUpdate
      */
     @Transactional
-    public void update(Long id, TrainerUpdate trainerUpdate) {
+    public Trainer update(Long id, TrainerUpdate trainerUpdate) {
         Trainer trainer = trainerRepository.findById(id).orElseThrow(
                 NotFoundTrainer::new);
         trainerRepository.initTrainer(id);
         trainer = trainer.update(trainerUpdate);
-        trainerRepository.save(trainer);
+        return trainerRepository.save(trainer);
     }
 
     /**

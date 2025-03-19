@@ -4,6 +4,7 @@ import com.petweb.sponge.auth.TrainerAuth;
 import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.jwt.JwtUtil;
 import com.petweb.sponge.jwt.RefreshRepository;
+import com.petweb.sponge.jwt.RefreshToken;
 import com.petweb.sponge.jwt.Token;
 import com.petweb.sponge.oauth2.controller.response.TrainerOauth2Response;
 import com.petweb.sponge.trainer.controller.response.TrainerResponse;
@@ -78,11 +79,13 @@ public class TrainerController {
      */
     @PatchMapping("/{id}")
     @TrainerAuth
-    public void update(@PathVariable("id") Long id, @RequestBody TrainerUpdate trainerUpdate) {
+    public ResponseEntity<RefreshToken> update(@PathVariable("id") Long id, @RequestBody TrainerUpdate trainerUpdate) {
         if (authorizationUtil.getLoginId().equals(id)) {
-            trainerService.update(id,trainerUpdate);
-        }
-        else {
+            Trainer trainer = trainerService.update(id, trainerUpdate);
+            Token token = jwtUtil.createToken(trainer.getId(), trainer.getName(), LoginType.TRAINER.getLoginType());
+            return ResponseEntity.ok().header("Authorization", token.getAccessToken())
+                    .body(new RefreshToken(token.getRefreshToken()));
+        } else {
             throw new LoginIdError();
         }
     }

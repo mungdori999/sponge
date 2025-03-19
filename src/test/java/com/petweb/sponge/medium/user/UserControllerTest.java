@@ -20,8 +20,7 @@ import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -86,7 +85,7 @@ public class UserControllerTest {
 
         String name = jwtUtil.getName(refreshToken);
         // name 값 검증
-        assertEquals(userUpdate.getName(), name);
+        assertThat(userUpdate.getName()).isEqualTo(name);
 
     }
 
@@ -99,7 +98,8 @@ public class UserControllerTest {
         // then
         mockMvc.perform(get("/api/user/my_info").header(HttpHeaders.AUTHORIZATION, accessToken))
                 .andExpect(status().isUnauthorized())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof LoginTypeError));
+                .andExpect(result -> assertThat(result.getResolvedException())
+                        .isInstanceOf(LoginTypeError.class));
     }
 
 
