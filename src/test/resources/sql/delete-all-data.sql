@@ -13,4 +13,5 @@ delete from `post_like` where 1;
 delete from `answer` where 1;
 delete from `answer_like` where 1;
 delete from `adopt_answer` where 1;
+delete from `review` where 1;
 

@@ -46,7 +46,7 @@ public class ReviewController {
     }
 
     /**
-     * 내가 쓴 리뷰 조회
+     * 내게 달린 리뷰 조회
      * @param page
      * @return
      */
