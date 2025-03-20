@@ -125,7 +125,7 @@ public class AnswerController {
      */
     @PostMapping("/like")
     @UserAuth
-    public void updateLikeC(@RequestParam("answerId") Long answerId) {
+    public void updateLike(@RequestParam("answerId") Long answerId) {
         answerService.updateLike(authorizationUtil.getLoginId(), answerId);
     }
 
