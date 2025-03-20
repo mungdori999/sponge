@@ -250,4 +250,94 @@ public class PostControllerTest {
                         .isInstanceOf(NotFoundPost.class));
 
     }
+
+
+    @SqlGroup({
+            @Sql(value = "/sql/controller/postlike-controller-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+            @Sql(value = "/sql/controller/bookmark-controller-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+            @Sql(value = "/sql/delete-all-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    })
+    @Test
+    public void 유저가_북마크와_좋아요를_조회한다() throws Exception {
+        // given
+        Token token = jwtUtil.createToken(1L, "김칠칠", LoginType.USER.getLoginType());
+        String accessToken = token.getAccessToken();
+
+        // when
+        // then
+        mockMvc.perform(get("/api/post/check").param("postId", "1")
+                        .header(HttpHeaders.AUTHORIZATION, accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.likeCheck").value(true))
+                .andExpect(jsonPath("$.bookmarkCheck").value(true));
+
+    }
+
+    @SqlGroup({
+            @Sql(value = "/sql/controller/post-controller-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+            @Sql(value = "/sql/controller/bookmark-controller-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+            @Sql(value = "/sql/delete-all-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    })
+    @Test
+    public void 유저가_북마크한_글들을_조회한다() throws Exception {
+        // given
+        Token token = jwtUtil.createToken(1L, "김칠칠", LoginType.USER.getLoginType());
+        String accessToken = token.getAccessToken();
+
+        // when
+        // then
+        mockMvc.perform(get("/api/post/bookmark").param("page","1" )
+                        .header(HttpHeaders.AUTHORIZATION, accessToken))
+                .andExpect(jsonPath("$.size()").value(5))
+                .andExpect(status().isOk());
+    }
+
+    @SqlGroup({
+            @Sql(value = "/sql/controller/post-controller-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+            @Sql(value = "/sql/controller/bookmark-controller-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+            @Sql(value = "/sql/delete-all-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    })
+    @Test
+    public void 유저가_북마크를_업데이트_한다() throws Exception {
+        // given
+        Token token = jwtUtil.createToken(1L, "김칠칠", LoginType.USER.getLoginType());
+        String accessToken = token.getAccessToken();
+
+        // when
+        // then
+        mockMvc.perform(post("/api/post/bookmark").param("postId","1" )
+                        .header(HttpHeaders.AUTHORIZATION, accessToken))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/post/check").param("postId", "1")
+                        .header(HttpHeaders.AUTHORIZATION, accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.likeCheck").value(false))
+                .andExpect(jsonPath("$.bookmarkCheck").value(false));
+    }
+
+
+    @SqlGroup({
+            @Sql(value = "/sql/controller/post-controller-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+            @Sql(value = "/sql/controller/pet-controller-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+            @Sql(value = "/sql/delete-all-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    })
+    @Test
+    public void 유저가_좋아요를_업데이트_한다() throws Exception {
+        // given
+        Token token = jwtUtil.createToken(1L, "김칠칠", LoginType.USER.getLoginType());
+        String accessToken = token.getAccessToken();
+
+        // when
+        // then
+        mockMvc.perform(post("/api/post/like").param("postId","1" )
+                        .header(HttpHeaders.AUTHORIZATION, accessToken))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/post/check").param("postId", "1")
+                        .header(HttpHeaders.AUTHORIZATION, accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.likeCheck").value(true));
+        mockMvc.perform(get("/api/post/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.likeCount").value(1));
+    }
 }

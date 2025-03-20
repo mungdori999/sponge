@@ -8,3 +8,6 @@ delete from `tag` where 1;
 delete from `post_category` where 1;
 delete from `post_file` where 1;
 delete from `post` where 1;
+delete from `bookmark` where 1;
+delete from `post_like` where 1;
+
