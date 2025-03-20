@@ -47,8 +47,6 @@ dependencies {
     //WebSocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
-    // STOMP를 지원하는 메시지 브로커
-    implementation 'org.springframework.boot:spring-boot-starter-messaging'
 
     // JSON 변환 (메시지 처리에 필요)
     implementation 'com.fasterxml.jackson.core:jackson-databind'
