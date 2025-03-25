@@ -23,15 +23,16 @@ public class ChatRoomEntity {
     private Long userId;
     private Long trainerId;
     private Long createdAt;
-
+    private Long modifiedAt;
 
     public static ChatRoomEntity from(ChatRoom chatRoom) {
 
         ChatRoomEntity chatRoomEntity = new ChatRoomEntity();
-        chatRoomEntity.lastChatMsg = "";
+        chatRoomEntity.lastChatMsg = chatRoom.getLastChatMsg();
         chatRoomEntity.userId = chatRoom.getUserId();
         chatRoomEntity.trainerId = chatRoom.getTrainerId();
         chatRoomEntity.createdAt = chatRoom.getCreatedAt();
+        chatRoomEntity.modifiedAt = chatRoom.getModifiedAt();
         return chatRoomEntity;
     }
 
@@ -41,7 +42,9 @@ public class ChatRoomEntity {
                 .lastChatMsg(lastChatMsg)
                 .userId(userId)
                 .trainerId(trainerId)
-                .createdAt(createdAt).build();
+                .createdAt(createdAt)
+                .modifiedAt(modifiedAt)
+                .build();
     }
 
 

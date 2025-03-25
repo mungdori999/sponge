@@ -6,10 +6,7 @@ import com.petweb.sponge.chat.service.ChatRoomService;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,6 +16,11 @@ public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
     private final AuthorizationUtil authorizationUtil;
+
+    @GetMapping("/my_info")
+    public void getMyChatRoom(@RequestParam("page")  int page) {
+        chatRoomService.findMyInfo(authorizationUtil.getLoginId(),authorizationUtil.getLoginType(),page);
+    }
 
     /**
      * 개인 DM 채팅방 생성

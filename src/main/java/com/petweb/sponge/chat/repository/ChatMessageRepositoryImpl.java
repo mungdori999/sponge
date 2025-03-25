@@ -4,6 +4,7 @@ import com.petweb.sponge.chat.domain.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+
 @Repository
 @RequiredArgsConstructor
 public class ChatMessageRepositoryImpl implements ChatMessageRepository {

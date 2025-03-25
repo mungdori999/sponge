@@ -13,21 +13,25 @@ public class ChatRoom {
     private Long userId;
     private Long trainerId;
     private Long createdAt;
+    private Long modifiedAt;
 
     @Builder
-    public ChatRoom(Long id, String lastChatMsg, Long userId, Long trainerId, Long createdAt) {
+    public ChatRoom(Long id, String lastChatMsg, Long userId, Long trainerId, Long createdAt, Long modifiedAt) {
         this.id = id;
         this.lastChatMsg = lastChatMsg;
         this.userId = userId;
         this.trainerId = trainerId;
         this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
     }
 
     public static ChatRoom from(ChatRoomCreate chatRoomCreate, Long loginId, ClockHolder clockHolder) {
         return ChatRoom.builder()
                 .userId(loginId)
+                .lastChatMsg("")
                 .trainerId(chatRoomCreate.getTrainerId())
                 .createdAt(clockHolder.clock())
+                .modifiedAt(0L)
                 .build();
     }
 }
