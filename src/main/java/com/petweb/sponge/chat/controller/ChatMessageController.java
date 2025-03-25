@@ -1,5 +1,6 @@
 package com.petweb.sponge.chat.controller;
 
+import com.petweb.sponge.chat.domain.ChatMessage;
 import com.petweb.sponge.chat.dto.ChatMessageCreate;
 import com.petweb.sponge.chat.service.ChatMessageService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,8 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Objects;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -15,9 +18,13 @@ public class ChatMessageController {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatMessageService chatMessageService;
-
-    @MessageMapping("/message}")
+    @MessageMapping("/message")
     public void sendMessage(ChatMessageCreate chatMessageCreate, SimpMessageHeaderAccessor accessor) {
+        Long pubId = Long.valueOf(Objects.requireNonNull(accessor.getFirstNativeHeader("id")));
+        String loginType = accessor.getFirstNativeHeader("loginType");
 
+        ChatMessage chatMessage = chatMessageService.create(chatMessageCreate, pubId, loginType);
+
+        messagingTemplate.convertAndSend("/sub/channel/" + chatMessageCreate.getChatRoomId(), chatMessage);
     }
 }

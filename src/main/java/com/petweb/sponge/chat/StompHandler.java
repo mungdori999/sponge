@@ -11,6 +11,7 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,24 +24,28 @@ public class StompHandler implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-
-        if (accessor.getCommand() == StompCommand.CONNECT) {
+        if (accessor.getCommand() == StompCommand.CONNECT || accessor.getCommand() == StompCommand.SEND) {
             String accessToken = accessor.getFirstNativeHeader("Authorization");
+
             if (!this.validateAccessToken(accessToken)) {
+                // return을 해야함
                 throw new NotFoundToken();
             }
             Long id = jwtUtil.getId(accessToken);
             String loginType = jwtUtil.getLoginType(accessToken);
-            accessor.addNativeHeader("id", id.toString());
-            accessor.addNativeHeader("loginType", loginType);
+
+            // 헤더에 사용자 정보 추가
+            accessor.setNativeHeader("id", String.valueOf(id));
+            accessor.setNativeHeader("loginType", loginType);
         }
 
 
-        return message;
+        return MessageBuilder.createMessage(message.getPayload(), accessor.getMessageHeaders());
     }
 
     private boolean validateAccessToken(String accessToken) {
         if (accessToken == null || accessToken.trim().isEmpty()) {
+            log.error("토큰 없음");
             return false;
         }
 

@@ -20,7 +20,11 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
     private final AuthorizationUtil authorizationUtil;
 
-    @PostMapping("/personal") //개인 DM 채팅방 생성
+    /**
+     * 개인 DM 채팅방 생성
+     * @param chatRoomCreate
+     */
+    @PostMapping("/personal")
     @UserAuth
     public void createPersonalChatRoom(@RequestBody ChatRoomCreate chatRoomCreate) {
         chatRoomService.create(authorizationUtil.getLoginId(), chatRoomCreate);

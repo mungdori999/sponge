@@ -1,10 +1,8 @@
 package com.petweb.sponge.utils;
 
-import com.petweb.sponge.exception.error.NotFoundToken;
 import com.petweb.sponge.oauth2.dto.CustomOAuth2User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 @Component

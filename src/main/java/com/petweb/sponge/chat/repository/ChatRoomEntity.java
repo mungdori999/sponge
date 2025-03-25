@@ -3,6 +3,7 @@ package com.petweb.sponge.chat.repository;
 
 import com.petweb.sponge.chat.domain.ChatRoom;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
 public class ChatRoomEntity {
 
     @Id
+    @GeneratedValue
     private Long id;
     private String lastChatMsg;
     private Long userId;

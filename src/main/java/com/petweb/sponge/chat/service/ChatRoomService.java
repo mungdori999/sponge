@@ -14,6 +14,12 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final ClockHolder clockHolder;
 
+    /**
+     * 개인 DM 채팅방 생성
+     * @param loginId
+     * @param chatRoomCreate
+     * @return
+     */
     public ChatRoom create(Long loginId, ChatRoomCreate chatRoomCreate) {
         ChatRoom chatRoom = ChatRoom.from(chatRoomCreate, loginId, clockHolder);
         return chatRoomRepository.save(chatRoom);
