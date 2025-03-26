@@ -22,6 +22,12 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository {
     }
 
     @Override
+    public List<ChatRoom> findListByUserId(Long loginId, int page) {
+        int offset = page * PAGE_SIZE;
+        return chatRoomJpaRepository.findListByUserId(loginId, PAGE_SIZE, offset).stream().map(ChatRoomEntity::toModel).collect(Collectors.toList());
+    }
+
+    @Override
     public ChatRoom save(ChatRoom chatRoom) {
         return chatRoomJpaRepository.save(ChatRoomEntity.from(chatRoom)).toModel();
     }

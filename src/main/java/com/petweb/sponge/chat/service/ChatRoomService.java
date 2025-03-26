@@ -47,11 +47,11 @@ public class ChatRoomService {
                         String name = userNameMap.getOrDefault(chatRoom.getUserId(), "");
                         String lastMsg = chatRoom.getLastChatMsg();
                         Long createdAt = chatRoom.getModifiedAt() != 0 ? chatRoom.getModifiedAt() : chatRoom.getCreatedAt();
-                        return ChatRoomResponse.from(name, "", lastMsg, createdAt);
+                        return ChatRoomResponse.from(name, "",LoginType.USER.getLoginType(),lastMsg, createdAt);
                     })
                     .toList();
         } else {
-            List<ChatRoom> chatRoomList = chatRoomRepository.findListByTrainerId(loginId, page);
+            List<ChatRoom> chatRoomList = chatRoomRepository.findListByUserId(loginId, page);
             List<Trainer> trainerList = trainerRepository.findShortByIdList(chatRoomList.stream().map(ChatRoom::getTrainerId).collect(Collectors.toList()));
 
             Map<Long, String> trainerNameMap = trainerList.stream()
@@ -63,7 +63,7 @@ public class ChatRoomService {
                         String name = trainerNameMap.getOrDefault(chatRoom.getTrainerId(), "");
                         String lastMsg = chatRoom.getLastChatMsg();
                         Long createdAt = chatRoom.getModifiedAt() != 0 ? chatRoom.getModifiedAt() : chatRoom.getCreatedAt();
-                        return ChatRoomResponse.from(name, "", lastMsg, createdAt);
+                        return ChatRoomResponse.from(name, "", LoginType.TRAINER.getLoginType(), lastMsg, createdAt);
                     })
                     .toList();
 
