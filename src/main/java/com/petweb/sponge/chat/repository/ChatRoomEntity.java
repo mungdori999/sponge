@@ -28,6 +28,7 @@ public class ChatRoomEntity {
     public static ChatRoomEntity from(ChatRoom chatRoom) {
 
         ChatRoomEntity chatRoomEntity = new ChatRoomEntity();
+        chatRoomEntity.id = chatRoom.getId();
         chatRoomEntity.lastChatMsg = chatRoom.getLastChatMsg();
         chatRoomEntity.userId = chatRoom.getUserId();
         chatRoomEntity.trainerId = chatRoom.getTrainerId();

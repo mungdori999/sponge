@@ -34,4 +34,16 @@ public class ChatRoom {
                 .modifiedAt(0L)
                 .build();
     }
+
+    public ChatRoom update(String lastChatMsg,ClockHolder clockHolder) {
+        return ChatRoom.builder()
+                .id(id)
+                .lastChatMsg(lastChatMsg)
+                .userId(userId)
+                .trainerId(trainerId)
+                .createdAt(createdAt)
+                .modifiedAt(clockHolder.clock())
+                .build();
+    }
+
 }

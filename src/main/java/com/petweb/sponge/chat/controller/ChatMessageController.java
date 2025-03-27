@@ -39,6 +39,11 @@ public class ChatMessageController {
         return new ResponseEntity<>(chatMessageList.stream().map(ChatMessageResponse::from).collect(Collectors.toList()), HttpStatus.OK);
     }
 
+    /**
+     * 메세지
+     * @param chatMessageCreate
+     * @param accessor
+     */
     @MessageMapping("/message")
     public void sendMessage(ChatMessageCreate chatMessageCreate, SimpMessageHeaderAccessor accessor) {
         Long pubId = Long.valueOf(Objects.requireNonNull(accessor.getFirstNativeHeader("id")));
