@@ -8,6 +8,7 @@ import lombok.Getter;
 public class ChatRoomResponse {
 
 
+    private Long id;
     private String name;
     private String loginType;
     private String imgUrl;
@@ -15,8 +16,9 @@ public class ChatRoomResponse {
     private Long createdAt;
 
 
-    public static ChatRoomResponse from(String name, String imgUrl,String loginType, String lastMsg, Long createdAt) {
+    public static ChatRoomResponse from(Long id , String name, String imgUrl,String loginType, String lastMsg, Long createdAt) {
         return ChatRoomResponse.builder()
+                .id(id)
                 .name(name)
                 .imgUrl(imgUrl)
                 .loginType(loginType)

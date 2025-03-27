@@ -12,6 +12,7 @@ import com.petweb.sponge.utils.ClockHolder;
 import com.petweb.sponge.utils.LoginType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ public class ChatRoomService {
      * @param page
      * @return
      */
+    @Transactional(readOnly = true)
     public List<ChatRoomResponse> findMyInfo(Long loginId, String loginType, int page) {
         if (loginType.equals(LoginType.TRAINER.getLoginType())) {
             List<ChatRoom> chatRoomList = chatRoomRepository.findListByTrainerId(loginId, page);
@@ -47,7 +49,7 @@ public class ChatRoomService {
                         String name = userNameMap.getOrDefault(chatRoom.getUserId(), "");
                         String lastMsg = chatRoom.getLastChatMsg();
                         Long createdAt = chatRoom.getModifiedAt() != 0 ? chatRoom.getModifiedAt() : chatRoom.getCreatedAt();
-                        return ChatRoomResponse.from(name, "",LoginType.USER.getLoginType(),lastMsg, createdAt);
+                        return ChatRoomResponse.from(chatRoom.getId(), name, "", LoginType.USER.getLoginType(), lastMsg, createdAt);
                     })
                     .toList();
         } else {
@@ -63,7 +65,7 @@ public class ChatRoomService {
                         String name = trainerNameMap.getOrDefault(chatRoom.getTrainerId(), "");
                         String lastMsg = chatRoom.getLastChatMsg();
                         Long createdAt = chatRoom.getModifiedAt() != 0 ? chatRoom.getModifiedAt() : chatRoom.getCreatedAt();
-                        return ChatRoomResponse.from(name, "", LoginType.TRAINER.getLoginType(), lastMsg, createdAt);
+                        return ChatRoomResponse.from(chatRoom.getId(), name, "", LoginType.TRAINER.getLoginType(), lastMsg, createdAt);
                     })
                     .toList();
 
@@ -77,6 +79,7 @@ public class ChatRoomService {
      * @param chatRoomCreate
      * @return
      */
+    @Transactional
     public ChatRoom create(Long loginId, ChatRoomCreate chatRoomCreate) {
         ChatRoom chatRoom = ChatRoom.from(chatRoomCreate, loginId, clockHolder);
         return chatRoomRepository.save(chatRoom);

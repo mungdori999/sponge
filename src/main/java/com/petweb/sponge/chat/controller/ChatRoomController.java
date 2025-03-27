@@ -28,6 +28,8 @@ public class ChatRoomController {
         return new ResponseEntity<>(chatRoomList, HttpStatus.OK);
     }
 
+
+
     /**
      * 개인 DM 채팅방 생성
      * @param chatRoomCreate
