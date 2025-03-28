@@ -3,8 +3,7 @@ package com.petweb.sponge.post.controller;
 import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.post.service.PostService;
 import com.petweb.sponge.s3.dto.FileListDTO;
-import com.petweb.sponge.s3.service.S3DeleteService;
-import com.petweb.sponge.s3.service.S3UploadService;
+import com.petweb.sponge.s3.service.S3Service;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,8 +20,7 @@ import java.util.List;
 @RequestMapping("/api/post/file")
 public class PostFileController {
 
-    private final S3UploadService s3UploadService;
-    private final S3DeleteService s3DeleteService;
+    private final S3Service s3Service;
     private final PostService postService;
     private final AuthorizationUtil authorizationUtil;
 
@@ -35,7 +33,7 @@ public class PostFileController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @UserAuth
     public ResponseEntity<List<String>> uploadPostFiles(@RequestPart List<MultipartFile> multipartFileList) {
-        List<String> saveFiles = s3UploadService.saveFiles(multipartFileList, "post");
+        List<String> saveFiles = s3Service.saveFiles(multipartFileList, "post");
         return new ResponseEntity<>(saveFiles, HttpStatus.OK);
     }
 
@@ -49,7 +47,7 @@ public class PostFileController {
     @UserAuth
     public void deletePostFile(@PathVariable Long postId, @RequestBody FileListDTO fileListDTO) {
         // S3에서 삭제
-        s3DeleteService.deleteFiles(fileListDTO.getFileUrlList());
+        s3Service.deleteFiles(fileListDTO.getFileUrlList());
         // DB에서 링크 삭제
         postService.deletePostFiles(authorizationUtil.getLoginId(), postId, fileListDTO.getFileUrlList());
     }

@@ -26,7 +26,7 @@ logging.level:
 
 cloud:
   aws:
-    s3.bucket: mungdori-bucket-domain
+    s3.bucket: test-buckect
     stack.auto: false
     region.static: ap-northeast-2
     credentials:

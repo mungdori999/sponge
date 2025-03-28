@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class S3UploadService {
+public class S3Service {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -81,16 +81,22 @@ public class S3UploadService {
     }
 
     /**
-     * 복수의 사진 파일 AWS에서 삭제
-     *
-     * @param fileNames
+     * 동영상,이미지들 삭제
+     * @param fileUrls
      */
-    public void deleteImages(List<String> fileNames) {
-        for (String fileName : fileNames) {
-            amazonS3.deleteObject(bucket, fileName);
+    public void deleteFiles(List<String> fileUrls) {
+        for (String fileUrl : fileUrls) {
+            amazonS3.deleteObject(bucket, fileUrl);
         }
     }
 
+    /**
+     * 이미지 삭제
+     * @param imgUrl
+     */
+    public void deleteImage(String imgUrl) {
+        amazonS3.deleteObject(bucket, imgUrl);
+    }
     // 파일명 중복 방지
     private String createFileName(String fileName) {
         return UUID.randomUUID().toString().concat(getFileExtension(fileName));
@@ -107,6 +113,10 @@ public class S3UploadService {
         }
         return fileName.substring(fileName.lastIndexOf("."));
     }
+
+
+
+
 
 
 }
