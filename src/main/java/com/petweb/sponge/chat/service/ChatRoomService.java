@@ -10,6 +10,7 @@ import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.repository.UserRepository;
 import com.petweb.sponge.utils.ClockHolder;
 import com.petweb.sponge.utils.LoginType;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Builder
 public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
