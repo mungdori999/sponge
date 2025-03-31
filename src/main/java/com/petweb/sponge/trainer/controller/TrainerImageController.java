@@ -29,7 +29,6 @@ public class TrainerImageController {
      * @return
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @TrainerAuth
     public ResponseEntity<String> uploadTrainerImg(@RequestPart MultipartFile multipartFile) {
         String saveFile = s3Service.saveImage(multipartFile, "profile");
         return new ResponseEntity<>(saveFile, HttpStatus.OK);
@@ -38,16 +37,16 @@ public class TrainerImageController {
     /**
      * 훈련사 이미지 삭제
      * @param trainerId
-     * @param imageDTO
+     * @param imgUrl
      */
-    @DeleteMapping("/{trainerId}")
+    @DeleteMapping("")
     @TrainerAuth
-    public void deleteTrainerImg(@PathVariable("trainerId") Long trainerId, @RequestBody ImageDTO imageDTO) {
+    public void deleteTrainerImg(@RequestParam("trainerId") Long trainerId, @RequestParam("imgUrl") String imgUrl) {
         if (authorizationUtil.getLoginId().equals(trainerId)) {
             // S3에서 삭제
-            s3Service.deleteImage(imageDTO.getImgUrl());
+            s3Service.deleteImage(imgUrl);
             //훈련사 이미지 링크 삭제
-            trainerService.deleteTrainerImg(trainerId);
+            trainerService.deleteImgUrl(trainerId);
         } else {
             throw new LoginIdError();
         }

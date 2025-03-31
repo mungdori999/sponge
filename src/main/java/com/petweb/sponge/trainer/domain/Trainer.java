@@ -106,5 +106,8 @@ public class Trainer {
             this.score = (this.score + (float) newScore) / 2;
         }
     }
+    public void deleteImgUrl() {
+        this.profileImgUrl = "";
+    }
 
 }

@@ -87,13 +87,13 @@ public class TrainerService {
     /**
      * 훈련사 이미지 삭제
      *
-     * @param trainerId
+     * @param id
      */
     @Transactional
-    public void deleteTrainerImg(Long trainerId) {
-//        TrainerEntity trainerEntity = trainerRepository.findById(trainerId).orElseThrow(
-//                NotFoundTrainer::new);
-//        trainerEntity.setProfileImgUrl(null);
+    public void deleteImgUrl(Long id) {
+        Trainer trainer = trainerRepository.findShortById(id).orElseThrow(NotFoundTrainer::new);
+        trainer.deleteImgUrl();
+        trainerRepository.save(trainer);
     }
 
 
