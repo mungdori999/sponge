@@ -36,11 +36,12 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        // /api/trainer 경로 중 POST 메서드는 필터링하지 않음
-        if (requestUri.equals("/api/trainer") && request.getMethod().equalsIgnoreCase("POST")) {
+        if ((requestUri.equals("/api/trainer") || requestUri.equals("/api/trainer/image"))
+                && request.getMethod().equalsIgnoreCase("POST")) {
             filterChain.doFilter(request, response);
             return;
         }
+
 
         String token = request.getHeader("Authorization");
 
