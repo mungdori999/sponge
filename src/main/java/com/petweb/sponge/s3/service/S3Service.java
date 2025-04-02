@@ -1,13 +1,20 @@
 package com.petweb.sponge.s3.service;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +25,8 @@ public class S3Service {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
-    private final AmazonS3 amazonS3;
+    private final S3Client s3Client;
+    private final S3Presigner s3Presigner;
     private static final ArrayList<String> fileValidate = new ArrayList<>();
 
     static {
@@ -37,14 +45,42 @@ public class S3Service {
         fileValidate.add(".mkv");
     }
 
+    /**
+     * 이미지 읽어오기
+     *
+     * @param imgUrl
+     */
+    public String readImage(String imgUrl) {
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucket)
+                .key(imgUrl)
+                .build();
 
+        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(1)) // URL 유효기간 (1분)
+                .getObjectRequest(getObjectRequest)
+                .build();
+        PresignedGetObjectRequest presignedRequest = s3Presigner.presignGetObject(presignRequest);
+        return presignedRequest.url().toString();
+    }
+
+    /**
+     * 파일 저장
+     *
+     * @param file
+     * @param dir
+     * @return
+     */
     public String saveImage(MultipartFile file, String dir) {
         String originalFilename = dir + "/" + createFileName(file.getOriginalFilename());
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentLength(file.getSize());
-        metadata.setContentType(file.getContentType());
         try {
-            amazonS3.putObject(bucket, originalFilename, file.getInputStream(), metadata);
+            s3Client.putObject(PutObjectRequest.builder()
+                            .bucket(bucket)
+                            .key(originalFilename)
+                            .contentType(file.getContentType())
+                            .build(),
+                    RequestBody.fromBytes(file.getBytes()));
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -63,12 +99,15 @@ public class S3Service {
 
         multipartFile.forEach(file -> {
             String originalFilename = dir + "/" + createFileName(file.getOriginalFilename());
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentLength(file.getSize());
-            metadata.setContentType(file.getContentType());
 
             try {
-                amazonS3.putObject(bucket, originalFilename, file.getInputStream(), metadata);
+                s3Client.putObject(PutObjectRequest.builder()
+                                .bucket(bucket)
+                                .key(originalFilename)
+                                .contentType(file.getContentType())
+                                .build(),
+                        RequestBody.fromBytes(file.getBytes()));
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -76,27 +115,35 @@ public class S3Service {
             fileNameList.add(originalFilename);
         });
 
-
         return fileNameList;
     }
 
     /**
      * 동영상,이미지들 삭제
+     *
      * @param fileUrls
      */
     public void deleteFiles(List<String> fileUrls) {
         for (String fileUrl : fileUrls) {
-            amazonS3.deleteObject(bucket, fileUrl);
+            s3Client.deleteObject(DeleteObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(fileUrl)
+                    .build());
         }
     }
 
     /**
      * 이미지 삭제
+     *
      * @param imgUrl
      */
     public void deleteImage(String imgUrl) {
-        amazonS3.deleteObject(bucket, imgUrl);
+        s3Client.deleteObject(DeleteObjectRequest.builder()
+                .bucket(bucket)
+                .key(imgUrl)
+                .build());
     }
+
     // 파일명 중복 방지
     private String createFileName(String fileName) {
         return UUID.randomUUID().toString().concat(getFileExtension(fileName));
@@ -113,10 +160,6 @@ public class S3Service {
         }
         return fileName.substring(fileName.lastIndexOf("."));
     }
-
-
-
-
 
 
 }
