@@ -18,7 +18,20 @@ import org.springframework.web.multipart.MultipartFile;
 public class PetImageController {
     private final S3Service s3Service;
     private final PetService petService;
-    private final AuthorizationUtil authorizationUtil;
+    private final  AuthorizationUtil authorizationUtil;
+
+
+    /**
+     * 반려견 이미지 조회
+     * @param imgUrl
+     * @return
+     */
+    @GetMapping()
+    public ResponseEntity<String> getByImageUrl(@RequestParam("imgUrl")String imgUrl) {
+        String presignedUrl = s3Service.readImage(imgUrl);
+        return new ResponseEntity<>(presignedUrl,HttpStatus.OK);
+    }
+
 
     /**
      * 반려견 이미지 저장
@@ -29,21 +42,22 @@ public class PetImageController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @UserAuth
     public ResponseEntity<String> uploadPetImg(@RequestPart MultipartFile multipartFile) {
-        String saveFile = s3Service.saveImage(multipartFile, "profile");
+        String saveFile = s3Service.saveImage(multipartFile, "pet");
         return new ResponseEntity<>(saveFile, HttpStatus.OK);
     }
 
     /**
      * 반려견 이미지 삭제
+     *
      * @param petId
-     * @param imageDTO
+     * @param imgUrl
      */
-    @DeleteMapping("/{petId}")
+    @DeleteMapping("")
     @UserAuth
-    public void deletePetImg(@PathVariable("petId") Long petId, @RequestBody ImageDTO imageDTO) {
+    public void deletePetImg(@RequestParam("petId") Long petId, @RequestParam("imgUrl") String imgUrl) {
         // S3에서 삭제
-        s3Service.deleteImage(imageDTO.getImgUrl());
+        s3Service.deleteImage(imgUrl);
         // 펫 이미지 링크 삭제
-        petService.deletePetImg(authorizationUtil.getLoginId(),petId);
+        petService.deletePetImg(authorizationUtil.getLoginId(), petId);
     }
 }

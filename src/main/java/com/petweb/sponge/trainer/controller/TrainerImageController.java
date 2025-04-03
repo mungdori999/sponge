@@ -22,6 +22,11 @@ public class TrainerImageController {
     private final TrainerService trainerService;
     private final AuthorizationUtil authorizationUtil;
 
+    /**
+     * 훈련사 이미지 조회
+     * @param imgUrl
+     * @return
+     */
     @GetMapping()
     public ResponseEntity<String> getByImageUrl(@RequestParam("imgUrl")String imgUrl) {
         String presignedUrl = s3Service.readImage(imgUrl);
