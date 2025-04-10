@@ -19,7 +19,7 @@ public class ReissueController {
     private final RefreshRepository refreshRepository;
     private final JwtUtil jwtUtil;
 
-    @PostMapping()
+    @PostMapping("")
     public ResponseEntity<?> reissue(@RequestBody RefreshToken token) {
         String refreshToken = token.getRefreshToken();
 

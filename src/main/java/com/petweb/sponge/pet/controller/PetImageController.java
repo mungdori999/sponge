@@ -2,7 +2,6 @@ package com.petweb.sponge.pet.controller;
 
 import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.pet.service.PetService;
-import com.petweb.sponge.s3.dto.ImageDTO;
 import com.petweb.sponge.s3.service.S3Service;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
