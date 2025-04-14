@@ -32,50 +32,82 @@ public class LogoutJwtFilter extends GenericFilterBean {
     }
 
     private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        String requestUri = request.getRequestURI();
 
-        if (!requestUri.equals("/api/logout")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-        if (!request.getMethod().equals("POST")) {
+        // logout Uri가 아니라면 패스
+        if (!isLogoutUri(request)) {
             filterChain.doFilter(request, response);
             return;
         }
 
         String token = request.getHeader("Authorization");
 
-        // 토큰이 없을때
-        if (token == null && !request.getMethod().equalsIgnoreCase("GET")) {
-            settingResponse(new ResponseError(401, "토큰이 없습니다."), response);
-        }
-        //토큰 소멸 시간 검증
-        try {
-            jwtUtil.isExpired(token);
-        } catch (ExpiredJwtException jwtException) {
-            settingResponse(new ResponseError(ResponseHttpStatus.EXPIRE_ACCESS_TOKEN.getCode(), "토큰이 만료되었습니다."), response);
-        } catch (SignatureException signatureException) {
-            settingResponse(new ResponseError(401, "위조된 토큰입니다."), response);
-        }
+
+        if (isTokenMissing(token, request, response)) return;
+
+        if (!validateToken(token, response)) return;
+
         String body = new String(request.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
         ObjectMapper objectMapper = new ObjectMapper();
         RefreshToken tokenDto = objectMapper.readValue(body, RefreshToken.class);
         String refreshToken = tokenDto.getRefreshToken();
+
         refreshRepository.deleteByRefresh(refreshToken);
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
     }
 
-    private void settingResponse(ResponseError error, HttpServletResponse response) {
+    /**
+     * 해당하는 URI 체크
+     */
+    private boolean isLogoutUri(HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        return uri.equals("/api/logout") &&
+                request.getMethod().equalsIgnoreCase("POST");
+    }
+
+    /**
+     * 토큰 없을 때 처리
+     */
+    private boolean isTokenMissing(String token, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (token == null) {
+            respondWithError(response, 401, "토큰이 없습니다.");
+            return true;
+
+        }
+        return false;
+    }
+
+    /**
+     * 토큰 유효성 검사
+     */
+    private boolean validateToken(String token, HttpServletResponse response) throws IOException {
+        try {
+            jwtUtil.isExpired(token);
+            return true;
+        } catch (ExpiredJwtException e) {
+            respondWithError(response, ResponseHttpStatus.EXPIRE_ACCESS_TOKEN.getCode(), "토큰이 만료되었습니다.");
+        } catch (SignatureException e) {
+            respondWithError(response, 401, "위조된 토큰입니다.");
+        }
+        return false;
+    }
+
+
+    /**
+     * 응답 에러 출력
+     */
+    private void respondWithError(HttpServletResponse response, int status, String message) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+
+        ResponseError error = new ResponseError(status, message);
         try {
             String json = new ObjectMapper().writeValueAsString(error);
             response.getWriter().write(json);
-        } catch (Exception e) {
-            log.error(e.getMessage());
+        } catch (IOException e) {
+            log.error("Response write error", e);
         }
     }
 }
