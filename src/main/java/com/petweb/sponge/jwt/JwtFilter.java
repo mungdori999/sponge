@@ -66,6 +66,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private boolean isTokenMissing(String token, HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (token == null) {
             if (!request.getMethod().equalsIgnoreCase("GET")) {
+                log.error("토큰이 없음");
                 respondWithError(response, 401, "토큰이 없습니다.");
                 return true;
             }
@@ -82,8 +83,10 @@ public class JwtFilter extends OncePerRequestFilter {
             jwtUtil.isExpired(token);
             return true;
         } catch (ExpiredJwtException e) {
+            log.error("토큰 만료: {}", e.getMessage());
             respondWithError(response, ResponseHttpStatus.EXPIRE_ACCESS_TOKEN.getCode(), "토큰이 만료되었습니다.");
         } catch (SignatureException e) {
+            log.error("토큰 위조: {}", e.getMessage());
             respondWithError(response, 401, "위조된 토큰입니다.");
         }
         return false;

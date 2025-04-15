@@ -25,9 +25,10 @@ public class ReissueController {
 
         //토큰이 존재하지 않는다면
         if (!refreshRepository.existsByRefresh(refreshToken)) {
-//            return;
+            return new ResponseEntity<>(
+                    new ResponseError(ResponseHttpStatus.EXPIRE_REFRESH_TOKEN.getCode(), "토큰이 만료되었습니다."),
+                    HttpStatus.UNAUTHORIZED);
         }
-
         try {
             jwtUtil.isExpired(refreshToken);
         } catch (ExpiredJwtException e) {
@@ -38,7 +39,9 @@ public class ReissueController {
         }
         String category = jwtUtil.getCategory(refreshToken);
         if (!category.equals("refreshToken")) {
-//            return;
+            return new ResponseEntity<>(
+                    new ResponseError(ResponseHttpStatus.EXPIRE_REFRESH_TOKEN.getCode(), "토큰이 만료되었습니다."),
+                    HttpStatus.UNAUTHORIZED);
         }
         Long id = jwtUtil.getId(refreshToken);
         String name = jwtUtil.getName(refreshToken);
