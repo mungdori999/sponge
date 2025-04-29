@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class FileListDTO {
+public class FileListCreate {
 
     private List<String> fileUrlList;
 }

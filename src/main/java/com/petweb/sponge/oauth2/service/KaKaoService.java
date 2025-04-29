@@ -16,8 +16,6 @@ public class KaKaoService {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
-
-
         try {
             ResponseEntity<Map> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me",
                     HttpMethod.GET,
@@ -35,7 +33,6 @@ public class KaKaoService {
             String name = profile != null ? (String) profile.get("nickname") : null;
 
             return new LoginOAuth2(name, email);
-
         } catch (Exception e) {
             e.printStackTrace();
             return null;

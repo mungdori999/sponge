@@ -77,7 +77,7 @@ public class JwtFilter extends OncePerRequestFilter {
     /**
      * 토큰 유효성 검사
      */
-    private boolean validateToken(String token, HttpServletResponse response) throws IOException {
+    private boolean validateToken(String token, HttpServletResponse response) {
 
         try {
             jwtUtil.isExpired(token);

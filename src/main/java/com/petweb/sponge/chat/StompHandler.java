@@ -26,9 +26,7 @@ public class StompHandler implements ChannelInterceptor {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         if (accessor.getCommand() == StompCommand.CONNECT || accessor.getCommand() == StompCommand.SEND) {
             String accessToken = accessor.getFirstNativeHeader("Authorization");
-
             if (!this.validateAccessToken(accessToken)) {
-                // return을 해야함
                 throw new NotFoundToken();
             }
             Long id = jwtUtil.getId(accessToken);
@@ -48,7 +46,6 @@ public class StompHandler implements ChannelInterceptor {
             log.error("토큰 없음");
             return false;
         }
-
         String token = accessToken.trim();
         try {
             jwtUtil.isExpired(token);

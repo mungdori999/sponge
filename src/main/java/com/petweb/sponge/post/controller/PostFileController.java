@@ -2,7 +2,7 @@ package com.petweb.sponge.post.controller;
 
 import com.petweb.sponge.auth.UserAuth;
 import com.petweb.sponge.post.service.PostService;
-import com.petweb.sponge.s3.dto.FileListDTO;
+import com.petweb.sponge.s3.dto.FileListCreate;
 import com.petweb.sponge.s3.service.S3Service;
 import com.petweb.sponge.utils.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
@@ -41,14 +41,14 @@ public class PostFileController {
     /**
      * 게시글 이미지,동영상 삭제
      *
-     * @param fileListDTO
+     * @param fileListCreate
      */
     @DeleteMapping("/{postId}")
     @UserAuth
-    public void deletePostFile(@PathVariable Long postId, @RequestBody FileListDTO fileListDTO) {
+    public void deletePostFile(@PathVariable Long postId, @RequestBody FileListCreate fileListCreate) {
         // S3에서 삭제
-        s3Service.deleteFiles(fileListDTO.getFileUrlList());
+        s3Service.deleteFiles(fileListCreate.getFileUrlList());
         // DB에서 링크 삭제
-        postService.deletePostFiles(authorizationUtil.getLoginId(), postId, fileListDTO.getFileUrlList());
+        postService.deletePostFiles(authorizationUtil.getLoginId(), postId, fileListCreate.getFileUrlList());
     }
 }
