@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    include: aws
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
@@ -29,3 +27,13 @@ spring:
 
 logging.level:
   org.hibernate.SQL: debug
+
+
+cloud:
+  aws:
+    s3.bucket: mungdori-bucket-domain
+    stack.auto: false
+    region.static: ap-northeast-2
+    credentials:
+      accessKey: ${AWS_S3_ACCESSKEY}
+      secretKey: ${AWS_S3_SECRETKEY}
