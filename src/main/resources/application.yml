@@ -13,11 +13,8 @@ spring:
     open-in-view: false
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
-
-  server:
-    url: ${SERVER_URL}
+      max-file-size: 100MB
+      max-request-size: 100MB
 
   # jwt
   jwt:
@@ -25,8 +22,8 @@ spring:
     accessToken-expire-length: 1800000   # 30분
     refresh-expire-length: 2592000000   # 1달 (30일)
 
-logging.level:
-  org.hibernate.SQL: debug
+#logging.level:
+#  org.hibernate.SQL: debug
 
 
 cloud:
