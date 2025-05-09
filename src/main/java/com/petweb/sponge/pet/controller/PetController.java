@@ -1,6 +1,7 @@
 package com.petweb.sponge.pet.controller;
 
 import com.petweb.sponge.auth.UserAuth;
+import com.petweb.sponge.log.Logging;
 import com.petweb.sponge.pet.controller.response.PetResponse;
 import com.petweb.sponge.pet.domain.Pet;
 import com.petweb.sponge.pet.dto.PetCreate;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/pet")
+@Logging
 public class PetController {
 
     private final PetService petService;
