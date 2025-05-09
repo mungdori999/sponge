@@ -1,6 +1,7 @@
 package com.petweb.sponge.pet.controller;
 
 import com.petweb.sponge.auth.UserAuth;
+import com.petweb.sponge.log.Logging;
 import com.petweb.sponge.pet.service.PetService;
 import com.petweb.sponge.s3.service.S3Service;
 import com.petweb.sponge.utils.AuthorizationUtil;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/pet/image")
+@Logging
 public class PetImageController {
     private final S3Service s3Service;
     private final PetService petService;

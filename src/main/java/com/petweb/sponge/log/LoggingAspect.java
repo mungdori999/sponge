@@ -28,11 +28,11 @@ public class LoggingAspect {
         String methodName = methodSignature.getName();
         String loginId = authorizationUtil.getLoginId() != null ? authorizationUtil.getLoginId().toString() : "비회원";
         String loginType = authorizationUtil.getLoginType() != null ? authorizationUtil.getLoginType() : "비회원";
-        log.info("[{}], [{}], [REQUEST] {}.{}()", loginId, loginType, className, methodName);
+        log.info("[ID:{}], [TYPE:{}], [REQUEST] {}.{}()", loginId, loginType, className, methodName);
         Object result = joinPoint.proceed();
 
         long end = System.currentTimeMillis();
-        log.info("[{}], [{}], [RESPONSE] {}.{}() executed in {}ms", loginId, loginType, className, methodName, end - start);
+        log.info("[ID:{}], [TYPE:{}], [RESPONSE] {}.{}() executed in {}ms", loginId, loginType, className, methodName, end - start);
 
         return result;
     }

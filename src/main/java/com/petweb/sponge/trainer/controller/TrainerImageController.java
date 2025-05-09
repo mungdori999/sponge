@@ -2,6 +2,7 @@ package com.petweb.sponge.trainer.controller;
 
 import com.petweb.sponge.auth.TrainerAuth;
 import com.petweb.sponge.exception.error.LoginIdError;
+import com.petweb.sponge.log.Logging;
 import com.petweb.sponge.s3.service.S3Service;
 import com.petweb.sponge.trainer.service.TrainerService;
 import com.petweb.sponge.utils.AuthorizationUtil;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/trainer/image")
+@Logging
 public class TrainerImageController {
 
     private final S3Service s3Service;

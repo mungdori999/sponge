@@ -5,6 +5,7 @@ import com.petweb.sponge.exception.error.LoginIdError;
 import com.petweb.sponge.jwt.JwtUtil;
 import com.petweb.sponge.jwt.RefreshToken;
 import com.petweb.sponge.jwt.Token;
+import com.petweb.sponge.log.Logging;
 import com.petweb.sponge.user.controller.response.UserResponse;
 import com.petweb.sponge.user.domain.User;
 import com.petweb.sponge.user.dto.UserUpdate;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
+@Logging
 public class UserController {
     private final UserService userService;
     private final AuthorizationUtil authorizationUtil;

@@ -6,6 +6,7 @@ import com.petweb.sponge.jwt.JwtUtil;
 import com.petweb.sponge.jwt.RefreshRepository;
 import com.petweb.sponge.jwt.RefreshToken;
 import com.petweb.sponge.jwt.Token;
+import com.petweb.sponge.log.Logging;
 import com.petweb.sponge.oauth2.controller.response.TrainerOauth2Response;
 import com.petweb.sponge.trainer.controller.response.TrainerResponse;
 import com.petweb.sponge.trainer.domain.Trainer;
@@ -26,6 +27,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/trainer")
+@Logging
 public class TrainerController {
 
     private final TrainerService trainerService;

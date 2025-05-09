@@ -2,6 +2,7 @@ package com.petweb.sponge.trainer.controller;
 
 import com.petweb.sponge.auth.TrainerAuth;
 import com.petweb.sponge.auth.UserAuth;
+import com.petweb.sponge.log.Logging;
 import com.petweb.sponge.trainer.controller.response.ReviewCheckResponse;
 import com.petweb.sponge.trainer.controller.response.ReviewResponse;
 import com.petweb.sponge.trainer.dto.ReviewCreate;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/review")
+@Logging
 public class ReviewController {
 
     private final ReviewService reviewService;

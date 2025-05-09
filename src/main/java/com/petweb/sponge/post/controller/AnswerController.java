@@ -2,6 +2,7 @@ package com.petweb.sponge.post.controller;
 
 import com.petweb.sponge.auth.TrainerAuth;
 import com.petweb.sponge.auth.UserAuth;
+import com.petweb.sponge.log.Logging;
 import com.petweb.sponge.post.controller.response.answer.AnswerCheckResponse;
 import com.petweb.sponge.post.controller.response.answer.AnswerBasicListResponse;
 import com.petweb.sponge.post.controller.response.answer.AnswerDetailsListResponse;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/answer")
+@Logging
 public class AnswerController {
 
     private final AnswerService answerService;

@@ -1,6 +1,7 @@
 package com.petweb.sponge.post.controller;
 
 import com.petweb.sponge.auth.UserAuth;
+import com.petweb.sponge.log.Logging;
 import com.petweb.sponge.post.service.PostService;
 import com.petweb.sponge.s3.dto.FileListCreate;
 import com.petweb.sponge.s3.service.S3Service;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/post/file")
+@Logging
 public class PostFileController {
 
     private final S3Service s3Service;

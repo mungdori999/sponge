@@ -1,6 +1,7 @@
 package com.petweb.sponge.post.controller;
 
 import com.petweb.sponge.auth.UserAuth;
+import com.petweb.sponge.log.Logging;
 import com.petweb.sponge.post.controller.response.post.PostCheckResponse;
 import com.petweb.sponge.post.controller.response.post.PostDetailsResponse;
 import com.petweb.sponge.post.controller.response.post.PostListResponse;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/post")
+@Logging
 public class PostController {
 
 
