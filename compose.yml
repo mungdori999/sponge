@@ -3,16 +3,18 @@ services:
     build: .
     ports:
       - 8080:8080
-
+    depends_on:
+      my-db:
+        condition: service_healthy
   my-db:
     image: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: pwd1234
-      MYSQL_DATABASE: mydb
+      MYSQL_ROOT_PASSWORD: rlawldyd000@
+      MYSQL_DATABASE: sponge
     volumes:
-      - ./mysql_data:/var/lib/mysql
+      - /Users/mungdori00/Documents/mysql-data/:/var/lib/mysql
     ports:
-      - 3306:3306
+      - 3307:3306
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping" ]
       interval: 5s
