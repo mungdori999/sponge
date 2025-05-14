@@ -22,6 +22,8 @@ services:
 
   my-cache-server:
     image: redis
+    volumes:
+      - /Users/mungdori00/Documents/redis-data/:/data
     ports:
       - 6379:6379
     healthcheck:
