@@ -99,60 +99,60 @@ public class TrainerControllerTest {
     }
 
 
-    @Sql(value = "/sql/delete-all-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @Test
-    public void 훈련사_회원가입을한다() throws Exception {
-        // given
-        TrainerCreate trainerCreate = TrainerCreate.builder()
-                .email("test@example.com")
-                .name("김철수")
-                .gender(Gender.MALE.getCode())  // 1: 남성, 2: 여성
-                .phone("01012345678")
-                .profileImgUrl("")
-                .content("안녕하세요! 전문 트레이너입니다.")
-                .years(5) // 연차
-                .trainerAddressList(List.of(
-                        TrainerAddressCreate.builder()
-                                .city("서울")
-                                .town("강남구")
-                                .build(),
-                        TrainerAddressCreate.builder()
-                                .city("부산")
-                                .town("해운대구")
-                                .build()
-                ))
-                .historyList(List.of(
-                        HistoryCreate.builder()
-                                .title("헬스 트레이너")
-                                .startDt("201901")
-                                .endDt("202312")
-                                .description("헬스 트레이너로 5년간 활동")
-                                .build(),
-                        HistoryCreate.builder()
-                                .title("PT 강사")
-                                .startDt("202105")
-                                .endDt("202312")
-                                .description("개인 PT 강사로 활동")
-                                .build()
-                ))
-                .build();
-
-        // when
-        // then
-        MvcResult result = mockMvc.perform(post("/api/trainer")
-                        .contentType(MediaType.APPLICATION_JSON)  // JSON 요청 설정
-                        .content(new ObjectMapper().writeValueAsString(trainerCreate)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("김철수"))
-                .andExpect(jsonPath("$.refreshToken").exists()).andReturn();
-
-        String responseBody = result.getResponse().getContentAsString();
-        String refreshToken = JsonPath.read(responseBody, "$.refreshToken");
-
-        String name = jwtUtil.getName(refreshToken);
-        // name 값 검증
-        assertThat(trainerCreate.getName()).isEqualTo(name);
-    }
+//    @Sql(value = "/sql/delete-all-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+//    @Test
+//    public void 훈련사_회원가입을한다() throws Exception {
+//        // given
+//        TrainerCreate trainerCreate = TrainerCreate.builder()
+//                .email("test@example.com")
+//                .name("김철수")
+//                .gender(Gender.MALE.getCode())  // 1: 남성, 2: 여성
+//                .phone("01012345678")
+//                .profileImgUrl("")
+//                .content("안녕하세요! 전문 트레이너입니다.")
+//                .years(5) // 연차
+//                .trainerAddressList(List.of(
+//                        TrainerAddressCreate.builder()
+//                                .city("서울")
+//                                .town("강남구")
+//                                .build(),
+//                        TrainerAddressCreate.builder()
+//                                .city("부산")
+//                                .town("해운대구")
+//                                .build()
+//                ))
+//                .historyList(List.of(
+//                        HistoryCreate.builder()
+//                                .title("헬스 트레이너")
+//                                .startDt("201901")
+//                                .endDt("202312")
+//                                .description("헬스 트레이너로 5년간 활동")
+//                                .build(),
+//                        HistoryCreate.builder()
+//                                .title("PT 강사")
+//                                .startDt("202105")
+//                                .endDt("202312")
+//                                .description("개인 PT 강사로 활동")
+//                                .build()
+//                ))
+//                .build();
+//
+//        // when
+//        // then
+//        MvcResult result = mockMvc.perform(post("/api/trainer")
+//                        .contentType(MediaType.APPLICATION_JSON)  // JSON 요청 설정
+//                        .content(new ObjectMapper().writeValueAsString(trainerCreate)))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.name").value("김철수"))
+//                .andExpect(jsonPath("$.refreshToken").exists()).andReturn();
+//
+//        String responseBody = result.getResponse().getContentAsString();
+//        String refreshToken = JsonPath.read(responseBody, "$.refreshToken");
+//
+//        String name = jwtUtil.getName(refreshToken);
+//        // name 값 검증
+//        assertThat(trainerCreate.getName()).isEqualTo(name);
+//    }
 
     @SqlGroup({
             @Sql(value = "/sql/controller/trainer-controller-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),

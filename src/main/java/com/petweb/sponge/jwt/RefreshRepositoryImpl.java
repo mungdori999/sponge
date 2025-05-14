@@ -1,35 +1,27 @@
 package com.petweb.sponge.jwt;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
 public class RefreshRepositoryImpl implements RefreshRepository {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RefreshRedisRepository refreshRedisRepository;
 
-    @Value("${spring.jwt.refresh-expire-length}")
-    private long refreshExpireLong;
 
     @Override
     public void save(String refreshToken) {
-        redisTemplate.opsForValue().set(
-                refreshToken,
-                "refreshtoken",
-                refreshExpireLong
-        );
+        refreshRedisRepository.save(RefreshTokenEntity.from(refreshToken));
     }
 
     @Override
     public Boolean existsByRefresh(String refreshToken) {
-        return redisTemplate.hasKey(refreshToken);
+        return refreshRedisRepository.existsById(refreshToken);
     }
 
     @Override
     public void deleteByRefresh(String refreshToken) {
-        redisTemplate.delete(refreshToken);
+        refreshRedisRepository.deleteById(refreshToken);
     }
 }
