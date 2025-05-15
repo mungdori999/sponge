@@ -36,13 +36,13 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Docker 이미지 생성
-        run: docker build -t instagram-server .
+        run: docker build -t sponge-server .
 
       - name: Docker 이미지에 Tag 붙이기
-        run: docker tag instagram-server ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
+        run: docker tag sponge-server ${{ steps.login-ecr.outputs.registry }}/sponge/mungdori:latest
 
       - name: ECR에 Docker 이미지 Push하기
-        run: docker push ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
+        run: docker push ${{ steps.login-ecr.outputs.registry }}/sponge/mungdori:latest
 
 #      - name: SSH로 EC2에 접속하기
 #        uses: appleboy/ssh-action@v1.0.3
