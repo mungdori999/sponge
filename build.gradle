@@ -36,6 +36,8 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
 
     //JWT
     implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
@@ -45,8 +47,6 @@ dependencies {
     //test 롬복 사용
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
-
-
 
 
     //WebSocket
