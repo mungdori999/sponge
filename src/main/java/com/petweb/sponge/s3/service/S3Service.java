@@ -66,6 +66,32 @@ public class S3Service {
     }
 
     /**
+     * 이미지,동영상 읽어오기
+     *
+     * @param imgUrlList
+     */
+    public List<String> readImages(List<String> imgUrlList) {
+        List<String> presignedUrlList = new ArrayList<>();
+
+        for (String key : imgUrlList) {
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(key)
+                    .build();
+
+            GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                    .signatureDuration(Duration.ofMinutes(1)) // URL 유효기간 (1분)
+                    .getObjectRequest(getObjectRequest)
+                    .build();
+
+            PresignedGetObjectRequest presignedRequest = s3Presigner.presignGetObject(presignRequest);
+            presignedUrlList.add(presignedRequest.url().toString());
+        }
+
+        return presignedUrlList;
+    }
+
+    /**
      * 파일 저장
      *
      * @param file

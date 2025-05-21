@@ -26,6 +26,20 @@ public class PostFileController {
     private final PostService postService;
     private final AuthorizationUtil authorizationUtil;
 
+
+    /**
+     * 게시글 이미지,동영상 조회
+     *
+     * @param imgUrlList
+     * @return
+     */
+    @GetMapping()
+    public ResponseEntity<List<String>> getByImageUrl(@RequestParam("imgUrl") List<String> imgUrlList) {
+        List<String> presignedUrlList = s3Service.readImages(imgUrlList);
+        return new ResponseEntity<>(presignedUrlList, HttpStatus.OK);
+    }
+
+
     /**
      * 게시글 이미지,동영상 업로드
      *
