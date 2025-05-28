@@ -34,7 +34,7 @@ public class PostFileController {
      * @return
      */
     @GetMapping()
-    public ResponseEntity<List<String>> getByImageUrl(@RequestParam("imgUrl") List<String> imgUrlList) {
+    public ResponseEntity<List<String>> getByImageUrlList(@RequestParam("imgUrl") List<String> imgUrlList) {
         List<String> presignedUrlList = s3Service.readImages(imgUrlList);
         return new ResponseEntity<>(presignedUrlList, HttpStatus.OK);
     }
